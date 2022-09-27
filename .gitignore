@@ -1,0 +1,13 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+.idea
+build
+.openzeppelin
+
+#Hardhat files
+cache
+artifacts
+arguments.js
