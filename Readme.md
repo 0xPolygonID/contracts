@@ -12,7 +12,7 @@ Also, it contains the example of ERC20 based smart contract with enabled zkp ver
 
 Current addresses on Polygon Mumbai testnet.
 
-|                    |                    Sig                   |                    MTP                     |
-|:------------------:|:------------------------------------------:|:------------------------------------------:|
-|   **Validators**   | 0xb1e86C4c687B85520eF4fd2a0d14e81970a15aFB | 0x217Ca85588293Fb845daBCD6385Ebf9877fAF649 |
-| **ERC20 examples** | 0x752A8f2Fd1c5FC5c9241090BD183709D4591D4cb | 0x16b2e8653c7dCFd221114A7e1664D3c884f03090 |
+|                    |                    Sig                   |                    MTP                    |
+|:------------------:|:------------------------------------------:|:-----------------------------------------:|
+|   **Validators**   |0xF2D4Eeb4d455fb673104902282Ce68B9ce4Ac450  |0x3DcAe4c8d94359D31e4C89D7F2b944859408C618 |
+| **ERC20 examples** |0x9017a99afb69CB7B21C7DD29827b4762DECD53FD  |0x3Bf7f4774DC3f92431fA690fa000f636562dCC18 |

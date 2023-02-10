@@ -4,7 +4,7 @@ import path from "path";
 const pathOutputJson = path.join(__dirname, "./deploy_validator_output.json");
 
 async function main() {
-  const stateAddress = "0x46Fd04eEa588a3EA7e9F055dd691C688c4148ab3";
+  const stateAddress = "0x134B1BE34911E39A8397ec6289782989729807a4";
   const verifierContractWrapperName = "VerifierMTPWrapper";
   const validatorContractName = "CredentialAtomicQueryMTPValidator";
   const VerifierMTPWrapper = await ethers.getContractFactory(
