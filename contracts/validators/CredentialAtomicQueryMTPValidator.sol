@@ -106,7 +106,4 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
 
         return (true);
     }
-    function getUpdated() external pure returns (uint256 index) {
-        return 1;
-    }
 }
