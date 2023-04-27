@@ -56,7 +56,7 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
         uint256 issuerClaimIdenState = inputs[7];
         uint256 issuerClaimNonRevState = inputs[9];
 
-        IState.RootInfo memory rootInfo = state.getGISTRootInfo(gistRoot);
+        IState.GistRootInfo memory rootInfo = state.getGISTRootInfo(gistRoot);
 
         require(rootInfo.root == gistRoot, "Gist root state isn't in state contract");
 
@@ -64,8 +64,8 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
         bool isIssuerStateGenesis = GenesisUtils.isGenesisState(issuerId, issuerClaimIdenState);
 
         if (!isIssuerStateGenesis) {
-            IState.StateInfo memory issuerStateInfo = state.getStateInfoByState(
-                issuerClaimIdenState
+            IState.StateInfo memory issuerStateInfo = state.getStateInfoByIdAndState(
+               issuerId, issuerClaimIdenState
             );
             require(issuerId == issuerStateInfo.id, "Issuer state doesn't exist in state contract");
         }
@@ -80,9 +80,9 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
         } else {
             // The non-empty state is returned, and it's not equal to the state that the user has provided.
             if (issuerClaimNonRevStateInfo.state != issuerClaimNonRevState) {
-                // Get the time of the latest state and compare it to the transition time of state provided by the user.
+                // Get  the time of the latest state and compare it to the transition time of state provided by the user.
                 IState.StateInfo memory issuerClaimNonRevLatestStateInfo = state
-                .getStateInfoByState(issuerClaimNonRevState);
+                .getStateInfoByIdAndState(issuerId,issuerClaimNonRevState);
 
                 if (
                     issuerClaimNonRevLatestStateInfo.id == 0 ||

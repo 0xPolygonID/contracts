@@ -54,7 +54,7 @@ contract CredentialAtomicQuerySigValidator is OwnableUpgradeable, ICircuitValida
         uint256 issuerId = inputs[7];
         uint256 issuerClaimNonRevState = inputs[9];
 
-        IState.RootInfo memory rootInfo = state.getGISTRootInfo(gistRoot);
+        IState.GistRootInfo memory rootInfo = state.getGISTRootInfo(gistRoot);
 
         require(rootInfo.root == gistRoot, "Gist root state isn't in state contract");
 
@@ -62,8 +62,8 @@ contract CredentialAtomicQuerySigValidator is OwnableUpgradeable, ICircuitValida
         bool isIssuerStateGenesis = GenesisUtils.isGenesisState(issuerId, issuerClaimAuthState);
 
         if (!isIssuerStateGenesis) {
-            IState.StateInfo memory issuerStateInfo = state.getStateInfoByState(
-                issuerClaimAuthState
+            IState.StateInfo memory issuerStateInfo = state.getStateInfoByIdAndState(
+                issuerId, issuerClaimAuthState
             );
             require(issuerId == issuerStateInfo.id, "Issuer state doesn't exist in state contract");
         }
@@ -80,7 +80,7 @@ contract CredentialAtomicQuerySigValidator is OwnableUpgradeable, ICircuitValida
             if (issuerClaimNonRevStateInfo.state != issuerClaimNonRevState) {
                 // Get the time of the latest state and compare it to the transition time of state provided by the user.
                 IState.StateInfo memory issuerClaimNonRevLatestStateInfo = state
-                .getStateInfoByState(issuerClaimNonRevState);
+                .getStateInfoByIdAndState(issuerId, issuerClaimNonRevState);
 
                 if (
                     issuerClaimNonRevLatestStateInfo.id == 0 ||
