@@ -1,6 +1,7 @@
 import { ethers, upgrades } from "hardhat";
 import { StateDeployHelper } from "../helpers/StateDeployHelper";
 import { Contract } from "ethers";
+import {deployPoseidons} from "./deploy-poseidons.util";
 
 export async function deploySpongePoseidon(poseidon6ContractAddress: string): Promise<Contract> {
   const SpongePoseidonFactory = await ethers.getContractFactory("SpongePoseidon", {
@@ -64,8 +65,8 @@ export async function deployERC20ZKPVerifierToken(
   address: string;
 }> {
   const owner = (await ethers.getSigners())[0];
-  const stateDeployHelper = await StateDeployHelper.initialize();
-  const [poseidon6Contract] = await stateDeployHelper.deployPoseidons(owner, [6]);
+
+  const [poseidon6Contract] = await deployPoseidons(owner, [6]);
 
   const spongePoseidon = await deploySpongePoseidon(poseidon6Contract.address);
 

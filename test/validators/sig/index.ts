@@ -6,6 +6,10 @@ import {
   prepareInputs,
   publishState,
 } from "../../utils/deploy-utils";
+import {
+  StateDeployHelper
+} from "../../helpers/StateDeployHelper";
+
 
 const testCases: any[] = [
   {
@@ -159,6 +163,13 @@ describe("Atomic Sig Validator", function () {
       "validator is not set for this request id"
     );
 
+    const stateDeployHelper = await StateDeployHelper.initialize();
+
+    // const validatorAddress = await token.requestQueries(requestId)).validator
+    // console.log("validator":validatorAddress)
+    // console.log("contract address before:", sig.address)
+    // const addr = await stateDeployHelper.upgradeValidator(sig.address,"UPD")
+    // console.log("contract address after:", addr.validator.address)
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
 
     expect(await token.proofs(account, requestId)).to.be.true; // check proof is assigned
