@@ -57,6 +57,9 @@
     "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:mumbai:erc20": "npx hardhat run scripts/deployERC20.ts --network mumbai",
     "deploy:mumbai:sig": "npx hardhat run scripts/deploySigValidator.ts --network mumbai",
-    "deploy:mumbai:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mumbai"
+    "deploy:mumbai:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mumbai",
+    "deploy:mainnet:sig": "npx hardhat run scripts/deploySigValidator.ts --network mainnet",
+    "deploy:mainnet:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mainnet",
+    "deploy:mainnet:erc20": "npx hardhat run scripts/deployERC20.ts --network mainnet"
   }
 }

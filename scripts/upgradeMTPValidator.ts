@@ -5,7 +5,7 @@ import {StateDeployHelper} from "../test/helpers/StateDeployHelper";
 const pathOutputJson = path.join(__dirname, "./deploy_validator_output.json");
 
 async function main() {
-    const validatorContractAddress = "0x3DcAe4c8d94359D31e4C89D7F2b944859408C618";
+    const validatorContractAddress = "0x3DcAe4c8d94359D31e4C89D7F2b944859408C618"; // mumbai
     const validatorContractName = "CredentialAtomicQueryMTPValidator";
 
     const CredentialAtomicQueryValidator = await ethers.getContractFactory(
