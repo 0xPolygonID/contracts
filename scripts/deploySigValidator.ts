@@ -4,7 +4,9 @@ import path from "path";
 const pathOutputJson = path.join(__dirname, "./deploy_validator_output.json");
 
 async function main() {
-  const stateAddress = "0x46Fd04eEa588a3EA7e9F055dd691C688c4148ab3"; // current iden3 state smart contract
+  const stateAddress = "0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D"; // current iden3 state smart contract on main
+  // const stateAddress = "0x134b1be34911e39a8397ec6289782989729807a4"; // current iden3 state smart contract on mumbai
+
   const verifierContractWrapperName = "VerifierSigWrapper";
   const validatorContractName = "CredentialAtomicQuerySigValidator";
   const VerifierSigWrapper = await ethers.getContractFactory(
