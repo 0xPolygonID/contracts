@@ -63,7 +63,7 @@ contract ERC1155Verifier is ERC1155, ZKPVerifier {
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory /* data */
-    ) internal override {
+    ) internal view override {
         // let's assume that we allow only single kind of token transfer
         require(ids.length == 1);
         require(amounts.length == 1);
