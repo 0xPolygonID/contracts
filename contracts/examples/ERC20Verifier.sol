@@ -45,10 +45,10 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
             "proof can not be submitted more than once"
         );
 
-        // address didn't get airdrop tokens
-        uint256 id = inputs[validator.getChallengeInputIndex()];
+        // get user id
+        uint256 id = inputs[1];
         // additional check didn't get airdrop tokens before
-        if (idToAddress[id] == address(0)) {
+        if (idToAddress[id] == address(0) && addressToId[_msgSender()] == 0 ) {
             super._mint(_msgSender(), TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
             addressToId[_msgSender()] = id;
             idToAddress[id] = _msgSender();
