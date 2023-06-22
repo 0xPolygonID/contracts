@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "../lib/GenesisUtils.sol";
-import "../interfaces/ICircuitValidator.sol";
-import "../verifiers/ZKPVerifier.sol";
+import "@iden3/contracts/lib/GenesisUtils.sol";
+import "@iden3/contracts/interfaces/ICircuitValidator.sol";
+import "@iden3/contracts/verifiers/ZKPVerifier.sol";
 
 contract ERC20Verifier is ERC20, ZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID = 1;
