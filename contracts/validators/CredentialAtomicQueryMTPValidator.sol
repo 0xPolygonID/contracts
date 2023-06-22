@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";	
 import "@iden3/contracts/lib/GenesisUtils.sol";	
 import "@iden3/contracts/interfaces/ICircuitValidator.sol";	
