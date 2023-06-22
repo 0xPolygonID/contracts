@@ -29,21 +29,21 @@ async function main() {
 
   const owner = (await ethers.getSigners())[0];
 
-  const [poseidon6Contract] = await deployPoseidons(owner, [6]);
+  // const [poseidon6Contract] = await deployPoseidons(owner, [6]);
   
-  const spongePoseidon = await deploySpongePoseidon(poseidon6Contract.address);
+  // const spongePoseidon = await deploySpongePoseidon(poseidon6Contract.address);
 
 
-  console.log("poseidon6:",poseidon6Contract.address);
-  console.log("spongePoseidon:",spongePoseidon.address);
+  // console.log("poseidon6:",poseidon6Contract.address);
+  // console.log("spongePoseidon:",spongePoseidon.address);
 
   const contractName ="ERC20Verifier"
   const name = "ERC20ZKPVerifier";
   const symbol = "ERCZKP";
   const ERC20ContractFactory = await ethers.getContractFactory(contractName,{
     libraries: {
-      SpongePoseidon: spongePoseidon.address,//"0xD1d3e0524E676afe079D0b2acE58ec7aB4ddE11f",
-      PoseidonUnit6L: poseidon6Contract.address//"0xa39f0793BB43cE04d64C4EdE16cc737bfBb4E1ce"
+      SpongePoseidon: "0xD1d3e0524E676afe079D0b2acE58ec7aB4ddE11f",
+      PoseidonUnit6L: "0xa39f0793BB43cE04d64C4EdE16cc737bfBb4E1ce",
     },
   } );
   const erc20instance = await ERC20ContractFactory.deploy(
