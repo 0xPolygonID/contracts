@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@iden3/contracts/lib/GenesisUtils.sol";
-import "@iden3/contracts/interfaces/ICircuitValidator.sol";
-import "@iden3/contracts/verifiers/ZKPVerifier.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {GenesisUtils} from "@iden3/contracts/lib/GenesisUtils.sol";
+import {ICircuitValidator} from "@iden3/contracts/interfaces/ICircuitValidator.sol";
+import {ZKPVerifier} from "@iden3/contracts/verifiers/ZKPVerifier.sol";
 
 contract ERC20Verifier is ERC20, ZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID = 1;
