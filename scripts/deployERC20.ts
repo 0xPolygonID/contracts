@@ -30,7 +30,7 @@ async function main() {
   const owner = (await ethers.getSigners())[0];
 
   // const [poseidon6Contract] = await deployPoseidons(owner, [6]);
-  //
+  
   // const spongePoseidon = await deploySpongePoseidon(poseidon6Contract.address);
 
 
@@ -43,7 +43,7 @@ async function main() {
   const ERC20ContractFactory = await ethers.getContractFactory(contractName,{
     libraries: {
       SpongePoseidon: "0xD1d3e0524E676afe079D0b2acE58ec7aB4ddE11f",
-      PoseidonUnit6L: "0xa39f0793BB43cE04d64C4EdE16cc737bfBb4E1ce"
+      PoseidonUnit6L: "0xa39f0793BB43cE04d64C4EdE16cc737bfBb4E1ce",
     },
   } );
   const erc20instance = await ERC20ContractFactory.deploy(

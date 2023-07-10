@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "../lib/GenesisUtils.sol";
-import "../interfaces/ICircuitValidator.sol";
-import "../interfaces/IVerifier.sol";
-import "../interfaces/IState.sol";
+import "@iden3/contracts/lib/GenesisUtils.sol";
+import "@iden3/contracts/interfaces/ICircuitValidator.sol";
+import "@iden3/contracts/interfaces/IVerifier.sol";
+import "@iden3/contracts/interfaces/IState.sol";
 
 contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValidator {
     string constant CIRCUIT_ID = "credentialAtomicQueryMTPV2OnChain";
@@ -82,7 +82,7 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
             if (issuerClaimNonRevStateInfo.state != issuerClaimNonRevState) {
                 // Get  the time of the latest state and compare it to the transition time of state provided by the user.
                 IState.StateInfo memory issuerClaimNonRevLatestStateInfo = state
-                .getStateInfoByIdAndState(issuerId,issuerClaimNonRevState);
+                    .getStateInfoByIdAndState(issuerId,issuerClaimNonRevState);
 
                 if (
                     issuerClaimNonRevLatestStateInfo.id == 0 ||
