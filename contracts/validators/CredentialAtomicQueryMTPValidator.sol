@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.0;
+pragma solidity 0.8.16;
 
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@iden3/contracts/lib/GenesisUtils.sol";
-import "@iden3/contracts/interfaces/ICircuitValidator.sol";
-import "@iden3/contracts/interfaces/IVerifier.sol";
-import "@iden3/contracts/interfaces/IState.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {GenesisUtils} from "@iden3/contracts/lib/GenesisUtils.sol";
+import {ICircuitValidator} from "@iden3/contracts/interfaces/ICircuitValidator.sol";
+import {IVerifier} from "@iden3/contracts/interfaces/IVerifier.sol";
+import {IState} from "@iden3/contracts/interfaces/IState.sol";
 
 contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValidator {
     string constant CIRCUIT_ID = "credentialAtomicQueryMTPV2OnChain";
@@ -15,12 +15,14 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
     IState public state;
 
     uint256 public revocationStateExpirationTime;
+    uint256 public proofGenerationExpirationTime;
 
     function initialize(
         address _verifierContractAddr,
         address _stateContractAddr
     ) public initializer {
         revocationStateExpirationTime = 1 hours;
+        proofGenerationExpirationTime = 1 hours;
         verifier = IVerifier(_verifierContractAddr);
         state = IState(_stateContractAddr);
         __Ownable_init();
@@ -28,6 +30,10 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
 
     function setRevocationStateExpirationTime(uint256 expirationTime) public onlyOwner {
         revocationStateExpirationTime = expirationTime;
+    }
+
+    function setProofGenerationExpirationTime(uint256 expirationTime) public virtual onlyOwner {
+        proofGenerationExpirationTime = expirationTime;
     }
 
     function getCircuitId() external pure returns (string memory id) {
@@ -55,6 +61,7 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
         uint256 issuerId = inputs[6];
         uint256 issuerClaimIdenState = inputs[7];
         uint256 issuerClaimNonRevState = inputs[9];
+        uint256 proofGenerationTimestamp = inputs[10];
 
         IState.GistRootInfo memory rootInfo = state.getGISTRootInfo(gistRoot);
 
@@ -100,6 +107,10 @@ contract CredentialAtomicQueryMTPValidator is OwnableUpgradeable, ICircuitValida
                     revocationStateExpirationTime
                 ) {
                     revert("Non-Revocation state of Issuer expired");
+                }
+
+                if (block.timestamp - proofGenerationTimestamp > proofGenerationExpirationTime) {
+                    revert("Generated proof is outdated");
                 }
             }
         }
