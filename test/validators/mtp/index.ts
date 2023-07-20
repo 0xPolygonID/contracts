@@ -7,17 +7,20 @@ import {
   publishState,
 } from "../../utils/deploy-utils";
 
+const tenYears = 315360000;
 const testCases: any[] = [
   {
     name: "Validate Genesis User State. Issuer Claim IdenState is in Chain. Revocation State is in Chain",
     stateTransitions: [require("../common-data/issuer_genesis_state.json")],
     proofJson: require("./data/valid_mtp_user_genesis.json"),
+    setProofExpiration: tenYears,
   },
   {
     name: "Validation of proof failed",
     stateTransitions: [require("../common-data/issuer_genesis_state.json")],
     proofJson: require("./data/invalid_mtp_user_genesis.json"),
-    errorMessage: "MTP Proof could not be verified",
+    errorMessage: "",
+    setProofExpiration: tenYears,
   },
   {
     name: "User state is not genesis but latest",
@@ -26,7 +29,7 @@ const testCases: any[] = [
       require("../common-data/user_state_transition.json"),
     ],
     proofJson: require("./data/valid_mtp_user_non_genesis.json"),
-    errorMessage: "",
+    setProofExpiration: tenYears,
   },
   {
     name: "The non-revocation issuer state is not expired (is not too old)",
@@ -36,7 +39,7 @@ const testCases: any[] = [
       require("../common-data/issuer_next_state_transition.json"),
     ],
     proofJson: require("./data/valid_mtp_user_non_genesis.json"),
-    errorMessage: "",
+    setProofExpiration: tenYears,
   },
   {
     name: "The non-revocation issuer state is expired (old enough)",
@@ -48,6 +51,17 @@ const testCases: any[] = [
     proofJson: require("./data/valid_mtp_user_non_genesis.json"),
     setExpiration: 1,
     errorMessage: "Non-Revocation state of Issuer expired",
+    setProofExpiration: tenYears,
+  },
+  {
+    name: "The generated proof is expired (old enough)",
+    stateTransitions: [
+      require("../common-data/issuer_genesis_state.json"),
+      require("../common-data/user_state_transition.json"),
+      require("../common-data/issuer_next_state_transition.json"),
+    ],
+    proofJson: require("./data/valid_mtp_user_non_genesis.json"),
+    errorMessage: "Generated proof is outdated",
   },
 ];
 
@@ -86,14 +100,18 @@ describe("Atomic MTP Validator", function () {
       };
 
       const { inputs, pi_a, pi_b, pi_c } = prepareInputs(test.proofJson);
+      if (test.setProofExpiration) {
+        await mtpValidator.setProofGenerationExpirationTime(test.setProofExpiration);
+      }
+      if (test.setExpiration) {
+        await mtpValidator.setRevocationStateExpirationTime(test.setExpiration);
+      }
       if (test.errorMessage) {
-        if (test.setExpiration) {
-          await mtpValidator.setRevocationStateExpirationTime(test.setExpiration);
-        }
-
-        (
-          expect(mtpValidator.verify(inputs, pi_a, pi_b, pi_c, query.queryHash)).to.be as any
-        ).revertedWith(test.errorMessage);
+        await expect(mtpValidator.verify(inputs, pi_a, pi_b, pi_c, query.queryHash)).to.be.revertedWith(
+          test.errorMessage
+        );
+      } else if (test.errorMessage === "") {
+        await expect(mtpValidator.verify(inputs, pi_a, pi_b, pi_c, query.queryHash)).to.be.reverted;
       } else {
         const verified = await mtpValidator.verify(inputs, pi_a, pi_b, pi_c, query.queryHash);
         expect(verified).to.be.true;
@@ -152,7 +170,6 @@ describe("Atomic MTP Validator", function () {
     expect((await token.getSupportedRequests()).length).to.be.equal(1);
 
     // submit response for non-existing request
-
     await expect(token.submitZKPResponse(2, inputs, pi_a, pi_b, pi_c)).to.be.revertedWith(
       "validator is not set for this request id"
     );
@@ -175,6 +192,7 @@ describe("Atomic MTP Validator", function () {
   }
 
   it("Example ERC20 Verifier: set zkp request", async () => {
+    await mtpValidator.setProofGenerationExpirationTime(tenYears);
     await erc20VerifierFlow(async (query, token, requestId) => {
       await token.setZKPRequest(
         requestId,
@@ -188,6 +206,7 @@ describe("Atomic MTP Validator", function () {
   });
 
   it("Example ERC20 Verifier: set zkp request raw", async () => {
+    await mtpValidator.setProofGenerationExpirationTime(tenYears);
     await erc20VerifierFlow(async (query, token, requestId) => {
       await token.setZKPRequestRaw(
         requestId,
