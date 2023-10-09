@@ -42,8 +42,7 @@ async function main() {
   const symbol = "ERCZKP";
   const ERC20ContractFactory = await ethers.getContractFactory(contractName,{
     libraries: {
-      SpongePoseidon: "0xD1d3e0524E676afe079D0b2acE58ec7aB4ddE11f",
-      PoseidonUnit6L: "0xa39f0793BB43cE04d64C4EdE16cc737bfBb4E1ce",
+      PoseidonFacade: "0xD65f5Fc521C4296723c6Eb16723A8171dCC12FB0",
     },
   } );
   const erc20instance = await ERC20ContractFactory.deploy(
@@ -62,7 +61,7 @@ async function main() {
 
   // mtp:validator: 0x5f24dD9FbEa358B9dD96daA281e82160fdefD3CD   // current mtp validator address on main
   // sig:validator: 0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b   // current sig validator address on main
-  const validatorAddress = "0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b";
+  const validatorAddress = "0xF2D4Eeb4d455fb673104902282Ce68B9ce4Ac450";
 
 
   const query = {
