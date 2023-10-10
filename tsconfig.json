@@ -8,6 +8,11 @@
     "declaration": true,
     "noImplicitAny": false
   },
-  "include": ["./scripts", "./test", "./typechain"],
+  "include": [
+    "./scripts",
+    "./test",
+    "./typechain",
+    "ScenarioWhitelist.spec.ts"
+  ],
   "files": ["hardhat.config.ts"]
 }

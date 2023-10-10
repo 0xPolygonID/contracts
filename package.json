@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@nexeraprotocol/nexera-id-schemas": "^1.8.55",
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
@@ -44,6 +45,7 @@
     "circomlibjs": "^0.1.7",
     "codecov": "^3.8.2",
     "diff": ">=5.0.0",
+    "dotenv": "^16.3.1",
     "ethereumjs-util": "^7.1.4",
     "jsonfile": "^6.1.0",
     "snarkjs": "^0.4.13",
@@ -57,6 +59,7 @@
     "test:gas": "REPORT_GAS=true npx hardhat test",
     "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:mumbai:erc20": "npx hardhat run scripts/deployERC20.ts --network mumbai",
+    "deploy:mumbai:nexera": "npx hardhat run scripts/deployScenarioWhitelist.ts --network mumbai",
     "deploy:mumbai:sig": "npx hardhat run scripts/deploySigValidator.ts --network mumbai",
     "deploy:mumbai:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mumbai",
     "deploy:mainnet:sig": "npx hardhat run scripts/deploySigValidator.ts --network mainnet",

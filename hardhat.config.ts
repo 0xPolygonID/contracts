@@ -7,6 +7,9 @@ import "solidity-coverage";
 import "@openzeppelin/hardhat-upgrades";
 import "@nomiclabs/hardhat-etherscan";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 const DEFAULT_MNEMONIC =
   "test test test test test test test test test test test junk";
 
@@ -44,7 +47,6 @@ const config: HardhatUserConfig = {
     ],
   },
   networks: {
-
     localhost: {
       url: "http://127.0.0.1:8545",
       accounts: {
@@ -53,6 +55,11 @@ const config: HardhatUserConfig = {
         initialIndex: 0,
         count: 20,
       },
+    },
+    mumbai: {
+      chainId: 80001,
+      url: `${process.env.ALCHEMY_MUMBAI_URL}`,
+      accounts: [`0x${process.env.MUMBAI_PRIVATE_KEY}`],
     },
   },
   gasReporter: {
