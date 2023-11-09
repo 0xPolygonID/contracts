@@ -6,7 +6,7 @@ import {
   prepareInputs,
   publishState,
 } from "../../utils/deploy-utils";
-import { packValidatorParams } from "../../utils/pack-utils";
+import { packValidatorParams, unpackValidatorParams } from "../../utils/pack-utils";
 
 const tenYears = 315360000;
 const testCases: any[] = [
@@ -181,7 +181,7 @@ describe("Atomic Sig Validator", function () {
     // must be no queries
     console.log("supported requests - zero");
 
-    expect((await token.getSupportedRequests()).length).to.be.equal(0);
+    expect(await token.getZKPRequestsCount()).to.be.equal(0);
 
     // set transfer request id
 
@@ -191,13 +191,16 @@ describe("Atomic Sig Validator", function () {
         "8566939875427719562376598811066985304309117528846759529734201066483458512800"
       ),
       operator: ethers.BigNumber.from(1),
+      slotIndex: ethers.BigNumber.from(0),
       value: ["1420070400000000000", ...new Array(63).fill("0")].map((x) =>
         ethers.BigNumber.from(x)
       ),
-      circuitId: "credentialAtomicQuerySigV2OnChain",
+      circuitIds: ["credentialAtomicQuerySigV2OnChain"],
       queryHash: ethers.BigNumber.from(
         "1496222740463292783938163206931059379817846775593932664024082849882751356658"
       ),
+      metadata: "test medatada",
+      skipClaimRevocationCheck: false,
     };
 
     const requestId = await token.TRANSFER_REQUEST_ID();
@@ -205,23 +208,20 @@ describe("Atomic Sig Validator", function () {
 
     await callBack(query, token, requestId);
 
-    expect((await token.requestQueries(requestId)).queryHash.toString()).to.be.equal(
+    const requestData = await token.getZKPRequest(requestId);
+    const parsed = unpackValidatorParams(requestData.data);
+
+    expect(parsed.queryHash.toString()).to.be.equal(
       "1496222740463292783938163206931059379817846775593932664024082849882751356658"
     ); // check that query is assigned
-    expect((await token.getSupportedRequests()).length).to.be.equal(1);
+    expect(await token.getZKPRequestsCount()).to.be.equal(1);
 
     // submit response for non-existing request
 
     await expect(token.submitZKPResponse(2, inputs, pi_a, pi_b, pi_c)).to.be.revertedWith(
       "validator is not set for this request id"
     );
-    // const stateDeployHelper = await StateDeployHelper.initialize();
 
-    // const validatorAddress = await token.requestQueries(requestId)).validator
-    // console.log("validator":validatorAddress)
-    // console.log("contract address before:", sig.address)
-    // const addr = await stateDeployHelper.upgradeValidator(sig.address,"UPD")
-    // console.log("contract address after:", addr.validator.address)
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
     expect(await token.proofs(account, requestId)).to.be.true; // check proof is assigned
 
@@ -238,34 +238,14 @@ describe("Atomic Sig Validator", function () {
     expect(await token.balanceOf(account)).to.equal(ethers.BigNumber.from("5000000000000000000"));
   }
 
-  // it("Example ERC20 Verifier: set zkp request", async () => {
-  //   await sig.setProofExpirationTimeout(tenYears);
-  //   await erc20VerifierFlow(async (query, token, requestId) => {
-  //     await token.setZKPRequest(
-  //       requestId,
-  //       sig.address,
-  //       query.schema,
-  //       query.claimPathKey,
-  //       query.operator,
-  //       query.value
-  //     );
-  //   });
-  // });
+  it("Example ERC20 Verifier: set zkp request", async () => {
+    await sig.setProofExpirationTimeout(tenYears);
+    await erc20VerifierFlow(async (query, token, requestId) => {
+      await token.setZKPRequest(
+        requestId,
+        { metadata: "metadata", validator: sig.address, data: packValidatorParams(query) }
+      );
+    });
+  });
 
-  // it("Example ERC20 Verifier: set zkp request raw", async () => {
-  //   await sig.setProofExpirationTimeout(tenYears);
-  //   await erc20VerifierFlow(async (query, token, requestId) => {
-  //     await token.setZKPRequestRaw(
-  //       requestId,
-  //       sig.address,
-  //       query.schema,
-  //       query.claimPathKey,
-  //       query.operator,
-  //       query.value,
-  //       ethers.BigNumber.from(
-  //         "1496222740463292783938163206931059379817846775593932664024082849882751356658"
-  //       )
-  //     );
-  //   });
-  // });
 });
