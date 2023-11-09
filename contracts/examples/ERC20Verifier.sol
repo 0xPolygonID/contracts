@@ -24,9 +24,9 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         uint256[] memory inputs,
         ICircuitValidator validator
     ) internal view override {
-        // check that  challenge input is address of sender
-        address addr = GenesisUtils.int256ToAddress(
-            inputs[validator.getChallengeInputIndex()]
+        // check that challenge input is address of sender
+        address addr = int256ToAddress(
+            inputs[validator.inputIndexOf("challenge")]
         );
         // this is linking between msg.sender and
         require(
@@ -65,4 +65,12 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
             "only identities who provided proof are allowed to receive tokens"
         );
     }
+
+    function int256ToAddress(uint256 input) private pure returns (address addr) {
+        bytes memory bys = GenesisUtils.uint256ToBytes(GenesisUtils.reverse(input));
+         assembly {
+            addr := mload(add(bys, 20))
+        }
+    }
+
 }

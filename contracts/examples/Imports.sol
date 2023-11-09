@@ -10,5 +10,5 @@ import{
     PoseidonUnit6L,
     SpongePoseidon,
     PoseidonFacade} from "@iden3/contracts/lib/Poseidon.sol";
-import {StateV2} from "@iden3/contracts/state/StateV2.sol";
-import {VerifierV2} from "@iden3/contracts/lib/verifierV2.sol";
+import {State} from "@iden3/contracts/state/State.sol";
+import {ZKPVerifier} from "@iden3/contracts/verifiers/ZKPVerifier.sol";

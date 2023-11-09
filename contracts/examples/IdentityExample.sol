@@ -4,14 +4,14 @@ pragma solidity 0.8.16;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IState} from "@iden3/contracts/interfaces/IState.sol";
 import {ClaimBuilder} from "@iden3/contracts/lib/ClaimBuilder.sol";
-import {OnChainIdentity} from "@iden3/contracts/lib/OnChainIdentity.sol";
+import {IdentityLib} from "@iden3/contracts/lib/IdentityLib.sol";
 import {IdentityBase} from "@iden3/contracts/lib/IdentityBase.sol";
 
 // /**
 //  * @dev Contract managing onchain identity
 //  */
 contract IdentityExample is IdentityBase, OwnableUpgradeable {
-    using OnChainIdentity for OnChainIdentity.Identity;
+    using IdentityLib for IdentityLib.Data;
 
     // This empty reserved space is put in place to allow future versions
     // of the State contract to inherit from other contracts without a risk of
