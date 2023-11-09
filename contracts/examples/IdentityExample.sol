@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.16;
 
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import {IState} from "@iden3/contracts/interfaces/IState.sol";
-import {ClaimBuilder} from "@iden3/contracts/lib/ClaimBuilder.sol";
-import {IdentityLib} from "@iden3/contracts/lib/IdentityLib.sol";
-import {IdentityBase} from "@iden3/contracts/lib/IdentityBase.sol";
+import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+import {IState} from '@iden3/contracts/interfaces/IState.sol';
+import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
+import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
+import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 
 // /**
 //  * @dev Contract managing onchain identity
@@ -93,9 +93,12 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
      * @param claimData - claim data
      * @return binary claim
      */
-    function buildClaim(
-        ClaimBuilder.ClaimData calldata claimData
-    ) public pure virtual returns (uint256[8] memory) {
+    function buildClaim(ClaimBuilder.ClaimData calldata claimData)
+        public
+        pure
+        virtual
+        returns (uint256[8] memory)
+    {
         return ClaimBuilder.build(claimData);
     }
 }
