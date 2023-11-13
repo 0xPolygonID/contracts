@@ -8,3 +8,7 @@ import {IdentityTreeStore} from '@iden3/contracts/identitytreestore/IdentityTree
 import {CredentialAtomicQueryMTPValidator} from '@iden3/contracts/validators/CredentialAtomicQueryMTPValidator.sol';
 import {CredentialAtomicQuerySigValidator} from '@iden3/contracts/validators/CredentialAtomicQuerySigValidator.sol';
 import {VerifierStateTransition} from '@iden3/contracts/lib/VerifierStateTransition.sol';
+import {VerifierMTP} from '@iden3/contracts/lib/VerifierMTP.sol';
+import {VerifierMTPWrapper} from '@iden3/contracts/lib/VerifierMTPWrapper.sol';
+import {VerifierSig} from '@iden3/contracts/lib/VerifierSig.sol';
+import {VerifierSigWrapper} from '@iden3/contracts/lib/VerifierSigWrapper.sol';
