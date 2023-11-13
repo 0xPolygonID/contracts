@@ -64,18 +64,10 @@ export async function deployERC20ZKPVerifierToken(
 ): Promise<{
   address: string;
 }> {
-  const owner = (await ethers.getSigners())[0];
-
-  // const poseidoneFacede = await deployPoseidonFacade();
-  const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier', {
-    // libraries: {
-    //   PoseidonFacade: poseidoneFacede.address,
-    // },
-  });
+  const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
   const erc20Verifier = await ERC20Verifier.deploy(name, symbol);
   await erc20Verifier.deployed();
   console.log('ERC20Verifier deployed to:', erc20Verifier.address);
-
   return erc20Verifier;
 }
 

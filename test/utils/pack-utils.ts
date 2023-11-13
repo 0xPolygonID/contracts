@@ -30,7 +30,7 @@ export function packValidatorParams(query: any, allowedIssuers: any[] = []) {
   );
 }
 
- export function unpackValidatorParams(hex: string) {
+export function unpackValidatorParams(hex: string) {
   let web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.decodeParameter(
     {
@@ -45,7 +45,7 @@ export function packValidatorParams(query: any, allowedIssuers: any[] = []) {
         circuitIds: 'string[]',
         skipClaimRevocationCheck: 'bool'
       }
-    }, hex
+    },
+    hex
   );
 }
-
