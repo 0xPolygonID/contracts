@@ -18,6 +18,13 @@ async function main() {
 
   // set default query
 
+  const slotIndex = ethers.BigNumber.from(0);
+  const queryHash = ethers.BigNumber.from(
+    '1496222740463292783938163206931059379817846775593932664024082849882751356658'
+  );
+  const circuitIds = ['credentialAtomicQueryMTPV2OnChain'];
+  const metadata = 'test medatada';
+  const skipClaimRevocationCheck = false;
   const ageQueries = [
     // EQ
     {
@@ -28,13 +35,11 @@ async function main() {
       ),
       operator: 1,
       value: [19960424, ...new Array(63).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     //     // LT
     {
@@ -45,13 +50,11 @@ async function main() {
       ),
       operator: 2,
       value: [20020101, ...new Array(63).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // GT
     {
@@ -62,13 +65,11 @@ async function main() {
       ),
       operator: 3,
       value: [500, ...new Array(63).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // IN
     {
@@ -79,13 +80,11 @@ async function main() {
       ),
       operator: 4,
       value: [...new Array(63).fill(0).map((i) => 0), 19960424],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // NIN
     {
@@ -96,13 +95,11 @@ async function main() {
       ),
       operator: 5,
       value: [...new Array(64).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // NE
     {
@@ -113,13 +110,11 @@ async function main() {
       ),
       operator: 6,
       value: [500, ...new Array(63).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // EQ (corner)
 
@@ -131,13 +126,11 @@ async function main() {
       ),
       operator: 1,
       value: [...new Array(64).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
 
     // LT
@@ -149,13 +142,11 @@ async function main() {
       ),
       operator: 2,
       value: [...new Array(64).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // GT
     {
@@ -166,13 +157,11 @@ async function main() {
       ),
       operator: 3,
       value: [...new Array(64).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // IN corner
 
@@ -184,13 +173,11 @@ async function main() {
       ),
       operator: 4,
       value: [...new Array(64).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // NIN corner
     {
@@ -201,13 +188,11 @@ async function main() {
       ),
       operator: 5,
       value: [...new Array(63).fill(0).map((i) => 0), 19960424],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     },
     // NE corner
     {
@@ -218,13 +203,11 @@ async function main() {
       ),
       operator: 6,
       value: [...new Array(64).fill(0).map((i) => 0)],
-      slotIndex: ethers.BigNumber.from(0),
-      queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-      ),
-      circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
-      metadata: 'test medatada',
-      skipClaimRevocationCheck: false
+      slotIndex,
+      queryHash,
+      circuitIds,
+      metadata,
+      skipClaimRevocationCheck
     }
   ];
 
