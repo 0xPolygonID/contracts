@@ -2,7 +2,7 @@
 pragma solidity 0.8.16;
 
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
-import {GenesisUtils} from '@iden3/contracts/lib/GenesisUtils.sol';
+import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
 
@@ -22,7 +22,7 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         ICircuitValidator validator
     ) internal view override {
         // check that challenge input is address of sender
-        address addr = int256ToAddress(inputs[validator.inputIndexOf('challenge')]);
+        address addr = PrimitiveTypeUtils.int256ToAddress(inputs[validator.inputIndexOf('challenge')]);
         // this is linking between msg.sender and
         require(_msgSender() == addr, 'address in proof is not a sender address');
     }
@@ -58,10 +58,4 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         );
     }
 
-    function int256ToAddress(uint256 input) private pure returns (address addr) {
-        bytes memory bys = GenesisUtils.uint256ToBytes(GenesisUtils.reverse(input));
-        assembly {
-            addr := mload(add(bys, 20))
-        }
-    }
 }
