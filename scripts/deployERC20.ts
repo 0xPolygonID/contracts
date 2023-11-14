@@ -2,6 +2,7 @@ import { ethers } from 'hardhat';
 import fs from 'fs';
 import path from 'path';
 import { packValidatorParams } from '../test/utils/pack-utils';
+import { calculateQueryHash } from '../test/utils/utils';
 const pathOutputJson = path.join(__dirname, './deploy_erc20verifier_output.json');
 
 const Operators = {
@@ -51,21 +52,25 @@ async function main() {
   const validatorAddress = '0xF2D4Eeb4d455fb673104902282Ce68B9ce4Ac450';
 
   const query = {
-    schema: ethers.BigNumber.from(schemaBigInt),
-    claimPathKey: ethers.BigNumber.from(schemaClaimPathKey),
-    operator: ethers.BigNumber.from(Operators.LT),
-    slotIndex: ethers.BigNumber.from(0),
-    value: [
-      ethers.BigNumber.from('20020101'),
-      ...new Array(63).fill('0').map((x) => ethers.BigNumber.from(x))
-    ],
-    queryHash: ethers.BigNumber.from(
-      '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-    ),
+    schema: schemaBigInt,
+    claimPathKey: schemaClaimPathKey,
+    operator: Operators.LT,
+    slotIndex: 0,
+    value: [20020101, ...new Array(63).fill(0)],
+    queryHash: '',
     circuitIds: ['credentialAtomicQueryMTPV2OnChain'],
     metadata: 'test medatada',
     skipClaimRevocationCheck: false
   };
+
+  query.queryHash = calculateQueryHash(
+    query.value,
+    query.schema,
+    query.slotIndex,
+    query.operator,
+    query.claimPathKey,
+    1
+  ).toString();
 
   const requestId = await erc20instance.TRANSFER_REQUEST_ID();
   try {
