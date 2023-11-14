@@ -38,7 +38,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     //     // LT
@@ -53,7 +52,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // GT
@@ -68,7 +66,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // IN
@@ -83,7 +80,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // NIN
@@ -98,7 +94,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // NE
@@ -113,7 +108,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // EQ (corner)
@@ -129,7 +123,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
 
@@ -145,7 +138,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // GT
@@ -160,7 +152,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // IN corner
@@ -176,7 +167,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // NIN corner
@@ -191,7 +181,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     },
     // NE corner
@@ -206,7 +195,6 @@ async function main() {
       slotIndex,
       queryHash,
       circuitIds,
-      metadata,
       skipClaimRevocationCheck
     }
   ];

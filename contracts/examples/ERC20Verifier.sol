@@ -32,6 +32,8 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         uint256[] memory inputs,
         ICircuitValidator validator
     ) internal override {
+
+        // it is a custom restriction that prohibits to use proof more than once
         require(
             requestId == TRANSFER_REQUEST_ID && addressToId[_msgSender()] == 0,
             'proof can not be submitted more than once'
