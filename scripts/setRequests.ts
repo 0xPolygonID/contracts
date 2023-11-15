@@ -37,7 +37,6 @@ async function main() {
 
   // await erc20Verifier.deployed();
   console.log(erc20Verifier, ' attached to:', erc20Verifier.address);
-  const schema = '74977327600848231385663280181476307657';
 
   // set default query
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
@@ -46,16 +45,26 @@ async function main() {
   const schemaUrl =
     'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
   const type = 'KYCAgeCredential';
+  const schema = '74977327600848231385663280181476307657';
   const schemaClaimPathKey =
     '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-
-  // set default query
-
   const slotIndex = 0;
   const queryHash = '';
   const circuitIds = [circuitIdSig];
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
+  const claimPathDoesntExist = 0;
+
+  /*
+     // init these values for non-merklized claim use case
+     const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
+    const schemaClaimPathKey = '0';
+    const slotIndex = 2;
+    const claimPathDoesntExist = 1;
+    const schema = '198285726510688200335207273836123338699';
+   */
+
   const ageQueries = [
     // EQ
     {
@@ -232,7 +241,7 @@ async function main() {
         query.slotIndex,
         query.operator,
         query.claimPathKey,
-        0
+        claimPathDoesntExist
       ).toString();
 
       const invokeRequestMetadata = {
