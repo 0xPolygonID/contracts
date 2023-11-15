@@ -17,11 +17,15 @@ const Operators = {
 
 async function main() {
   // you can run https://go.dev/play/p/rnrRbxXTRY6 to get schema hash and claimPathKey using YOUR schema
-  const schemaBigInt = '74977327600848231385663280181476307657';
-
+  const schema = '74977327600848231385663280181476307657';
   // merklized path to field in the W3C credential according to JSONLD  schema e.g. birthday in the KYCAgeCredential under the url "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld"
+  const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
+  const type = 'KYCAgeCredential';
   const schemaClaimPathKey =
     '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+  const value = [20020101, ...new Array(63).fill(0)];
+  const slotIndex = 0; // because schema  is merklized for merklized credential, otherwise you should actual put slot index  https://docs.iden3.io/protocol/non-merklized/#motivation
 
   const contractName = 'ERC20Verifier';
   const name = 'ERC20ZKPVerifier';
@@ -33,82 +37,83 @@ async function main() {
   console.log(contractName, ' deployed to:', erc20instance.address);
 
   // set default query
-  const circuitId = 'credentialAtomicQueryMTPV2OnChain'; //"credentialAtomicQuerySigV2OnChain";
+  const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
+  const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
   // mtp:validator: 0xf43Ace301b6b29b7FFEE786335ef25ce1dfa1a0A   // current mtp validator address on mumbai
   // sig:validator: 0xB574207F445507016C4b176A92A74b9ecf3CA11b   // current sig validator address on mumbai
 
   // mtp:validator:    // current mtp validator address on main
   // sig:validator:    // current sig validator address on main
-  const validatorAddress = '0xf43Ace301b6b29b7FFEE786335ef25ce1dfa1a0A';
-
-
+  const validatorAddress = '0xB574207F445507016C4b176A92A74b9ecf3CA11b';
 
   const query = {
-    schema: schemaBigInt,
+    schema: schema,
     claimPathKey: schemaClaimPathKey,
     operator: Operators.LT,
-    slotIndex: 0,
-    value: [20020101, ...new Array(63).fill(0)],
-    queryHash: '',
-    circuitIds: [circuitId],
+    slotIndex: slotIndex,
+    value: value,
+    queryHash: calculateQueryHash(
+      value,
+      schema,
+      slotIndex,
+      Operators.LT,
+      schemaClaimPathKey,
+      0 // 0 for inclusion (merklized credentials) - 1 for non-merklized
+    ).toString(),
+    circuitIds: [circuitIdSig],
     allowedIssuers: [],
     skipClaimRevocationCheck: false
   };
-
-  query.queryHash = calculateQueryHash(
-    query.value,
-    query.schema,
-    query.slotIndex,
-    query.operator,
-    query.claimPathKey,
-    1
-  ).toString();
 
   const requestId = await erc20instance.TRANSFER_REQUEST_ID();
 
   const invokeRequestMetadata = {
     id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
     typ: 'application/iden3comm-plain-json',
-    "type": "https://iden3-communication.io/proofs/1.0/contract-invoke-request",
-    "thid": "7f38a193-0918-4a48-9fac-36adfdb8b542",
-    "body": {
-      "reason": "for testing",
-      "transaction_data": {
-        "contract_address": erc20instance.address ,
-        "method_id": "b68967e2",
-        "chain_id": 80001,
-        "network": "polygon-mumbai"
+    type: 'https://iden3-communication.io/proofs/1.0/contract-invoke-request',
+    thid: '7f38a193-0918-4a48-9fac-36adfdb8b542',
+    body: {
+      reason: 'for testing',
+      transaction_data: {
+        contract_address: erc20instance.address,
+        method_id: 'b68967e2',
+        chain_id: 80001,
+        network: 'polygon-mumbai'
       },
-      "scope": [
+      scope: [
         {
-          "id": requestId,
-          "circuitId": circuitId,
-          "query": {
-            "allowedIssuers": [
-              "*"
-            ],
-            "context": "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld",
-            "credentialSubject": {
-              "birthday": {
-                "$lt": 20020101
+          id: requestId,
+          circuitId: circuitIdSig,
+          query: {
+            allowedIssuers: ['*'],
+            context: schemaUrl,
+            credentialSubject: {
+              birthday: {
+                $lt: value[0]
               }
             },
-            "type": "KYCAgeCredential"
+            type: type
           }
         }
       ]
     }
-  }
-
+  };
 
   try {
-    let tx = await erc20instance.setZKPRequest(requestId, {
+    // sig request set
+    const tx = await erc20instance.setZKPRequest(requestId, {
       metadata: JSON.stringify(invokeRequestMetadata),
       validator: validatorAddress,
       data: packValidatorParams(query)
     });
-    console.log(tx.hash);
+
+    // mtp request set
+    const tx = await erc20instance.setZKPRequest(requestId, {
+      metadata: JSON.stringify(invokeRequestMetadata),
+      validator: validatorAddress,
+      data: packValidatorParams(query)
+    });
   } catch (e) {
     console.log('error: ', e);
   }

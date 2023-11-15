@@ -7,7 +7,8 @@ import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.s
 import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
 
 contract ERC20Verifier is ERC20, ZKPVerifier {
-    uint64 public constant TRANSFER_REQUEST_ID = 1;
+    uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 1;
+    uint64 public constant TRANSFER_REQUEST_ID_MTP_VALIDATOR = 2;
 
     mapping(uint256 => address) public idToAddress;
     mapping(address => uint256) public addressToId;
@@ -32,20 +33,14 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         uint256[] memory inputs,
         ICircuitValidator validator
     ) internal override {
-
-        // it is a custom restriction that prohibits to use proof more than once
-        require(
-            requestId == TRANSFER_REQUEST_ID && addressToId[_msgSender()] == 0,
-            'proof can not be submitted more than once'
-        );
-
-        // get user id
-        uint256 id = inputs[1];
-        // additional check didn't get airdrop tokens before
-        if (idToAddress[id] == address(0) && addressToId[_msgSender()] == 0) {
-            super._mint(_msgSender(), TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
-            addressToId[_msgSender()] = id;
-            idToAddress[id] = _msgSender();
+        if (requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR || requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR ){
+            // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
+            uint256 id = inputs[1];
+            if (idToAddress[id] == address(0) && addressToId[_msgSender()] == 0) {
+                super._mint(_msgSender(), TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
+                addressToId[_msgSender()] = id;
+                idToAddress[id] = _msgSender();
+            }
         }
     }
 
@@ -55,8 +50,8 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         uint256 /* amount */
     ) internal view override {
         require(
-            proofs[to][TRANSFER_REQUEST_ID] == true,
-            'only identities who provided proof are allowed to receive tokens'
+            proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||  proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
+            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
     }
 
