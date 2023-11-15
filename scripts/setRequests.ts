@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import { packValidatorParams } from '../test/utils/pack-utils';
+import { calculateQueryHash } from '../test/utils/utils';
 
 async function main() {
   const validatorAddressSig = '0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b';
@@ -18,10 +19,8 @@ async function main() {
 
   // set default query
 
-  const slotIndex = ethers.BigNumber.from(0);
-  const queryHash = ethers.BigNumber.from(
-    '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-  );
+  const slotIndex = 0;
+  const queryHash = '';
   const circuitIds = ['credentialAtomicQueryMTPV2OnChain'];
   const metadata = 'test medatada';
   const skipClaimRevocationCheck = false;
@@ -29,12 +28,10 @@ async function main() {
     // EQ
     {
       requestId: 100,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 1,
-      value: [19960424, ...new Array(63).fill(0).map((i) => 0)],
+      value: [19960424, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -43,12 +40,10 @@ async function main() {
     //     // LT
     {
       requestId: 200,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 2,
-      value: [20020101, ...new Array(63).fill(0).map((i) => 0)],
+      value: [20020101, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -57,12 +52,10 @@ async function main() {
     // GT
     {
       requestId: 300,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 3,
-      value: [500, ...new Array(63).fill(0).map((i) => 0)],
+      value: [500, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -71,12 +64,10 @@ async function main() {
     // IN
     {
       requestId: 400,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 4,
-      value: [...new Array(63).fill(0).map((i) => 0), 19960424],
+      value: [...new Array(63).fill(0), 19960424],
       slotIndex,
       queryHash,
       circuitIds,
@@ -85,12 +76,10 @@ async function main() {
     // NIN
     {
       requestId: 500,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 5,
-      value: [...new Array(64).fill(0).map((i) => 0)],
+      value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -99,12 +88,10 @@ async function main() {
     // NE
     {
       requestId: 600,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 6,
-      value: [500, ...new Array(63).fill(0).map((i) => 0)],
+      value: [500, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -114,12 +101,10 @@ async function main() {
 
     {
       requestId: 150,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 1,
-      value: [...new Array(64).fill(0).map((i) => 0)],
+      value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -129,12 +114,10 @@ async function main() {
     // LT
     {
       requestId: 250,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 2,
-      value: [...new Array(64).fill(0).map((i) => 0)],
+      value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -143,12 +126,10 @@ async function main() {
     // GT
     {
       requestId: 350,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 3,
-      value: [...new Array(64).fill(0).map((i) => 0)],
+      value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -158,12 +139,10 @@ async function main() {
 
     {
       requestId: 450,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 4,
-      value: [...new Array(64).fill(0).map((i) => 0)],
+      value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -172,12 +151,10 @@ async function main() {
     // NIN corner
     {
       requestId: 550,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 5,
-      value: [...new Array(63).fill(0).map((i) => 0), 19960424],
+      value: [...new Array(63).fill(0), 19960424],
       slotIndex,
       queryHash,
       circuitIds,
@@ -186,12 +163,10 @@ async function main() {
     // NE corner
     {
       requestId: 650,
-      schema: ethers.BigNumber.from('74977327600848231385663280181476307657'),
-      claimPathKey: ethers.BigNumber.from(
-        '20376033832371109177683048456014525905119173674985843915445634726167450989630'
-      ),
+      schema: '74977327600848231385663280181476307657',
+      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
       operator: 6,
-      value: [...new Array(64).fill(0).map((i) => 0)],
+      value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
@@ -201,11 +176,20 @@ async function main() {
 
   try {
     for (let i = 0; i < ageQueries.length; i++) {
-      console.log(ageQueries[i].requestId);
-      let tx = await erc20Verifier.setZKPRequest(ageQueries[i].requestId, {
+      const query = ageQueries[i];
+      console.log(query.requestId);
+      query.queryHash = calculateQueryHash(
+        query.value,
+        query.schema,
+        query.slotIndex,
+        query.operator,
+        query.claimPathKey,
+        1
+      ).toString();
+      let tx = await erc20Verifier.setZKPRequest(query.requestId, {
         metadata: 'metadata',
         validator: validatorAddressSig,
-        data: packValidatorParams(ageQueries[i])
+        data: packValidatorParams(query)
       });
 
       console.log(tx.hash);
