@@ -41,10 +41,10 @@ async function main() {
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
   // sig:validator:    // current sig validator address on mumbai
-  const validatorAddressSig = '0xB574207F445507016C4b176A92A74b9ecf3CA11b';
+  const validatorAddressSig = '0x2b098c24Db48C84426967cdDF8CD235087CdA315';
 
   // mtp:validator:    // current mtp validator address on mumbai
-  const validatorAddressMTP = '0xf43Ace301b6b29b7FFEE786335ef25ce1dfa1a0A';
+  const validatorAddressMTP = '0x4332C2F58dcAAb0cC4d264fb0022aC1fE3D6Fe9d';
 
   const query = {
     schema: schema,
