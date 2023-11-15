@@ -40,12 +40,11 @@ async function main() {
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
-  // mtp:validator: 0xf43Ace301b6b29b7FFEE786335ef25ce1dfa1a0A   // current mtp validator address on mumbai
-  // sig:validator: 0xB574207F445507016C4b176A92A74b9ecf3CA11b   // current sig validator address on mumbai
+  // sig:validator:    // current sig validator address on mumbai
+  const validatorAddressSig = '0xB574207F445507016C4b176A92A74b9ecf3CA11b';
 
-  // mtp:validator:    // current mtp validator address on main
-  // sig:validator:    // current sig validator address on main
-  const validatorAddress = '0xB574207F445507016C4b176A92A74b9ecf3CA11b';
+  // mtp:validator:    // current mtp validator address on mumbai
+  const validatorAddressMTP = '0xf43Ace301b6b29b7FFEE786335ef25ce1dfa1a0A';
 
   const query = {
     schema: schema,
@@ -66,7 +65,8 @@ async function main() {
     skipClaimRevocationCheck: false
   };
 
-  const requestId = await erc20instance.TRANSFER_REQUEST_ID();
+  const requestIdSig = await erc20instance.TRANSFER_REQUEST_ID_SIG_VALIDATOR();
+  const requestIdMtp = await erc20instance.TRANSFER_REQUEST_ID_MTP_VALIDATOR();
 
   const invokeRequestMetadata = {
     id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
@@ -83,7 +83,7 @@ async function main() {
       },
       scope: [
         {
-          id: requestId,
+          id: requestIdSig,
           circuitId: circuitIdSig,
           query: {
             allowedIssuers: ['*'],
@@ -102,28 +102,25 @@ async function main() {
 
   try {
     // sig request set
-    const tx = await erc20instance.setZKPRequest(requestId, {
+    const txSig = await erc20instance.setZKPRequest(requestIdSig, {
       metadata: JSON.stringify(invokeRequestMetadata),
-      validator: validatorAddress,
+      validator: validatorAddressSig,
       data: packValidatorParams(query)
     });
 
+    query.circuitIds = [circuitIdMTP];
+    invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
+    invokeRequestMetadata.body.scope[0].id = requestIdMtp;
+
     // mtp request set
-    const tx = await erc20instance.setZKPRequest(requestId, {
+    const txMtp = await erc20instance.setZKPRequest(requestIdMtp, {
       metadata: JSON.stringify(invokeRequestMetadata),
-      validator: validatorAddress,
+      validator: validatorAddressMTP,
       data: packValidatorParams(query)
     });
   } catch (e) {
     console.log('error: ', e);
   }
-
-  const outputJson = {
-    circuitId,
-    token: erc20instance.address,
-    network: process.env.HARDHAT_NETWORK
-  };
-  fs.writeFileSync(pathOutputJson, JSON.stringify(outputJson, null, 1));
 }
 
 main()

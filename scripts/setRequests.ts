@@ -1,13 +1,34 @@
 import { ethers } from 'hardhat';
 import { packValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash } from '../test/utils/utils';
+const Operators = {
+  NOOP: 0, // No operation, skip query verification in circuit
+  EQ: 1, // equal
+  LT: 2, // less than
+  GT: 3, // greater than
+  IN: 4, // in
+  NIN: 5, // not in
+  NE: 6 // not equal
+};
+
+export const QueryOperators = {
+  $noop: Operators.NOOP,
+  $eq: Operators.EQ,
+  $lt: Operators.LT,
+  $gt: Operators.GT,
+  $in: Operators.IN,
+  $nin: Operators.NIN,
+  $ne: Operators.NE
+};
 
 async function main() {
-  const validatorAddressSig = '0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b';
-  const validatorAddressMtp = '0x5f24dD9FbEa358B9dD96daA281e82160fdefD3CD';
+  // sig:validator:    // current sig validator address on mumbai
+  const validatorAddressSig = '0xB574207F445507016C4b176A92A74b9ecf3CA11b';
 
-  // const erc20verifierAddress = "0xa3Bc012FCf034bee8d16161730CE4eAb34C35100"; //with mtp validatorc
-  const erc20verifierAddress = '0x7C14Aa764130852A8B64BA7058bf71E4292d677F'; //with sig    validatorc
+  // mtp:validator:    // current mtp validator address on mumbai
+  const validatorAddressMTP = '0xf43Ace301b6b29b7FFEE786335ef25ce1dfa1a0A';
+
+  const erc20verifierAddress = '0x32231f2c3823f1394E4FEb06A8FFCb06F69D1B15'; //with sig    validatorc
 
   const owner = (await ethers.getSigners())[0];
 
@@ -16,160 +37,183 @@ async function main() {
 
   // await erc20Verifier.deployed();
   console.log(erc20Verifier, ' attached to:', erc20Verifier.address);
+  const schema = '74977327600848231385663280181476307657';
+
+  // set default query
+  const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
+  const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
+
+  const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
+  const type = 'KYCAgeCredential';
+  const schemaClaimPathKey =
+    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
 
   // set default query
 
   const slotIndex = 0;
   const queryHash = '';
-  const circuitIds = ['credentialAtomicQueryMTPV2OnChain'];
-  const metadata = 'test medatada';
+  const circuitIds = [circuitIdSig];
   const skipClaimRevocationCheck = false;
+  const allowedIssuers = [];
   const ageQueries = [
     // EQ
     {
       requestId: 100,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 1,
       value: [19960424, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     //     // LT
     {
       requestId: 200,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 2,
       value: [20020101, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // GT
     {
       requestId: 300,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 3,
       value: [500, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // IN
     {
       requestId: 400,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 4,
       value: [...new Array(63).fill(0), 19960424],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // NIN
     {
       requestId: 500,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 5,
       value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // NE
     {
       requestId: 600,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 6,
       value: [500, ...new Array(63).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // EQ (corner)
 
     {
       requestId: 150,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 1,
       value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
 
     // LT
     {
       requestId: 250,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 2,
       value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // GT
     {
       requestId: 350,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 3,
       value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // IN corner
 
     {
       requestId: 450,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 4,
       value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // NIN corner
     {
       requestId: 550,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 5,
       value: [...new Array(63).fill(0), 19960424],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     },
     // NE corner
     {
       requestId: 650,
-      schema: '74977327600848231385663280181476307657',
-      claimPathKey: '20376033832371109177683048456014525905119173674985843915445634726167450989630',
+      schema: schema,
+      claimPathKey: schemaClaimPathKey,
       operator: 6,
       value: [...new Array(64).fill(0)],
       slotIndex,
       queryHash,
       circuitIds,
+      allowedIssuers,
       skipClaimRevocationCheck
     }
   ];
@@ -178,22 +222,77 @@ async function main() {
     for (let i = 0; i < ageQueries.length; i++) {
       const query = ageQueries[i];
       console.log(query.requestId);
+
+      const operatorKey =
+        Object.keys(QueryOperators)[Object.values(QueryOperators).indexOf(query.operator)];
+
       query.queryHash = calculateQueryHash(
         query.value,
         query.schema,
         query.slotIndex,
         query.operator,
         query.claimPathKey,
-        1
+        0
       ).toString();
-      let tx = await erc20Verifier.setZKPRequest(query.requestId, {
-        metadata: 'metadata',
+
+      const invokeRequestMetadata = {
+        id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
+        typ: 'application/iden3comm-plain-json',
+        type: 'https://iden3-communication.io/proofs/1.0/contract-invoke-request',
+        thid: '7f38a193-0918-4a48-9fac-36adfdb8b542',
+        body: {
+          reason: 'for testing',
+          transaction_data: {
+            contract_address: erc20verifierAddress,
+            method_id: 'b68967e2',
+            chain_id: 80001,
+            network: 'polygon-mumbai'
+          },
+          scope: [
+            {
+              id: query.requestId,
+              circuitId: circuitIdSig,
+              query: {
+                allowedIssuers: ['*'],
+                context: schemaUrl,
+                credentialSubject: {
+                  birthday: {
+                    [operatorKey]:
+                      query.operator === Operators.IN || query.operator === Operators.NIN
+                        ? query.value
+                        : query.value[0]
+                  }
+                },
+                type: type
+              }
+            }
+          ]
+        }
+      };
+
+      const tx = await erc20Verifier.setZKPRequest(query.requestId, {
+        metadata: JSON.stringify(invokeRequestMetadata),
         validator: validatorAddressSig,
         data: packValidatorParams(query)
       });
 
       console.log(tx.hash);
       await tx.wait();
+
+      query.circuitIds = [circuitIdMTP];
+      query.requestId = query.requestId + 1000;
+      console.log(query.requestId);
+
+      invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
+      invokeRequestMetadata.body.scope[0].id = query.requestId;
+      // mtp request set
+      const txMtp = await erc20Verifier.setZKPRequest(query.requestId, {
+        metadata: JSON.stringify(invokeRequestMetadata),
+        validator: validatorAddressMTP,
+        data: packValidatorParams(query)
+      });
+      console.log(txMtp.hash);
+      await txMtp.wait();
     }
   } catch (e) {
     console.log('error: ', e);

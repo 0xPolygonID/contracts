@@ -9,7 +9,7 @@ import {
 import { packValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
 
 const tenYears = 315360000;
-describe.only('ERC 20 test', function () {
+describe('ERC 20 test', function () {
   let state: any, sig: any, mtp: any;
 
   beforeEach(async () => {
