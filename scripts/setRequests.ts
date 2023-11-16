@@ -23,12 +23,12 @@ export const QueryOperators = {
 
 async function main() {
   // sig:validator:    // current sig validator address on mumbai
-  const validatorAddressSig = '0x2b098c24Db48C84426967cdDF8CD235087CdA315';
+  const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
 
   // mtp:validator:    // current mtp validator address on mumbai
-  const validatorAddressMTP = '0x4332C2F58dcAAb0cC4d264fb0022aC1fE3D6Fe9d';
+  const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
 
-  const erc20verifierAddress = '0xeDB5a9231D87040Cf1d0c308f87281bC73176984'; //with sig    validatorc
+  const erc20verifierAddress = '0x82c5F9dC8e0b4f177ed5EBA5Ca6Ec55938EBe4f3'; //with sig    validatorc
 
   const owner = (await ethers.getSigners())[0];
 
@@ -42,33 +42,34 @@ async function main() {
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
-  const schemaUrl =
-    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
   const type = 'KYCAgeCredential';
-  const schema = '74977327600848231385663280181476307657';
-  const schemaClaimPathKey =
-    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  const slotIndex = 0;
+
   const queryHash = '';
   const circuitIds = [circuitIdSig];
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
+  const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
+  const schema = '74977327600848231385663280181476307657';
+  const schemaClaimPathKey =
+    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+  const slotIndex = 0;
   const claimPathDoesntExist = 0;
+  const requestIdModifier = 1;
 
-  /*
-     // init these values for non-merklized claim use case
-     const schemaUrl =
-    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
-    const schemaClaimPathKey = '0';
-    const slotIndex = 2;
-    const claimPathDoesntExist = 1;
-    const schema = '198285726510688200335207273836123338699';
-   */
+  // init these values for non-merklized credential use case
+  // const schemaUrl =
+  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
+  // const schemaClaimPathKey = '0';
+  // const slotIndex = 2;
+  // const claimPathDoesntExist = 1;
+  // const schema = '198285726510688200335207273836123338699';
+  // const requestIdModifier = 100;
 
   const ageQueries = [
     // EQ
     {
-      requestId: 100,
+      requestId: 100 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 1,
@@ -77,11 +78,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     //     // LT
     {
-      requestId: 200,
+      requestId: 200 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 2,
@@ -90,11 +92,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // GT
     {
-      requestId: 300,
+      requestId: 300 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 3,
@@ -103,11 +106,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // IN
     {
-      requestId: 400,
+      requestId: 400 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 4,
@@ -116,11 +120,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // NIN
     {
-      requestId: 500,
+      requestId: 500 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 5,
@@ -129,11 +134,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // NE
     {
-      requestId: 600,
+      requestId: 600 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 6,
@@ -142,12 +148,13 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // EQ (corner)
 
     {
-      requestId: 150,
+      requestId: 150 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 1,
@@ -156,12 +163,13 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
 
     // LT
     {
-      requestId: 250,
+      requestId: 250 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 2,
@@ -170,11 +178,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // GT
     {
-      requestId: 350,
+      requestId: 350 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 3,
@@ -183,12 +192,13 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // IN corner
 
     {
-      requestId: 450,
+      requestId: 450 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 4,
@@ -197,11 +207,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // NIN corner
     {
-      requestId: 550,
+      requestId: 550 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 5,
@@ -210,11 +221,12 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     },
     // NE corner
     {
-      requestId: 650,
+      requestId: 650 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: 6,
@@ -223,7 +235,8 @@ async function main() {
       queryHash,
       circuitIds,
       allowedIssuers,
-      skipClaimRevocationCheck
+      skipClaimRevocationCheck,
+      claimPathNotExists: claimPathDoesntExist
     }
   ];
 

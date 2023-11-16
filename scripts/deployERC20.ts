@@ -32,6 +32,7 @@ async function main() {
   const symbol = 'ERCZKP';
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
   const erc20instance = await ERC20ContractFactory.deploy(name, symbol);
+  const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
   await erc20instance.deployed();
   console.log(contractName, ' deployed to:', erc20instance.address);
@@ -41,10 +42,10 @@ async function main() {
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
   // sig:validator:    // current sig validator address on mumbai
-  const validatorAddressSig = '0x2b098c24Db48C84426967cdDF8CD235087CdA315';
+  const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
 
   // mtp:validator:    // current mtp validator address on mumbai
-  const validatorAddressMTP = '0x4332C2F58dcAAb0cC4d264fb0022aC1fE3D6Fe9d';
+  const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
 
   const query = {
     schema: schema,
@@ -58,11 +59,12 @@ async function main() {
       slotIndex,
       Operators.LT,
       schemaClaimPathKey,
-      0 // 0 for inclusion (merklized credentials) - 1 for non-merklized
+      claimPathDoesntExist
     ).toString(),
     circuitIds: [circuitIdSig],
     allowedIssuers: [],
-    skipClaimRevocationCheck: false
+    skipClaimRevocationCheck: false,
+    claimPathNotExists: claimPathDoesntExist
   };
 
   const requestIdSig = await erc20instance.TRANSFER_REQUEST_ID_SIG_VALIDATOR();

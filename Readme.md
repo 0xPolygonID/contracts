@@ -14,8 +14,8 @@ Current addresses on Polygon Mumbai testnet. (V1.0.0)
 
 |                    |                             Sig                             |                             MTP                              |
 |:------------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
-|   **Validators**   |         0x2b098c24Db48C84426967cdDF8CD235087CdA315          |          0x4332C2F58dcAAb0cC4d264fb0022aC1fE3D6Fe9d          |
-| **ERC20 examples** | 0xeDB5a9231D87040Cf1d0c308f87281bC73176984 (request id = 1) | 0xeDB5a9231D87040Cf1d0c308f87281bC73176984  (request id = 2) |
+|   **Validators**   |         0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878          |          0x0682fbaA2E4C478aD5d24d992069dba409766121          |
+| **ERC20 examples** | 0x82c5F9dC8e0b4f177ed5EBA5Ca6Ec55938EBe4f3 (request id = 1) | 0x82c5F9dC8e0b4f177ed5EBA5Ca6Ec55938EBe4f3  (request id = 2) |
 
 
 
