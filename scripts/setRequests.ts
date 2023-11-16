@@ -28,7 +28,7 @@ async function main() {
   // mtp:validator:    // current mtp validator address on mumbai
   const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
 
-  const erc20verifierAddress = '0x82c5F9dC8e0b4f177ed5EBA5Ca6Ec55938EBe4f3'; //with sig    validatorc
+  const erc20verifierAddress = '0xD75638D319B1aE2a9491DC61f87a800AD362D168'; //with sig    validatorc
 
   const owner = (await ethers.getSigners())[0];
 
@@ -48,23 +48,23 @@ async function main() {
   const circuitIds = [circuitIdSig];
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
-  const schemaUrl =
-    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
-  const schema = '74977327600848231385663280181476307657';
-  const schemaClaimPathKey =
-    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  const slotIndex = 0;
-  const claimPathDoesntExist = 0;
-  const requestIdModifier = 1;
+  // const schemaUrl =
+  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
+  // const schema = '74977327600848231385663280181476307657';
+  // const schemaClaimPathKey =
+  //   '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+  // const slotIndex = 0;
+  // const claimPathDoesntExist = 0;
+  // const requestIdModifier = 1;
 
   // init these values for non-merklized credential use case
-  // const schemaUrl =
-  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
-  // const schemaClaimPathKey = '0';
-  // const slotIndex = 2;
-  // const claimPathDoesntExist = 1;
-  // const schema = '198285726510688200335207273836123338699';
-  // const requestIdModifier = 100;
+  const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
+  const schemaClaimPathKey = '0';
+  const slotIndex = 2;
+  const claimPathDoesntExist = 1;
+  const schema = '198285726510688200335207273836123338699';
+  const requestIdModifier = 100;
 
   const ageQueries = [
     // EQ

@@ -82,6 +82,7 @@ describe('ERC 20 test', function () {
       queryHash: ethers.BigNumber.from(
         '1496222740463292783938163206931059379817846775593932664024082849882751356658'
       ),
+      claimPathNotExists: 0,
       metadata: 'test medatada',
       skipClaimRevocationCheck: validator === 'credentialAtomicQuerySigV2OnChain' ? false : true
     };
@@ -97,9 +98,12 @@ describe('ERC 20 test', function () {
     const requestData = await token.getZKPRequest(requestId);
     const parsed = unpackValidatorParams(requestData.data);
 
-    expect(parsed.queryHash.toString()).to.be.equal(
-      '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-    ); // check that query is assigned
+    expect(parsed.queryHash.toString()).to.be.equal(query.queryHash);
+    expect(parsed.claimPathKey.toString()).to.be.equal(query.claimPathKey.toString());
+    expect(parsed.circuitIds[0].toString()).to.be.equal(query.circuitIds[0].toString());
+    expect(parsed.operator.toString()).to.be.equal(query.operator.toString());
+    expect(parsed.claimPathNotExists.toString()).to.be.equal(query.claimPathNotExists.toString());
+    // check that query is assigned
     expect(await token.getZKPRequestsCount()).to.be.equal(1);
 
     console.log('supported requests - one');

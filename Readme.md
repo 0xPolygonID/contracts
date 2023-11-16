@@ -12,12 +12,20 @@ Also, it contains the example of ERC20 based smart contract with enabled zkp ver
 
 Current addresses on Polygon Mumbai testnet. (V1.0.0)
 
-|                    |                             Sig                             |                             MTP                              |
-|:------------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
-|   **Validators**   |         0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878          |          0x0682fbaA2E4C478aD5d24d992069dba409766121          |
-| **ERC20 examples** | 0x82c5F9dC8e0b4f177ed5EBA5Ca6Ec55938EBe4f3 (request id = 1) | 0x82c5F9dC8e0b4f177ed5EBA5Ca6Ec55938EBe4f3  (request id = 2) |
+|                   |                             Sig                             |                             MTP                              |
+|:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
+|   **Verifier**    |         0x8024014f73BcCAEe048784d835A36c49e96F2806          |          0xF71d97Fc0262bB2e5B20912a6861da0B617a07Aa          |
+|  **Validators**   |         0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878          |          0x0682fbaA2E4C478aD5d24d992069dba409766121          |
+| **ERC20 example** | 0xD75638D319B1aE2a9491DC61f87a800AD362D168 (request id = 1) | 0xD75638D319B1aE2a9491DC61f87a800AD362D168  (request id = 2) |
 
 
+
+Current addresses on Polygon Main  (V1.0.0)
+|                    |                    Sig                   |                    MTP                    |
+|:------------------:|:------------------------------------------:|:-----------------------------------------:|
+|   **Verifier**     |  | |
+|  **Validators**    |  | |
+| **ERC20 example**  |  | |
 
 
 

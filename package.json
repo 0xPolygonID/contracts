@@ -57,9 +57,9 @@
     "deploy:mumbai:erc20": "npx hardhat run scripts/deployERC20.ts --network mumbai",
     "deploy:mumbai:sig": "npx hardhat run scripts/deploySigValidator.ts --network mumbai",
     "deploy:mumbai:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mumbai",
-    "deploy:mainnet:sig": "npx hardhat run scripts/deploySigValidator.ts --network mainnet",
-    "deploy:mainnet:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mainnet",
-    "deploy:mainnet:erc20": "npx hardhat run scripts/deployERC20.ts --network mainnet",
+    "deploy:main:sig": "npx hardhat run scripts/deploySigValidator.ts --network main",
+    "deploy:main:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network main",
+    "deploy:main:erc20": "npx hardhat run scripts/deployERC20.ts --network main",
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "lint:contracts": "npx solhint contracts/**/*.sol",
     "lint:contracts:format": "npx prettier --write contracts/**/*.sol"
