@@ -1,9 +1,6 @@
 import { ethers } from 'hardhat';
-import fs from 'fs';
-import path from 'path';
 import { packValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash } from '../test/utils/utils';
-const pathOutputJson = path.join(__dirname, './deploy_erc20verifier_output.json');
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -41,12 +38,25 @@ async function main() {
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
-  // sig:validator:    // current sig validator address on mumbai
+  // current sig validator address on mumbai
   const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
 
-  // mtp:validator:    // current mtp validator address on mumbai
+  // current mtp validator address on mumbai
   const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
 
+  const chainId = 80001;
+
+  const network = 'polygon-mumbai';
+
+  // current sig validator address on polygon main
+  // const validatorAddressSig = '0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb';
+  //
+  // // current mtp validator address on polygon main
+  // const validatorAddressMTP = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
+  //
+  // const network = 'polygon-main';
+  //
+  // const chainId = 137;
   const query = {
     schema: schema,
     claimPathKey: schemaClaimPathKey,
@@ -80,8 +90,8 @@ async function main() {
       transaction_data: {
         contract_address: erc20instance.address,
         method_id: 'b68967e2',
-        chain_id: 80001,
-        network: 'polygon-mumbai'
+        chain_id: chainId,
+        network: network
       },
       scope: [
         {
@@ -114,12 +124,17 @@ async function main() {
     invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
     invokeRequestMetadata.body.scope[0].id = requestIdMtp;
 
+    console.log(txSig.hash);
+    await txSig.wait();
     // mtp request set
     const txMtp = await erc20instance.setZKPRequest(requestIdMtp, {
       metadata: JSON.stringify(invokeRequestMetadata),
       validator: validatorAddressMTP,
       data: packValidatorParams(query)
     });
+
+    console.log(txMtp.hash);
+    await txMtp.wait();
   } catch (e) {
     console.log('error: ', e);
   }

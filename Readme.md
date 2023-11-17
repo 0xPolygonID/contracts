@@ -1,12 +1,12 @@
-## ZKP Verifier [WIP]
+## ERC20 example
 
-Repository contains implementation for onchain zero-knowledge proof verification.
+Repository contains implementation of the example smart contract and deployed sig/mtp validator onchain zero-knowledge proof verification.
 
-We aim to provide solidity implementations of:
+We aim to provide deployment of:
 
-- Atomic query MTP validator
-- Atomic query Signature validator
-- ZKP Verifier standard
+- Atomic query MTP validator https://github.com/iden3/contracts/blob/master/contracts/validators/CredentialAtomicQueryMTPValidator.sol
+- Atomic query Signature validator https://github.com/iden3/contracts/blob/master/contracts/validators/CredentialAtomicQuerySigValidator.sol
+- Example contract that inherits ZKP Verifier contract https://github.com/iden3/contracts/blob/master/contracts/verifiers/ZKPVerifier.sol
 
 Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
 
@@ -21,12 +21,12 @@ Current addresses on Polygon Mumbai testnet. (V1.0.0)
 
 
 Current addresses on Polygon Main  (V1.0.0)
-|                    |                    Sig                   |                    MTP                    |
-|:------------------:|:------------------------------------------:|:-----------------------------------------:|
-|   **Verifier**     |  | |
-|  **Validators**    |  | |
-| **ERC20 example**  |  | |
 
+|                   |                                Sig                                |                                MTP                                |
+|:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
+|   **Verifier**    |            0xaf48CC9C2Ef728b7c4A903c9f5472498f8AED5E1             |            0x1008De1794be8fAba4fc33db6dff59B1d1Ac3a64             |
+|  **Validators**   |            0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb             |            0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d             |
+| **ERC20 example** | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B (request id = 1 (sig)) | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B  (request id = 2 (mtp) |
 
 
 
