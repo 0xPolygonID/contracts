@@ -1,25 +1,25 @@
-import { ethers, upgrades } from "hardhat";
-import { StateDeployHelper } from "../helpers/StateDeployHelper";
-import { Contract } from "ethers";
-import { deployPoseidonFacade } from "./deploy-poseidons.util";
+import { ethers, upgrades } from 'hardhat';
+import { StateDeployHelper } from '../helpers/StateDeployHelper';
+import { Contract } from 'ethers';
+import { deployPoseidonFacade } from './deploy-poseidons.util';
 
 export async function deploySpongePoseidon(poseidon6ContractAddress: string): Promise<Contract> {
-  const SpongePoseidonFactory = await ethers.getContractFactory("SpongePoseidon", {
+  const SpongePoseidonFactory = await ethers.getContractFactory('SpongePoseidon', {
     libraries: {
-      PoseidonUnit6L: poseidon6ContractAddress,
-    },
+      PoseidonUnit6L: poseidon6ContractAddress
+    }
   });
 
   const spongePoseidon = await SpongePoseidonFactory.deploy();
   await spongePoseidon.deployed();
-  console.log("SpongePoseidon deployed to:", spongePoseidon.address);
+  console.log('SpongePoseidon deployed to:', spongePoseidon.address);
   return spongePoseidon;
 }
 
 export async function deployValidatorContracts(
   verifierContractWrapperName: string,
   validatorContractName: string,
-  stateAddress = ""
+  stateAddress = ''
 ): Promise<{
   state: any;
   verifierWrapper: any;
@@ -27,7 +27,7 @@ export async function deployValidatorContracts(
 }> {
   if (!stateAddress) {
     const stateDeployHelper = await StateDeployHelper.initialize();
-    const { state } = await stateDeployHelper.deployStateV2();
+    const { state } = await stateDeployHelper.deployState();
     stateAddress = state.address;
   }
 
@@ -37,24 +37,24 @@ export async function deployValidatorContracts(
   const validatorContractVerifierWrapper = await ValidatorContractVerifierWrapper.deploy();
 
   await validatorContractVerifierWrapper.deployed();
-  console.log("Validator Verifier Wrapper deployed to:", validatorContractVerifierWrapper.address);
+  console.log('Validator Verifier Wrapper deployed to:', validatorContractVerifierWrapper.address);
 
   const ValidatorContract = await ethers.getContractFactory(validatorContractName);
 
   const validatorContractProxy = await upgrades.deployProxy(ValidatorContract, [
     validatorContractVerifierWrapper.address,
-    stateAddress,
+    stateAddress
   ]);
 
   await validatorContractProxy.deployed();
   console.log(`${validatorContractName} deployed to: ${validatorContractProxy.address}`);
   const signers = await ethers.getSigners();
 
-  const state = await ethers.getContractAt("StateV2", stateAddress, signers[0]);
+  const state = await ethers.getContractAt('State', stateAddress, signers[0]);
   return {
     validator: validatorContractProxy,
     verifierWrapper: validatorContractVerifierWrapper,
-    state,
+    state
   };
 }
 
@@ -64,18 +64,10 @@ export async function deployERC20ZKPVerifierToken(
 ): Promise<{
   address: string;
 }> {
-  const owner = (await ethers.getSigners())[0];
-
-  const poseidoneFacede = await deployPoseidonFacade();
-  const ERC20Verifier = await ethers.getContractFactory("ERC20Verifier", {
-    libraries: {
-      PoseidonFacade: poseidoneFacede.address,
-    },
-  });
+  const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
   const erc20Verifier = await ERC20Verifier.deploy(name, symbol);
   await erc20Verifier.deployed();
-  console.log("ERC20Verifier deployed to:", erc20Verifier.address);
-
+  console.log('ERC20Verifier deployed to:', erc20Verifier.address);
   return erc20Verifier;
 }
 
@@ -94,9 +86,9 @@ export function prepareInputs(json: any): VerificationInfo {
     pi_a: pi_a.slice(0, 2),
     pi_b: [
       [p2, p1],
-      [p4, p3],
+      [p4, p3]
     ],
-    pi_c: pi_c.slice(0, 2),
+    pi_c: pi_c.slice(0, 2)
   };
 
   return { inputs: pub_signals, ...preparedProof };
@@ -107,7 +99,7 @@ export function toBigNumber({ inputs, pi_a, pi_b, pi_c }: VerificationInfo) {
     inputs: inputs.map((input) => ethers.BigNumber.from(input)),
     pi_a: pi_a.map((input) => ethers.BigNumber.from(input)),
     pi_b: pi_b.map((arr) => arr.map((input) => ethers.BigNumber.from(input))),
-    pi_c: pi_c.map((input) => ethers.BigNumber.from(input)),
+    pi_c: pi_c.map((input) => ethers.BigNumber.from(input))
   };
 }
 
@@ -125,14 +117,14 @@ export async function publishState(
     inputs: [id, oldState, newState, isOldStateGenesis],
     pi_a,
     pi_b,
-    pi_c,
+    pi_c
   } = prepareInputs(json);
 
   const transitStateTx = await state.transitState(
     id,
     oldState,
     newState,
-    isOldStateGenesis === "1",
+    isOldStateGenesis === '1',
     pi_a,
     pi_b,
     pi_c
@@ -146,12 +138,12 @@ export async function publishState(
     newState,
     id,
     blockNumber,
-    timestamp,
+    timestamp
   };
 }
 
 export function toJson(data) {
-  return JSON.stringify(data, (_, v) => (typeof v === "bigint" ? `${v}n` : v)).replace(
+  return JSON.stringify(data, (_, v) => (typeof v === 'bigint' ? `${v}n` : v)).replace(
     /"(-?\d+)n"/g,
     (_, a) => a
   );
