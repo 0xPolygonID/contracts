@@ -48,7 +48,6 @@ export class NonMerklizedOnchainIdentityDeployHelper {
         IdentityLib: il.address
       }
     });
-    // const IdentityFactory = await ethers.getContractFactory("Identity");
     const Identity = await upgrades.deployProxy(
       IdentityFactory,
       [stateContractAddress, jsonldSchemaURL, jsonldbSchemaHash, jsonSchemaURL, credentialType],

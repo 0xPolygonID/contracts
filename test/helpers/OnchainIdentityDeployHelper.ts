@@ -45,7 +45,6 @@ export class OnchainIdentityDeployHelper {
         IdentityLib: il.address
       }
     });
-    // const IdentityFactory = await ethers.getContractFactory("Identity");
     const Identity = await upgrades.deployProxy(IdentityFactory, [state.address], {
       unsafeAllowLinkedLibraries: true
     });

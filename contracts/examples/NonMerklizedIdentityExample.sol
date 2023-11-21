@@ -14,16 +14,6 @@ import { PrimitiveTypeUtils } from "@iden3/contracts/lib/PrimitiveTypeUtils.sol"
 contract NonMerklizedIdentityExample is IdentityBase, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
-    // These variables are used to create core claims
-    // They represent the type of claim
-    string private jsonldSchemaURL;
-    uint256 private jsonldSchemaHash;
-    string private jsonSchemaURL;
-    string private credentialType;
-
-    // countOfIssuedClaims count of issued claims for incrementing revocation nonce for new claims
-    uint64 private countOfIssuedClaims = 0;
-   
     // ClaimInfo represents a claim and its metadata
     struct ClaimInfo {
         // metadata
@@ -35,8 +25,38 @@ contract NonMerklizedIdentityExample is IdentityBase, OwnableUpgradeable {
         uint256[8] claim;
     }
 
+    uint256[500] private __gap_before;
+
+    // These variables are used to create core claims
+    // They represent the type of claim
+    string private jsonldSchemaURL;
+    uint256 private jsonldSchemaHash;
+    string private jsonSchemaURL;
+    string private credentialType;
+
+    // countOfIssuedClaims count of issued claims for incrementing revocation nonce for new claims
+    uint64 private countOfIssuedClaims = 0;
+   
     // claimsMap claims storage
     mapping(uint256 => mapping(string => ClaimInfo)) private claimsMap;
+   
+    uint256[44] private __gap_after;
+
+    function initialize(
+        address _stateContractAddr,
+        string calldata _jsonldSchemaURL, 
+        uint256 _jsonldSchemaHash,
+        string calldata _jsonSchemaURL,
+        string calldata _credentialType
+    ) public initializer {
+        jsonldSchemaURL = _jsonldSchemaURL;
+        jsonldSchemaHash = _jsonldSchemaHash;
+        jsonSchemaURL = _jsonSchemaURL;
+        credentialType = _credentialType;
+
+        IdentityBase.initialize(_stateContractAddr);
+        __Ownable_init();
+    }
 
     // saveClaim save a claim to storage
     function saveClaim(
@@ -82,33 +102,6 @@ contract NonMerklizedIdentityExample is IdentityBase, OwnableUpgradeable {
         credentialType = _credentialType;
     }
 
-
-    // This empty reserved space is put in place to allow future versions
-    // of the State contract to inherit from other contracts without a risk of
-    // breaking the storage layout. This is necessary because the parent contracts in the
-    // future may introduce some storage variables, which are placed before the State
-    // contract's storage variables.
-    // (see https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable#storage-gaps)
-    // slither-disable-next-line shadowing-state
-    // slither-disable-next-line unused-state
-    uint256[500] private __gap;
-
-    function initialize(
-        address _stateContractAddr,
-        string calldata _jsonldSchemaURL, 
-        uint256 _jsonldSchemaHash,
-        string calldata _jsonSchemaURL,
-        string calldata _credentialType
-    ) public initializer {
-        jsonldSchemaURL = _jsonldSchemaURL;
-        jsonldSchemaHash = _jsonldSchemaHash;
-        jsonSchemaURL = _jsonSchemaURL;
-        credentialType = _credentialType;
-
-        IdentityBase.initialize(_stateContractAddr);
-        __Ownable_init();
-    }
-
     // addClaimAndTransit add a claim to the identity and transit state
     function addClaimAndTransit(uint256[8] memory _claim) private {
         identity.addClaim(_claim);
@@ -143,7 +136,7 @@ contract NonMerklizedIdentityExample is IdentityBase, OwnableUpgradeable {
             expirationDate: 3183110232,
             // data
             merklizedRoot: 0,
-            indexDataSlotA: convertAddressToUint256(msg.sender),
+            indexDataSlotA: PrimitiveTypeUtils.addressToUint256(msg.sender),
             indexDataSlotB: weiToGwei(msg.sender.balance),
             valueDataSlotA: 0,
             valueDataSlotB: 0
@@ -155,9 +148,5 @@ contract NonMerklizedIdentityExample is IdentityBase, OwnableUpgradeable {
 
     function weiToGwei(uint weiAmount) internal pure returns (uint256) {
         return weiAmount / 1e9;
-    }
-
-    function convertAddressToUint256(address _addr) internal pure returns (uint256) {
-        return uint256(uint160(_addr));
     }
 }
