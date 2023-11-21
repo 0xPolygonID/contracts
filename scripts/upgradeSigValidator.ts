@@ -5,7 +5,7 @@ import { StateDeployHelper } from '../test/helpers/StateDeployHelper';
 const pathOutputJson = path.join(__dirname, './deploy_validator_output.json');
 
 async function main() {
-  const validatorContractAddress = '0x2b098c24Db48C84426967cdDF8CD235087CdA315'; // mumbai
+  const validatorContractAddress = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878'; // mumbai
   const validatorContractName = 'CredentialAtomicQuerySigValidator';
 
   const stateDeployHelper = await StateDeployHelper.initialize();

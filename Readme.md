@@ -10,7 +10,7 @@ We aim to provide deployment of:
 
 Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
 
-Current addresses on Polygon Mumbai testnet. (V1.0.0)
+Current addresses on Polygon Mumbai testnet. (V1.0.1)
 
 |                   |                             Sig                             |                             MTP                              |
 |:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
@@ -20,7 +20,7 @@ Current addresses on Polygon Mumbai testnet. (V1.0.0)
 
 
 
-Current addresses on Polygon Main  (V1.0.0)
+Current addresses on Polygon Main  (V1.0.1)
 
 |                   |                                Sig                                |                                MTP                                |
 |:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
