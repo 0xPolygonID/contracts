@@ -10,18 +10,13 @@
     "@types/chai-as-promised": "^7.1.5",
     "@types/mocha": "^9.1.1",
     "@types/node": "^12.20.52",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
     "async": "^3.2.3",
     "big-integer": "^1.6.51",
     "chai": "^4.3.6",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.4.1",
-    "eslint-plugin-promise": "^5.2.0",
+    "@iden3/eslint-config": "https://github.com/iden3/eslint-config",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.6.6",
     "hardhat": "^2.9.7",
@@ -35,7 +30,7 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "@iden3/contracts": "1.1.0",
+    "@iden3/contracts": "1.3.2",
     "@openzeppelin/contracts": "^4.6.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "braces": ">=3.0.2",
@@ -49,7 +44,10 @@
     "snarkjs": "^0.4.13",
     "solidity-bytes-utils": "^0.8.0",
     "solidity-coverage": "^0.7.18",
-    "solium": "0.1.3"
+    "solium": "0.1.3",
+    "solhint-plugin-prettier": "^0.0.5",
+    "@iden3/js-crypto": "1.0.3",
+    "@iden3/js-iden3-core": "1.1.0"
   },
   "scripts": {
     "compile": "npx hardhat compile",
@@ -59,8 +57,11 @@
     "deploy:mumbai:erc20": "npx hardhat run scripts/deployERC20.ts --network mumbai",
     "deploy:mumbai:sig": "npx hardhat run scripts/deploySigValidator.ts --network mumbai",
     "deploy:mumbai:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mumbai",
-    "deploy:mainnet:sig": "npx hardhat run scripts/deploySigValidator.ts --network mainnet",
-    "deploy:mainnet:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mainnet",
-    "deploy:mainnet:erc20": "npx hardhat run scripts/deployERC20.ts --network mainnet"
+    "deploy:main:sig": "npx hardhat run scripts/deploySigValidator.ts --network main",
+    "deploy:main:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network main",
+    "deploy:main:erc20": "npx hardhat run scripts/deployERC20.ts --network main",
+    "format": "prettier --write scripts/*.ts test/**/*.ts",
+    "lint:contracts": "npx solhint contracts/**/*.sol",
+    "lint:contracts:format": "npx prettier --write contracts/**/*.sol"
   }
 }

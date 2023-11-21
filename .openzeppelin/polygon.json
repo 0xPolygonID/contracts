@@ -24,6 +24,16 @@
       "address": "0x5956C72D4B36523719DD2c90e5Ca01FaCAe7915B",
       "txHash": "0xf8e547b2cf291ef3a34f898d6fadb852da299df55058276291eb457d08ba3b11",
       "kind": "transparent"
+    },
+    {
+      "address": "0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb",
+      "txHash": "0x3171ecc1a488d4443e458cc9761be0c0d63c0c5d417aedb4f4d171fc193bc361",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d",
+      "txHash": "0x07ff9ff9ae35cad1eba7ac65a19d6957e5491767de7cce6c524e87a9eb504928",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -459,6 +469,404 @@
           "t_contract(StateV2)4272": {
             "label": "contract StateV2",
             "numberOfBytes": "20"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "440c5f94909c36c4ed51ee17199a3a42856c98130bb89c8926e7b9d42bc8b9b6": {
+      "address": "0x3d3763eC0a50CE1AdF83d0b5D99FBE0e3fEB43fb",
+      "txHash": "0xec2d6d83164afd19b669827512903e347b38bd1f858e97e6fa6ed99d70755328",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap_before_base",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)500_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:48"
+          },
+          {
+            "label": "_circuitIdToVerifier",
+            "offset": 0,
+            "slot": "601",
+            "type": "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:50"
+          },
+          {
+            "label": "_supportedCircuitIds",
+            "offset": 0,
+            "slot": "602",
+            "type": "t_array(t_string_storage)dyn_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:51"
+          },
+          {
+            "label": "state",
+            "offset": 0,
+            "slot": "603",
+            "type": "t_contract(IState)778",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:53"
+          },
+          {
+            "label": "revocationStateExpirationTimeout",
+            "offset": 0,
+            "slot": "604",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:55"
+          },
+          {
+            "label": "proofExpirationTimeout",
+            "offset": 0,
+            "slot": "605",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:56"
+          },
+          {
+            "label": "gistRootExpirationTimeout",
+            "offset": 0,
+            "slot": "606",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:57"
+          },
+          {
+            "label": "_inputNameToIndex",
+            "offset": 0,
+            "slot": "607",
+            "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:59"
+          },
+          {
+            "label": "__gap_after_base",
+            "offset": 0,
+            "slot": "608",
+            "type": "t_array(t_uint256)43_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:65"
+          },
+          {
+            "label": "__gap_before",
+            "offset": 0,
+            "slot": "651",
+            "type": "t_array(t_uint256)500_storage",
+            "contract": "CredentialAtomicQuerySigValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQuerySigValidator.sol:23"
+          },
+          {
+            "label": "__gap_after",
+            "offset": 0,
+            "slot": "1151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "CredentialAtomicQuerySigValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQuerySigValidator.sol:31"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)43_storage": {
+            "label": "uint256[43]",
+            "numberOfBytes": "1376"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)500_storage": {
+            "label": "uint256[500]",
+            "numberOfBytes": "16000"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IState)778": {
+            "label": "contract IState",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IVerifier)829": {
+            "label": "contract IVerifier",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)": {
+            "label": "mapping(string => contract IVerifier)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "be0e0d1ea4df4846fe8a085294d65670e31d51a3d8df7db0d36b35c1b0a0b7b7": {
+      "address": "0xba0EB888B1CDD41523d541E0d06246460f0D32a8",
+      "txHash": "0x2c11f23d2d519de26e32511a8e7c63c0f304099a51511e6a445496f46bfd75ed",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap_before_base",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)500_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:48"
+          },
+          {
+            "label": "_circuitIdToVerifier",
+            "offset": 0,
+            "slot": "601",
+            "type": "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:50"
+          },
+          {
+            "label": "_supportedCircuitIds",
+            "offset": 0,
+            "slot": "602",
+            "type": "t_array(t_string_storage)dyn_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:51"
+          },
+          {
+            "label": "state",
+            "offset": 0,
+            "slot": "603",
+            "type": "t_contract(IState)778",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:53"
+          },
+          {
+            "label": "revocationStateExpirationTimeout",
+            "offset": 0,
+            "slot": "604",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:55"
+          },
+          {
+            "label": "proofExpirationTimeout",
+            "offset": 0,
+            "slot": "605",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:56"
+          },
+          {
+            "label": "gistRootExpirationTimeout",
+            "offset": 0,
+            "slot": "606",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:57"
+          },
+          {
+            "label": "_inputNameToIndex",
+            "offset": 0,
+            "slot": "607",
+            "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:59"
+          },
+          {
+            "label": "__gap_after_base",
+            "offset": 0,
+            "slot": "608",
+            "type": "t_array(t_uint256)43_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:65"
+          },
+          {
+            "label": "__gap_before",
+            "offset": 0,
+            "slot": "651",
+            "type": "t_array(t_uint256)500_storage",
+            "contract": "CredentialAtomicQueryMTPValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryMTPValidator.sol:23"
+          },
+          {
+            "label": "__gap_after",
+            "offset": 0,
+            "slot": "1151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "CredentialAtomicQueryMTPValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryMTPValidator.sol:31"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)43_storage": {
+            "label": "uint256[43]",
+            "numberOfBytes": "1376"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)500_storage": {
+            "label": "uint256[500]",
+            "numberOfBytes": "16000"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IState)778": {
+            "label": "contract IState",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IVerifier)829": {
+            "label": "contract IVerifier",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)": {
+            "label": "mapping(string => contract IVerifier)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
           },
           "t_uint256": {
             "label": "uint256",
