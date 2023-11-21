@@ -8,102 +8,138 @@ import { IdentityLib } from "@iden3/contracts/lib/IdentityLib.sol";
 import { IdentityBase } from "@iden3/contracts/lib/IdentityBase.sol";
 import { PrimitiveTypeUtils } from "@iden3/contracts/lib/PrimitiveTypeUtils.sol";
 
+/**
+ * @dev Contract managing nonmerklized onchain identity
+ */
 contract NonMerklizedIdentityExample is IdentityBase, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
-    // represent the current credential type
-    string private schemaURL;
-    uint256 private schemaHash;
-    string private schemaJSON;
+    // These variables are used to create core claims
+    // They represent the type of claim
+    string private jsonldSchemaURL;
+    uint256 private jsonldSchemaHash;
+    string private jsonSchemaURL;
     string private credentialType;
 
-    // claimsMapSize was used for revocationNonce
-    uint64 private claimsMapSize = 0;
+    // countOfIssuedClaims count of issued claims for incrementing revocation nonce for new claims
+    uint64 private countOfIssuedClaims = 0;
    
-    // can represent historical claims
+    // ClaimInfo represents a claim and its metadata
     struct ClaimInfo {
         // metadata
-        string schemaURL;
-        uint256 schemaHash;
-        string schemaJSON;
+        string jsonldSchemaURL;
+        uint256 jsonldSchemaHash;
+        string jsonSchemaURL;
         string credentialType;
         // data
         uint256[8] claim;
     }
 
-    // credential storage
+    // claimsMap claims storage
     mapping(uint256 => mapping(string => ClaimInfo)) private claimsMap;
 
-    function setClaim(
-        uint256 _id, 
+    // saveClaim save a claim to storage
+    function saveClaim(
+        uint256 _id,
         string memory _uuid,
-        uint256[8] memory _claimData
-    ) internal {
+        uint256[8] memory _claim
+    ) private {
         claimsMap[_id][_uuid] = ClaimInfo({
-            schemaURL: schemaURL,
-            schemaHash: schemaHash,
-            schemaJSON: schemaJSON,
+            jsonldSchemaURL: jsonldSchemaURL,
+            jsonldSchemaHash: jsonldSchemaHash,
+            jsonSchemaURL: jsonSchemaURL,
             credentialType: credentialType,
-            claim: _claimData
+            claim: _claim
         }); 
-        claimsMapSize++;
+        countOfIssuedClaims++;
     }
 
+    /**
+     * @dev Get user claim by user id and uuid
+     * @param _userId - user id
+     * @param _uuid - uuid of the claim that was used for issuing claim
+     */
     function getUserClaim(uint256 _userId, string memory _uuid) public view returns (ClaimInfo memory) {
         return claimsMap[_userId][_uuid];
     }
 
+    /**
+     * @dev Set schema
+     * @param _jsonldSchemaURL  - JSONLD schema url
+     * @param _jsonldSchemaHash - JSONLD schema hash. Use this code snippet to calculate hash: https://go.dev/play/p/3id7HAhf-Wi 
+     * @param _jsonSchemaURL  - JSON schema url
+     * @param _credentialType - credential type
+     */
     function setSchema(
-            string memory _schemaURL, 
-            uint256 _schemaHash,
-            string memory _schemaJSON,
+            string memory _jsonldSchemaURL, 
+            uint256 _jsonldSchemaHash,
+            string memory _jsonSchemaURL,
             string memory _credentialType
         ) public onlyOwner {
-        schemaURL = _schemaURL;
-        schemaHash = _schemaHash;
-        schemaJSON = _schemaJSON;
+        jsonldSchemaURL = _jsonldSchemaURL;
+        jsonldSchemaHash = _jsonldSchemaHash;
+        jsonSchemaURL = _jsonSchemaURL;
         credentialType = _credentialType;
     }
 
+
+    // This empty reserved space is put in place to allow future versions
+    // of the State contract to inherit from other contracts without a risk of
+    // breaking the storage layout. This is necessary because the parent contracts in the
+    // future may introduce some storage variables, which are placed before the State
+    // contract's storage variables.
+    // (see https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable#storage-gaps)
+    // slither-disable-next-line shadowing-state
+    // slither-disable-next-line unused-state
     uint256[500] private __gap;
 
     function initialize(
         address _stateContractAddr,
-        string calldata _schemaURL, 
-        uint256 _schemaHash,
-        string calldata _schemaJSON,
+        string calldata _jsonldSchemaURL, 
+        uint256 _jsonldSchemaHash,
+        string calldata _jsonSchemaURL,
         string calldata _credentialType
     ) public initializer {
-        schemaURL = _schemaURL;
-        schemaHash = _schemaHash;
-        schemaJSON = _schemaJSON;
+        jsonldSchemaURL = _jsonldSchemaURL;
+        jsonldSchemaHash = _jsonldSchemaHash;
+        jsonSchemaURL = _jsonSchemaURL;
         credentialType = _credentialType;
 
         IdentityBase.initialize(_stateContractAddr);
         __Ownable_init();
     }
 
-    function addClaimAndTransit(uint256[8] memory _claim) internal {
+    // addClaimAndTransit add a claim to the identity and transit state
+    function addClaimAndTransit(uint256[8] memory _claim) private {
         identity.addClaim(_claim);
         identity.transitState();
     }
 
+    /**
+     * @dev Revoke claim using it's revocationNonce
+     * @param _revocationNonce  - revocation nonce
+     */
     function revokeClaimAndTransit(uint64 _revocationNonce) public onlyOwner {
         identity.revokeClaim(_revocationNonce);
         identity.transitState();
     }
 
+    /**
+     * @dev Issue credential
+     * @param _userId - user id for which the claim is issued
+     * @param _uuid - uuid of the claim
+     */
     function issueCredential(uint256 _userId, string memory _uuid) public {
         ClaimBuilder.ClaimData memory claimData = ClaimBuilder.ClaimData({
              // metadata
-            schemaHash: schemaHash,
+            schemaHash: jsonldSchemaHash,
             idPosition: ClaimBuilder.ID_POSITION_INDEX,
             expirable: true,
             updatable: false,
             merklizedRootPosition: 0,
             version: 0,
             id: _userId,
-            revocationNonce: claimsMapSize,
+            revocationNonce: countOfIssuedClaims,
             expirationDate: 3183110232,
             // data
             merklizedRoot: 0,
@@ -114,7 +150,7 @@ contract NonMerklizedIdentityExample is IdentityBase, OwnableUpgradeable {
         });
         uint256[8] memory claim = ClaimBuilder.build(claimData);
         addClaimAndTransit(claim);
-        setClaim(_userId, _uuid, claim);
+        saveClaim(_userId, _uuid, claim);
     }
 
     function weiToGwei(uint weiAmount) internal pure returns (uint256) {
