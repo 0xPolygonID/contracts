@@ -2,7 +2,7 @@ import { ethers, upgrades } from 'hardhat';
 import { Contract } from 'ethers';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 
-export class NonMerklizedOnchainIdentityDeployHelper {
+export class BalanceCredentialIssuerDeployHelper {
   constructor(
     private signers: SignerWithAddress[],
     private readonly enableLogging: boolean = false
@@ -11,59 +11,54 @@ export class NonMerklizedOnchainIdentityDeployHelper {
   static async initialize(
     signers: SignerWithAddress[] | null = null,
     enableLogging = false
-  ): Promise<NonMerklizedOnchainIdentityDeployHelper> {
+  ): Promise<BalanceCredentialIssuerDeployHelper> {
     let sgrs;
     if (signers === null) {
       sgrs = await ethers.getSigners();
     } else {
       sgrs = signers;
     }
-    return new NonMerklizedOnchainIdentityDeployHelper(sgrs, enableLogging);
+    return new BalanceCredentialIssuerDeployHelper(sgrs, enableLogging);
   }
 
-  async deployIdentity(
+  async deployBalanceCredentialIssuer(
     smtLib: Contract,
     poseidon3: Contract,
     poseidon4: Contract,
-    stateContractAddress: string,
-    // claim metadata
-    jsonldSchemaURL: string,
-    jsonldbSchemaHash: bigint,
-    jsonSchemaURL: string,
-    credentialType: string
+    stateContractAddress: string
   ): Promise<{
-    identity: Contract;
+    balanceCredentialIssuer: Contract;
   }> {
     const owner = this.signers[0];
 
-    this.log('======== Identity: deploy started ========');
+    this.log('======== Balance credential issuer: deploy started ========');
 
     const cb = await this.deployClaimBuilder();
     const il = await this.deployIdentityLib(smtLib.address, poseidon3.address, poseidon4.address);
 
     this.log('deploying Identity...');
-    const IdentityFactory = await ethers.getContractFactory('NonMerklizedIdentityExample', {
+    const IdentityFactory = await ethers.getContractFactory('BalanceCredentialIssuer', {
       libraries: {
         ClaimBuilder: cb.address,
         IdentityLib: il.address
       }
     });
-    const Identity = await upgrades.deployProxy(
+    const balanceCredentialIssuer = await upgrades.deployProxy(
       IdentityFactory,
-      [stateContractAddress, jsonldSchemaURL, jsonldbSchemaHash, jsonSchemaURL, credentialType],
+      [stateContractAddress],
       {
-        initializer:
-          'initialize(address _stateContractAddr, string calldata _schemaURL, uint256 _schemaHash, string calldata _schemaJSON, string calldata _credentialType)',
         unsafeAllow: ['external-library-linking', 'struct-definition', 'state-variable-assignment']
       }
     );
-    await Identity.deployed();
-    this.log(`Identity contract deployed to address ${Identity.address} from ${owner.address}`);
+    await balanceCredentialIssuer.deployed();
+    this.log(
+      `Identity contract deployed to address ${balanceCredentialIssuer.address} from ${owner.address}`
+    );
 
-    this.log('======== Identity: deploy completed ========');
+    this.log('======== Balance credential issuer: deploy completed ========');
 
     return {
-      identity: Identity
+      balanceCredentialIssuer
     };
   }
 
@@ -90,7 +85,7 @@ export class NonMerklizedOnchainIdentityDeployHelper {
     });
     const il = await Identity.deploy();
     await il.deployed();
-    this.enableLogging && this.log(`ClaimBuilder deployed to: ${il.address}`);
+    this.enableLogging && this.log(`IdentityLib deployed to: ${il.address}`);
 
     return il;
   }
@@ -106,7 +101,7 @@ export class NonMerklizedOnchainIdentityDeployHelper {
       }
     });
     const claimBuilderWrapper = await ClaimBuilderWrapper.deploy();
-    this.log('ClaimBuilderWrapper deployed to:', claimBuilderWrapper.address);
+    this.log('ClaimBuilder deployed to:', claimBuilderWrapper.address);
     return claimBuilderWrapper;
   }
 
