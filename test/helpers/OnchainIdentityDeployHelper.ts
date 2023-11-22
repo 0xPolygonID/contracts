@@ -1,6 +1,7 @@
 import { ethers, upgrades } from 'hardhat';
 import { Contract } from 'ethers';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { deployClaimBuilder, deployIdentityLib } from '../utils/deploy-utils';
 
 export class OnchainIdentityDeployHelper {
   constructor(
@@ -35,8 +36,8 @@ export class OnchainIdentityDeployHelper {
 
     this.log('======== Identity: deploy started ========');
 
-    const cb = await this.deployClaimBuilder();
-    const il = await this.deployIdentityLib(smtLib.address, poseidon3.address, poseidon4.address);
+    const cb = await deployClaimBuilder();
+    const il = await deployIdentityLib(smtLib.address, poseidon3.address, poseidon4.address);
 
     this.log('deploying Identity...');
     const IdentityFactory = await ethers.getContractFactory('IdentityExample', {
@@ -56,49 +57,6 @@ export class OnchainIdentityDeployHelper {
     return {
       identity: Identity
     };
-  }
-
-  async deployClaimBuilder(): Promise<Contract> {
-    const ClaimBuilder = await ethers.getContractFactory('ClaimBuilder');
-    const cb = await ClaimBuilder.deploy();
-    await cb.deployed();
-    this.enableLogging && this.log(`ClaimBuilder deployed to: ${cb.address}`);
-
-    return cb;
-  }
-
-  async deployIdentityLib(
-    smtpAddress: string,
-    poseidonUtil3lAddress: string,
-    poseidonUtil4lAddress: string
-  ): Promise<Contract> {
-    const Identity = await ethers.getContractFactory('IdentityLib', {
-      libraries: {
-        SmtLib: smtpAddress,
-        PoseidonUnit3L: poseidonUtil3lAddress,
-        PoseidonUnit4L: poseidonUtil4lAddress
-      }
-    });
-    const il = await Identity.deploy();
-    await il.deployed();
-    this.enableLogging && this.log(`ClaimBuilder deployed to: ${il.address}`);
-
-    return il;
-  }
-
-  async deployClaimBuilderWrapper(): Promise<{
-    address: string;
-  }> {
-    const cb = await this.deployClaimBuilder();
-
-    const ClaimBuilderWrapper = await ethers.getContractFactory('ClaimBuilderWrapper', {
-      libraries: {
-        ClaimBuilder: cb.address
-      }
-    });
-    const claimBuilderWrapper = await ClaimBuilderWrapper.deploy();
-    console.log('ClaimBuilderWrapper deployed to:', claimBuilderWrapper.address);
-    return claimBuilderWrapper;
   }
 
   private log(...args): void {

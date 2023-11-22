@@ -148,3 +148,47 @@ export function toJson(data) {
     (_, a) => a
   );
 }
+
+export async function deployClaimBuilder(enableLogging = false): Promise<Contract> {
+  const ClaimBuilder = await ethers.getContractFactory('ClaimBuilder');
+  const cb = await ClaimBuilder.deploy();
+  await cb.deployed();
+  enableLogging && console.log(`ClaimBuilder deployed to: ${cb.address}`);
+
+  return cb;
+}
+
+export async function deployIdentityLib(
+  smtpAddress: string,
+  poseidonUtil3lAddress: string,
+  poseidonUtil4lAddress: string,
+  enableLogging = false
+): Promise<Contract> {
+  const Identity = await ethers.getContractFactory('IdentityLib', {
+    libraries: {
+      SmtLib: smtpAddress,
+      PoseidonUnit3L: poseidonUtil3lAddress,
+      PoseidonUnit4L: poseidonUtil4lAddress
+    }
+  });
+  const il = await Identity.deploy();
+  await il.deployed();
+  enableLogging && console.log(`IdentityLib deployed to: ${il.address}`);
+
+  return il;
+}
+
+export async function deployClaimBuilderWrapper(enableLogging = false): Promise<{
+  address: string;
+}> {
+  const cb = await deployClaimBuilder(enableLogging);
+
+  const ClaimBuilderWrapper = await ethers.getContractFactory('ClaimBuilderWrapper', {
+    libraries: {
+      ClaimBuilder: cb.address
+    }
+  });
+  const claimBuilderWrapper = await ClaimBuilderWrapper.deploy();
+  enableLogging && console.log('ClaimBuilder deployed to:', claimBuilderWrapper.address);
+  return claimBuilderWrapper;
+}
