@@ -1637,39 +1637,15 @@
         }
       }
     },
-    "abc2466006897ace78e51f83990213b092a19df3580b9cb2a23d38f1b123640a": {
-      "address": "0xe54DC0bcD19bA0F6Cb6163dA224265c218463D6B",
-      "txHash": "0xeb0488999143b9c489e174ff9d2a5a62c5814cffde26091a3ff0576857a50281",
+    "f48a4ba2d4ad8985e7735e1f31a42f47e15f9d55e0a7a1c795d2a5af06d94ccc": {
+      "address": "0x59870f921945E031605EC3544EC3963201510ba7",
+      "txHash": "0x782d2c67672c3604e6145b17c48d6f8a185785059df2e3a4892839404676a6ce",
       "layout": {
         "storage": [
           {
-            "label": "__gapBefore",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_array(t_uint256)500_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:17"
-          },
-          {
-            "label": "identity",
-            "offset": 0,
-            "slot": "500",
-            "type": "t_struct(Data)2019_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:21"
-          },
-          {
-            "label": "__gapAfter",
-            "offset": 0,
-            "slot": "700",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:27"
-          },
-          {
             "label": "_initialized",
             "offset": 0,
-            "slot": "749",
+            "slot": "0",
             "type": "t_uint8",
             "contract": "Initializable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
@@ -1678,7 +1654,7 @@
           {
             "label": "_initializing",
             "offset": 1,
-            "slot": "749",
+            "slot": "0",
             "type": "t_bool",
             "contract": "Initializable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
@@ -1686,7 +1662,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "750",
+            "slot": "1",
             "type": "t_array(t_uint256)50_storage",
             "contract": "ContextUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
@@ -1694,7 +1670,7 @@
           {
             "label": "_owner",
             "offset": 0,
-            "slot": "800",
+            "slot": "51",
             "type": "t_address",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
@@ -1702,66 +1678,98 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "801",
+            "slot": "52",
             "type": "t_array(t_uint256)49_storage",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
           },
           {
-            "label": "jsonldSchemaURL",
+            "label": "__gap_before_base",
             "offset": 0,
-            "slot": "850",
-            "type": "t_string_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:19"
-          },
-          {
-            "label": "jsonldSchemaHash",
-            "offset": 0,
-            "slot": "851",
-            "type": "t_uint256",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:20"
-          },
-          {
-            "label": "jsonSchemaURL",
-            "offset": 0,
-            "slot": "852",
-            "type": "t_string_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:21"
-          },
-          {
-            "label": "credentialType",
-            "offset": 0,
-            "slot": "853",
-            "type": "t_string_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:22"
-          },
-          {
-            "label": "countOfIssuedClaims",
-            "offset": 0,
-            "slot": "854",
-            "type": "t_uint64",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:25"
-          },
-          {
-            "label": "claimsMap",
-            "offset": 0,
-            "slot": "855",
-            "type": "t_mapping(t_uint256,t_mapping(t_string_memory_ptr,t_struct(ClaimInfo)10611_storage))",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:39"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "856",
+            "slot": "101",
             "type": "t_array(t_uint256)500_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:94"
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:48"
+          },
+          {
+            "label": "_circuitIdToVerifier",
+            "offset": 0,
+            "slot": "601",
+            "type": "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:50"
+          },
+          {
+            "label": "_supportedCircuitIds",
+            "offset": 0,
+            "slot": "602",
+            "type": "t_array(t_string_storage)dyn_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:51"
+          },
+          {
+            "label": "state",
+            "offset": 0,
+            "slot": "603",
+            "type": "t_contract(IState)778",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:53"
+          },
+          {
+            "label": "revocationStateExpirationTimeout",
+            "offset": 0,
+            "slot": "604",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:55"
+          },
+          {
+            "label": "proofExpirationTimeout",
+            "offset": 0,
+            "slot": "605",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:56"
+          },
+          {
+            "label": "gistRootExpirationTimeout",
+            "offset": 0,
+            "slot": "606",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:57"
+          },
+          {
+            "label": "_inputNameToIndex",
+            "offset": 0,
+            "slot": "607",
+            "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:59"
+          },
+          {
+            "label": "__gap_after_base",
+            "offset": 0,
+            "slot": "608",
+            "type": "t_array(t_uint256)43_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:65"
+          },
+          {
+            "label": "__gap_before",
+            "offset": 0,
+            "slot": "651",
+            "type": "t_array(t_uint256)500_storage",
+            "contract": "CredentialAtomicQuerySigValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQuerySigValidator.sol:23"
+          },
+          {
+            "label": "__gap_after",
+            "offset": 0,
+            "slot": "1151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "CredentialAtomicQuerySigValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQuerySigValidator.sol:31"
           }
         ],
         "types": {
@@ -1769,17 +1777,13 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(RootEntry)3471_storage)dyn_storage": {
-            "label": "struct SmtLib.RootEntry[]",
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]",
             "numberOfBytes": "32"
           },
           "t_array(t_uint256)43_storage": {
             "label": "uint256[43]",
             "numberOfBytes": "1376"
-          },
-          "t_array(t_uint256)45_storage": {
-            "label": "uint256[45]",
-            "numberOfBytes": "1440"
           },
           "t_array(t_uint256)49_storage": {
             "label": "uint256[49]",
@@ -1793,14 +1797,6 @@
             "label": "uint256[50]",
             "numberOfBytes": "1600"
           },
-          "t_array(t_uint256)8_storage": {
-            "label": "uint256[8]",
-            "numberOfBytes": "256"
-          },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]",
-            "numberOfBytes": "32"
-          },
           "t_bool": {
             "label": "bool",
             "numberOfBytes": "1"
@@ -1809,33 +1805,16 @@
             "label": "contract IState",
             "numberOfBytes": "20"
           },
-          "t_enum(NodeType)3423": {
-            "label": "enum SmtLib.NodeType",
-            "members": [
-              "EMPTY",
-              "LEAF",
-              "MIDDLE"
-            ],
-            "numberOfBytes": "1"
+          "t_contract(IVerifier)829": {
+            "label": "contract IVerifier",
+            "numberOfBytes": "20"
           },
-          "t_mapping(t_string_memory_ptr,t_struct(ClaimInfo)10611_storage)": {
-            "label": "mapping(string => struct NonMerklizedIdentityExample.ClaimInfo)",
+          "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)": {
+            "label": "mapping(string => contract IVerifier)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(uint256 => uint256[])",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_mapping(t_string_memory_ptr,t_struct(ClaimInfo)10611_storage))": {
-            "label": "mapping(uint256 => mapping(string => struct NonMerklizedIdentityExample.ClaimInfo))",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Node)3496_storage)": {
-            "label": "mapping(uint256 => struct SmtLib.Node)",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Roots)2036_storage)": {
-            "label": "mapping(uint256 => struct IdentityLib.Roots)",
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
             "numberOfBytes": "32"
           },
           "t_string_memory_ptr": {
@@ -1846,253 +1825,9 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(ClaimInfo)10611_storage": {
-            "label": "struct NonMerklizedIdentityExample.ClaimInfo",
-            "members": [
-              {
-                "label": "jsonldSchemaURL",
-                "type": "t_string_storage",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "jsonldSchemaHash",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "jsonSchemaURL",
-                "type": "t_string_storage",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "credentialType",
-                "type": "t_string_storage",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "claim",
-                "type": "t_array(t_uint256)8_storage",
-                "offset": 0,
-                "slot": "4"
-              }
-            ],
-            "numberOfBytes": "384"
-          },
-          "t_struct(Data)2019_storage": {
-            "label": "struct IdentityLib.Data",
-            "members": [
-              {
-                "label": "id",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "latestPublishedState",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "isOldStateGenesis",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "stateContract",
-                "type": "t_contract(IState)778",
-                "offset": 1,
-                "slot": "2"
-              },
-              {
-                "label": "rootsByState",
-                "type": "t_mapping(t_uint256,t_struct(Roots)2036_storage)",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "trees",
-                "type": "t_struct(Trees)2029_storage",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "latestPublishedTreeRoots",
-                "type": "t_struct(Roots)2036_storage",
-                "offset": 0,
-                "slot": "154"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)43_storage",
-                "offset": 0,
-                "slot": "157"
-              }
-            ],
-            "numberOfBytes": "6400"
-          },
-          "t_struct(Data)3446_storage": {
-            "label": "struct SmtLib.Data",
-            "members": [
-              {
-                "label": "nodes",
-                "type": "t_mapping(t_uint256,t_struct(Node)3496_storage)",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "rootEntries",
-                "type": "t_array(t_struct(RootEntry)3471_storage)dyn_storage",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootIndexes",
-                "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "maxDepth",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "initialized",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)45_storage",
-                "offset": 0,
-                "slot": "5"
-              }
-            ],
-            "numberOfBytes": "1600"
-          },
-          "t_struct(Node)3496_storage": {
-            "label": "struct SmtLib.Node",
-            "members": [
-              {
-                "label": "nodeType",
-                "type": "t_enum(NodeType)3423",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "childLeft",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "childRight",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "index",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "value",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "4"
-              }
-            ],
-            "numberOfBytes": "160"
-          },
-          "t_struct(RootEntry)3471_storage": {
-            "label": "struct SmtLib.RootEntry",
-            "members": [
-              {
-                "label": "root",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "createdAtTimestamp",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "createdAtBlock",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Roots)2036_storage": {
-            "label": "struct IdentityLib.Roots",
-            "members": [
-              {
-                "label": "claimsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Trees)2029_storage": {
-            "label": "struct IdentityLib.Trees",
-            "members": [
-              {
-                "label": "claimsTree",
-                "type": "t_struct(Data)3446_storage",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsTree",
-                "type": "t_struct(Data)3446_storage",
-                "offset": 0,
-                "slot": "50"
-              },
-              {
-                "label": "rootsTree",
-                "type": "t_struct(Data)3446_storage",
-                "offset": 0,
-                "slot": "100"
-              }
-            ],
-            "numberOfBytes": "4800"
-          },
           "t_uint256": {
             "label": "uint256",
             "numberOfBytes": "32"
-          },
-          "t_uint64": {
-            "label": "uint64",
-            "numberOfBytes": "8"
           },
           "t_uint8": {
             "label": "uint8",
@@ -2101,39 +1836,15 @@
         }
       }
     },
-    "f937c6766f34489679f7c23a4bbcaec4889e3b839f2ca2e7d037010972e2a844": {
-      "address": "0x1b9457708829f77Fb08A4923010875F88F2Cd77A",
-      "txHash": "0x9347be5def235fad9a56a8e4f7b97da5aab9359e5a8261eca7ea7f4422328611",
+    "c5d65a524297149ed3c088e3ab500f0bce949201bc288e89ac43234625a885a7": {
+      "address": "0x9f8d24182FbC3Ce63aDCc7523Fbdd0ef80cB60A9",
+      "txHash": "0x62227347fc63ec7e3e410056ad60288e531d8d65aab844c96b324565ec61114a",
       "layout": {
         "storage": [
           {
-            "label": "__gapBefore",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_array(t_uint256)500_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:17"
-          },
-          {
-            "label": "identity",
-            "offset": 0,
-            "slot": "500",
-            "type": "t_struct(Data)2019_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:21"
-          },
-          {
-            "label": "__gapAfter",
-            "offset": 0,
-            "slot": "700",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:27"
-          },
-          {
             "label": "_initialized",
             "offset": 0,
-            "slot": "749",
+            "slot": "0",
             "type": "t_uint8",
             "contract": "Initializable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
@@ -2142,7 +1853,7 @@
           {
             "label": "_initializing",
             "offset": 1,
-            "slot": "749",
+            "slot": "0",
             "type": "t_bool",
             "contract": "Initializable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
@@ -2150,7 +1861,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "750",
+            "slot": "1",
             "type": "t_array(t_uint256)50_storage",
             "contract": "ContextUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
@@ -2158,7 +1869,7 @@
           {
             "label": "_owner",
             "offset": 0,
-            "slot": "800",
+            "slot": "51",
             "type": "t_address",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
@@ -2166,66 +1877,98 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "801",
+            "slot": "52",
             "type": "t_array(t_uint256)49_storage",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
           },
           {
-            "label": "jsonldSchemaURL",
+            "label": "__gap_before_base",
             "offset": 0,
-            "slot": "850",
-            "type": "t_string_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:19"
-          },
-          {
-            "label": "jsonldSchemaHash",
-            "offset": 0,
-            "slot": "851",
-            "type": "t_uint256",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:20"
-          },
-          {
-            "label": "jsonSchemaURL",
-            "offset": 0,
-            "slot": "852",
-            "type": "t_string_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:21"
-          },
-          {
-            "label": "credentialType",
-            "offset": 0,
-            "slot": "853",
-            "type": "t_string_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:22"
-          },
-          {
-            "label": "countOfIssuedClaims",
-            "offset": 0,
-            "slot": "854",
-            "type": "t_uint64",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:25"
-          },
-          {
-            "label": "claimsMap",
-            "offset": 0,
-            "slot": "855",
-            "type": "t_mapping(t_uint256,t_mapping(t_string_memory_ptr,t_struct(ClaimInfo)10611_storage))",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:39"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "856",
+            "slot": "101",
             "type": "t_array(t_uint256)500_storage",
-            "contract": "NonMerklizedIdentityExample",
-            "src": "contracts/examples/NonMerklizedIdentityExample.sol:94"
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:48"
+          },
+          {
+            "label": "_circuitIdToVerifier",
+            "offset": 0,
+            "slot": "601",
+            "type": "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:50"
+          },
+          {
+            "label": "_supportedCircuitIds",
+            "offset": 0,
+            "slot": "602",
+            "type": "t_array(t_string_storage)dyn_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:51"
+          },
+          {
+            "label": "state",
+            "offset": 0,
+            "slot": "603",
+            "type": "t_contract(IState)778",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:53"
+          },
+          {
+            "label": "revocationStateExpirationTimeout",
+            "offset": 0,
+            "slot": "604",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:55"
+          },
+          {
+            "label": "proofExpirationTimeout",
+            "offset": 0,
+            "slot": "605",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:56"
+          },
+          {
+            "label": "gistRootExpirationTimeout",
+            "offset": 0,
+            "slot": "606",
+            "type": "t_uint256",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:57"
+          },
+          {
+            "label": "_inputNameToIndex",
+            "offset": 0,
+            "slot": "607",
+            "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:59"
+          },
+          {
+            "label": "__gap_after_base",
+            "offset": 0,
+            "slot": "608",
+            "type": "t_array(t_uint256)43_storage",
+            "contract": "CredentialAtomicQueryValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryValidator.sol:65"
+          },
+          {
+            "label": "__gap_before",
+            "offset": 0,
+            "slot": "651",
+            "type": "t_array(t_uint256)500_storage",
+            "contract": "CredentialAtomicQueryMTPValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryMTPValidator.sol:23"
+          },
+          {
+            "label": "__gap_after",
+            "offset": 0,
+            "slot": "1151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "CredentialAtomicQueryMTPValidator",
+            "src": "@iden3/contracts/validators/CredentialAtomicQueryMTPValidator.sol:31"
           }
         ],
         "types": {
@@ -2233,17 +1976,13 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(RootEntry)3471_storage)dyn_storage": {
-            "label": "struct SmtLib.RootEntry[]",
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]",
             "numberOfBytes": "32"
           },
           "t_array(t_uint256)43_storage": {
             "label": "uint256[43]",
             "numberOfBytes": "1376"
-          },
-          "t_array(t_uint256)45_storage": {
-            "label": "uint256[45]",
-            "numberOfBytes": "1440"
           },
           "t_array(t_uint256)49_storage": {
             "label": "uint256[49]",
@@ -2257,14 +1996,6 @@
             "label": "uint256[50]",
             "numberOfBytes": "1600"
           },
-          "t_array(t_uint256)8_storage": {
-            "label": "uint256[8]",
-            "numberOfBytes": "256"
-          },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]",
-            "numberOfBytes": "32"
-          },
           "t_bool": {
             "label": "bool",
             "numberOfBytes": "1"
@@ -2273,33 +2004,16 @@
             "label": "contract IState",
             "numberOfBytes": "20"
           },
-          "t_enum(NodeType)3423": {
-            "label": "enum SmtLib.NodeType",
-            "members": [
-              "EMPTY",
-              "LEAF",
-              "MIDDLE"
-            ],
-            "numberOfBytes": "1"
+          "t_contract(IVerifier)829": {
+            "label": "contract IVerifier",
+            "numberOfBytes": "20"
           },
-          "t_mapping(t_string_memory_ptr,t_struct(ClaimInfo)10611_storage)": {
-            "label": "mapping(string => struct NonMerklizedIdentityExample.ClaimInfo)",
+          "t_mapping(t_string_memory_ptr,t_contract(IVerifier)829)": {
+            "label": "mapping(string => contract IVerifier)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(uint256 => uint256[])",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_mapping(t_string_memory_ptr,t_struct(ClaimInfo)10611_storage))": {
-            "label": "mapping(uint256 => mapping(string => struct NonMerklizedIdentityExample.ClaimInfo))",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Node)3496_storage)": {
-            "label": "mapping(uint256 => struct SmtLib.Node)",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Roots)2036_storage)": {
-            "label": "mapping(uint256 => struct IdentityLib.Roots)",
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
             "numberOfBytes": "32"
           },
           "t_string_memory_ptr": {
@@ -2310,1077 +2024,9 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(ClaimInfo)10611_storage": {
-            "label": "struct NonMerklizedIdentityExample.ClaimInfo",
-            "members": [
-              {
-                "label": "jsonldSchemaURL",
-                "type": "t_string_storage",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "jsonldSchemaHash",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "jsonSchemaURL",
-                "type": "t_string_storage",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "credentialType",
-                "type": "t_string_storage",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "claim",
-                "type": "t_array(t_uint256)8_storage",
-                "offset": 0,
-                "slot": "4"
-              }
-            ],
-            "numberOfBytes": "384"
-          },
-          "t_struct(Data)2019_storage": {
-            "label": "struct IdentityLib.Data",
-            "members": [
-              {
-                "label": "id",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "latestPublishedState",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "isOldStateGenesis",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "stateContract",
-                "type": "t_contract(IState)778",
-                "offset": 1,
-                "slot": "2"
-              },
-              {
-                "label": "rootsByState",
-                "type": "t_mapping(t_uint256,t_struct(Roots)2036_storage)",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "trees",
-                "type": "t_struct(Trees)2029_storage",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "latestPublishedTreeRoots",
-                "type": "t_struct(Roots)2036_storage",
-                "offset": 0,
-                "slot": "154"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)43_storage",
-                "offset": 0,
-                "slot": "157"
-              }
-            ],
-            "numberOfBytes": "6400"
-          },
-          "t_struct(Data)3446_storage": {
-            "label": "struct SmtLib.Data",
-            "members": [
-              {
-                "label": "nodes",
-                "type": "t_mapping(t_uint256,t_struct(Node)3496_storage)",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "rootEntries",
-                "type": "t_array(t_struct(RootEntry)3471_storage)dyn_storage",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootIndexes",
-                "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "maxDepth",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "initialized",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)45_storage",
-                "offset": 0,
-                "slot": "5"
-              }
-            ],
-            "numberOfBytes": "1600"
-          },
-          "t_struct(Node)3496_storage": {
-            "label": "struct SmtLib.Node",
-            "members": [
-              {
-                "label": "nodeType",
-                "type": "t_enum(NodeType)3423",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "childLeft",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "childRight",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "index",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "value",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "4"
-              }
-            ],
-            "numberOfBytes": "160"
-          },
-          "t_struct(RootEntry)3471_storage": {
-            "label": "struct SmtLib.RootEntry",
-            "members": [
-              {
-                "label": "root",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "createdAtTimestamp",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "createdAtBlock",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Roots)2036_storage": {
-            "label": "struct IdentityLib.Roots",
-            "members": [
-              {
-                "label": "claimsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Trees)2029_storage": {
-            "label": "struct IdentityLib.Trees",
-            "members": [
-              {
-                "label": "claimsTree",
-                "type": "t_struct(Data)3446_storage",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsTree",
-                "type": "t_struct(Data)3446_storage",
-                "offset": 0,
-                "slot": "50"
-              },
-              {
-                "label": "rootsTree",
-                "type": "t_struct(Data)3446_storage",
-                "offset": 0,
-                "slot": "100"
-              }
-            ],
-            "numberOfBytes": "4800"
-          },
           "t_uint256": {
             "label": "uint256",
             "numberOfBytes": "32"
-          },
-          "t_uint64": {
-            "label": "uint64",
-            "numberOfBytes": "8"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
-    "a116940e61913c5a75262d0fa1b2f38e026776f591fdce6dc3b06cb43e70cc1d": {
-      "address": "0x5E3b50c1C43481030C3cdA2F82ADd09F08698720",
-      "txHash": "0x20db10cee6655f4044acf61a802057abb22fe5e79f64f55a2fc905b24fead3e3",
-      "layout": {
-        "storage": [
-          {
-            "label": "__gapBefore",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_array(t_uint256)500_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:17"
-          },
-          {
-            "label": "identity",
-            "offset": 0,
-            "slot": "500",
-            "type": "t_struct(Data)2016_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:21"
-          },
-          {
-            "label": "__gapAfter",
-            "offset": 0,
-            "slot": "700",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:27"
-          },
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "749",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "749",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "750",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "_owner",
-            "offset": 0,
-            "slot": "800",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "801",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
-          },
-          {
-            "label": "__gap_before",
-            "offset": 0,
-            "slot": "850",
-            "type": "t_array(t_uint256)500_storage",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:32"
-          },
-          {
-            "label": "countOfIssuedClaims",
-            "offset": 0,
-            "slot": "1350",
-            "type": "t_uint64",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:37"
-          },
-          {
-            "label": "claimStorage",
-            "offset": 0,
-            "slot": "1351",
-            "type": "t_mapping(t_uint256,t_array(t_struct(Claim)10207_storage)dyn_storage)",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:38"
-          },
-          {
-            "label": "__gap_after",
-            "offset": 0,
-            "slot": "1352",
-            "type": "t_array(t_uint256)47_storage",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:40"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_struct(Claim)10207_storage)dyn_storage": {
-            "label": "struct BalanceCredentialIssuer.Claim[]",
-            "numberOfBytes": "32"
-          },
-          "t_array(t_struct(RootEntry)3485_storage)dyn_storage": {
-            "label": "struct SmtLib.RootEntry[]",
-            "numberOfBytes": "32"
-          },
-          "t_array(t_uint256)43_storage": {
-            "label": "uint256[43]",
-            "numberOfBytes": "1376"
-          },
-          "t_array(t_uint256)45_storage": {
-            "label": "uint256[45]",
-            "numberOfBytes": "1440"
-          },
-          "t_array(t_uint256)47_storage": {
-            "label": "uint256[47]",
-            "numberOfBytes": "1504"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)500_storage": {
-            "label": "uint256[500]",
-            "numberOfBytes": "16000"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_array(t_uint256)8_storage": {
-            "label": "uint256[8]",
-            "numberOfBytes": "256"
-          },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]",
-            "numberOfBytes": "32"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_contract(IState)778": {
-            "label": "contract IState",
-            "numberOfBytes": "20"
-          },
-          "t_enum(NodeType)3437": {
-            "label": "enum SmtLib.NodeType",
-            "members": [
-              "EMPTY",
-              "LEAF",
-              "MIDDLE"
-            ],
-            "numberOfBytes": "1"
-          },
-          "t_mapping(t_uint256,t_array(t_struct(Claim)10207_storage)dyn_storage)": {
-            "label": "mapping(uint256 => struct BalanceCredentialIssuer.Claim[])",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(uint256 => uint256[])",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Node)3510_storage)": {
-            "label": "mapping(uint256 => struct SmtLib.Node)",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Roots)2033_storage)": {
-            "label": "mapping(uint256 => struct IdentityLib.Roots)",
-            "numberOfBytes": "32"
-          },
-          "t_struct(Claim)10207_storage": {
-            "label": "struct BalanceCredentialIssuer.Claim",
-            "members": [
-              {
-                "label": "claim",
-                "type": "t_array(t_uint256)8_storage",
-                "offset": 0,
-                "slot": "0"
-              }
-            ],
-            "numberOfBytes": "256"
-          },
-          "t_struct(Data)2016_storage": {
-            "label": "struct IdentityLib.Data",
-            "members": [
-              {
-                "label": "id",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "latestPublishedState",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "isOldStateGenesis",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "stateContract",
-                "type": "t_contract(IState)778",
-                "offset": 1,
-                "slot": "2"
-              },
-              {
-                "label": "rootsByState",
-                "type": "t_mapping(t_uint256,t_struct(Roots)2033_storage)",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "trees",
-                "type": "t_struct(Trees)2026_storage",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "latestPublishedTreeRoots",
-                "type": "t_struct(Roots)2033_storage",
-                "offset": 0,
-                "slot": "154"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)43_storage",
-                "offset": 0,
-                "slot": "157"
-              }
-            ],
-            "numberOfBytes": "6400"
-          },
-          "t_struct(Data)3460_storage": {
-            "label": "struct SmtLib.Data",
-            "members": [
-              {
-                "label": "nodes",
-                "type": "t_mapping(t_uint256,t_struct(Node)3510_storage)",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "rootEntries",
-                "type": "t_array(t_struct(RootEntry)3485_storage)dyn_storage",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootIndexes",
-                "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "maxDepth",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "initialized",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)45_storage",
-                "offset": 0,
-                "slot": "5"
-              }
-            ],
-            "numberOfBytes": "1600"
-          },
-          "t_struct(Node)3510_storage": {
-            "label": "struct SmtLib.Node",
-            "members": [
-              {
-                "label": "nodeType",
-                "type": "t_enum(NodeType)3437",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "childLeft",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "childRight",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "index",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "value",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "4"
-              }
-            ],
-            "numberOfBytes": "160"
-          },
-          "t_struct(RootEntry)3485_storage": {
-            "label": "struct SmtLib.RootEntry",
-            "members": [
-              {
-                "label": "root",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "createdAtTimestamp",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "createdAtBlock",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Roots)2033_storage": {
-            "label": "struct IdentityLib.Roots",
-            "members": [
-              {
-                "label": "claimsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Trees)2026_storage": {
-            "label": "struct IdentityLib.Trees",
-            "members": [
-              {
-                "label": "claimsTree",
-                "type": "t_struct(Data)3460_storage",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsTree",
-                "type": "t_struct(Data)3460_storage",
-                "offset": 0,
-                "slot": "50"
-              },
-              {
-                "label": "rootsTree",
-                "type": "t_struct(Data)3460_storage",
-                "offset": 0,
-                "slot": "100"
-              }
-            ],
-            "numberOfBytes": "4800"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint64": {
-            "label": "uint64",
-            "numberOfBytes": "8"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
-    "fa682ec6fccd137577f8ada258d1d6531551e4947c6848ac4561e09dc600d659": {
-      "address": "0x7B0bC9B535957bD888fDAC5D810f071e825C8Ef0",
-      "txHash": "0x685dd0aae2051bf326fe9e616f0a21fdfbfe293a741cfdd2789e5184041bba7a",
-      "layout": {
-        "storage": [
-          {
-            "label": "__gapBefore",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_array(t_uint256)500_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:17"
-          },
-          {
-            "label": "identity",
-            "offset": 0,
-            "slot": "500",
-            "type": "t_struct(Data)1321_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:21"
-          },
-          {
-            "label": "__gapAfter",
-            "offset": 0,
-            "slot": "700",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "IdentityBase",
-            "src": "@iden3/contracts/lib/IdentityBase.sol:27"
-          },
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "749",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "749",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "750",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "_owner",
-            "offset": 0,
-            "slot": "800",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "801",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
-          },
-          {
-            "label": "__gap_before",
-            "offset": 0,
-            "slot": "850",
-            "type": "t_array(t_uint256)500_storage",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:32"
-          },
-          {
-            "label": "countOfIssuedClaims",
-            "offset": 0,
-            "slot": "1350",
-            "type": "t_uint64",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:38"
-          },
-          {
-            "label": "claimStorage",
-            "offset": 0,
-            "slot": "1351",
-            "type": "t_mapping(t_uint256,t_array(t_struct(Claim)5018_storage)dyn_storage)",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:39"
-          },
-          {
-            "label": "__gap_after",
-            "offset": 0,
-            "slot": "1352",
-            "type": "t_array(t_uint256)47_storage",
-            "contract": "BalanceCredentialIssuer",
-            "src": "contracts/examples/BalanceCredentialIssuer.sol:41"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_struct(Claim)5018_storage)dyn_storage": {
-            "label": "struct BalanceCredentialIssuer.Claim[]",
-            "numberOfBytes": "32"
-          },
-          "t_array(t_struct(RootEntry)2710_storage)dyn_storage": {
-            "label": "struct SmtLib.RootEntry[]",
-            "numberOfBytes": "32"
-          },
-          "t_array(t_uint256)43_storage": {
-            "label": "uint256[43]",
-            "numberOfBytes": "1376"
-          },
-          "t_array(t_uint256)45_storage": {
-            "label": "uint256[45]",
-            "numberOfBytes": "1440"
-          },
-          "t_array(t_uint256)47_storage": {
-            "label": "uint256[47]",
-            "numberOfBytes": "1504"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)500_storage": {
-            "label": "uint256[500]",
-            "numberOfBytes": "16000"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_array(t_uint256)8_storage": {
-            "label": "uint256[8]",
-            "numberOfBytes": "256"
-          },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]",
-            "numberOfBytes": "32"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_contract(IState)208": {
-            "label": "contract IState",
-            "numberOfBytes": "20"
-          },
-          "t_enum(NodeType)2662": {
-            "label": "enum SmtLib.NodeType",
-            "members": [
-              "EMPTY",
-              "LEAF",
-              "MIDDLE"
-            ],
-            "numberOfBytes": "1"
-          },
-          "t_mapping(t_uint256,t_array(t_struct(Claim)5018_storage)dyn_storage)": {
-            "label": "mapping(uint256 => struct BalanceCredentialIssuer.Claim[])",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(uint256 => uint256[])",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Node)2735_storage)": {
-            "label": "mapping(uint256 => struct SmtLib.Node)",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(Roots)1338_storage)": {
-            "label": "mapping(uint256 => struct IdentityLib.Roots)",
-            "numberOfBytes": "32"
-          },
-          "t_struct(Claim)5018_storage": {
-            "label": "struct BalanceCredentialIssuer.Claim",
-            "members": [
-              {
-                "label": "claim",
-                "type": "t_array(t_uint256)8_storage",
-                "offset": 0,
-                "slot": "0"
-              }
-            ],
-            "numberOfBytes": "256"
-          },
-          "t_struct(Data)1321_storage": {
-            "label": "struct IdentityLib.Data",
-            "members": [
-              {
-                "label": "id",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "latestPublishedState",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "isOldStateGenesis",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "stateContract",
-                "type": "t_contract(IState)208",
-                "offset": 1,
-                "slot": "2"
-              },
-              {
-                "label": "rootsByState",
-                "type": "t_mapping(t_uint256,t_struct(Roots)1338_storage)",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "trees",
-                "type": "t_struct(Trees)1331_storage",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "latestPublishedTreeRoots",
-                "type": "t_struct(Roots)1338_storage",
-                "offset": 0,
-                "slot": "154"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)43_storage",
-                "offset": 0,
-                "slot": "157"
-              }
-            ],
-            "numberOfBytes": "6400"
-          },
-          "t_struct(Data)2685_storage": {
-            "label": "struct SmtLib.Data",
-            "members": [
-              {
-                "label": "nodes",
-                "type": "t_mapping(t_uint256,t_struct(Node)2735_storage)",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "rootEntries",
-                "type": "t_array(t_struct(RootEntry)2710_storage)dyn_storage",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootIndexes",
-                "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "maxDepth",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "initialized",
-                "type": "t_bool",
-                "offset": 0,
-                "slot": "4"
-              },
-              {
-                "label": "__gap",
-                "type": "t_array(t_uint256)45_storage",
-                "offset": 0,
-                "slot": "5"
-              }
-            ],
-            "numberOfBytes": "1600"
-          },
-          "t_struct(Node)2735_storage": {
-            "label": "struct SmtLib.Node",
-            "members": [
-              {
-                "label": "nodeType",
-                "type": "t_enum(NodeType)2662",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "childLeft",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "childRight",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "index",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "3"
-              },
-              {
-                "label": "value",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "4"
-              }
-            ],
-            "numberOfBytes": "160"
-          },
-          "t_struct(RootEntry)2710_storage": {
-            "label": "struct SmtLib.RootEntry",
-            "members": [
-              {
-                "label": "root",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "createdAtTimestamp",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "createdAtBlock",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Roots)1338_storage": {
-            "label": "struct IdentityLib.Roots",
-            "members": [
-              {
-                "label": "claimsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
-                "label": "rootsRoot",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "2"
-              }
-            ],
-            "numberOfBytes": "96"
-          },
-          "t_struct(Trees)1331_storage": {
-            "label": "struct IdentityLib.Trees",
-            "members": [
-              {
-                "label": "claimsTree",
-                "type": "t_struct(Data)2685_storage",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "revocationsTree",
-                "type": "t_struct(Data)2685_storage",
-                "offset": 0,
-                "slot": "50"
-              },
-              {
-                "label": "rootsTree",
-                "type": "t_struct(Data)2685_storage",
-                "offset": 0,
-                "slot": "100"
-              }
-            ],
-            "numberOfBytes": "4800"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint64": {
-            "label": "uint64",
-            "numberOfBytes": "8"
           },
           "t_uint8": {
             "label": "uint8",
