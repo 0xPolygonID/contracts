@@ -7,9 +7,10 @@ import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 
-// /**
-//  * @dev Contract managing onchain identity
-//  */
+/**
+ * @dev Example of centralized credential issuer.
+ * This issuer issue merklized credentials centralized.
+ */
 contract IdentityExample is IdentityBase, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
