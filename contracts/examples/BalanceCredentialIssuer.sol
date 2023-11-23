@@ -29,11 +29,12 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable {
     }
     
 
-    uint256[500] private __gap_before;
-    
     // jsonldSchemaHash hash of jsonld schema. 
     // More about schema: https://devs.polygonid.com/docs/issuer-node/issuer-node-api/claim/apis/#get-claims
     uint256 private constant jsonldSchemaHash = 134825296953649542485291823871789853562;
+
+    uint256[500] private __gap_before;
+    
     // countOfIssuedClaims count of issued claims for incrementing revocation nonce for new claims
     uint64 private countOfIssuedClaims = 0;
     mapping(uint256 => Claim[]) private claimStorage;
