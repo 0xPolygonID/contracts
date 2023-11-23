@@ -39,7 +39,7 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable {
     uint64 private countOfIssuedClaims = 0;
     mapping(uint256 => Claim[]) private claimStorage;
 
-    uint256[47] private __gap_after;
+    uint256[48] private __gap_after;
 
     function initialize(
         address _stateContractAddr
