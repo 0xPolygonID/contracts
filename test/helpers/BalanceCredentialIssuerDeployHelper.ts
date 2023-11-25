@@ -34,8 +34,8 @@ export class BalanceCredentialIssuerDeployHelper {
 
     this.log('======== Balance credential issuer: deploy started ========');
 
-    const cb = await deployClaimBuilder();
-    const il = await deployIdentityLib(smtLib.address, poseidon3.address, poseidon4.address);
+    const cb = await deployClaimBuilder(true);
+    const il = await deployIdentityLib(smtLib.address, poseidon3.address, poseidon4.address, true);
 
     const balanceCredentialIssuerFactory = await ethers.getContractFactory(
       'BalanceCredentialIssuer',
