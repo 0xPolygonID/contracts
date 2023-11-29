@@ -29,6 +29,33 @@ Current addresses on Polygon Main  (V1.0.1)
 | **ERC20 example** | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B (request id = 1 (sig)) | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B  (request id = 2 (mtp) |
 
 
+Current addresses of example BalanceCredentialIssuer on Polygon Mumbai testnet.
+
+|                             |                    Sig                     |
+|:---------------------------:|:------------------------------------------:|
+|    **Poseidon2Elements**    | 0x2490924fF554200CFfa3Fb7fEac0A8aF0eaa50fd |
+|    **Poseidon3Elements**    | 0xB980c71Ae4Dfd899CF9d09Efe135cE4CcFa021B5 |
+|    **Poseidon4Elements**    | 0x60EFFD4319D29297a97ede20e6bEF3d36ef2E25C |
+|         **SmtLib**          | 0x48E875a15Bd0AA626756Ad89ec76b63D8810660E |
+|      **ClaimBuilder**       | 0x4d29B42a7128fC030167e9E84F9dd356d5Ab7879 |
+|       **IdentityLib**       | 0x3476776B9e7ad7Bf187A98acF4dB62e4dBd99345 |
+| **BalanceCredentialIssuer** | 0x81787BE964A59A95B5508f31d153B806169E15f4 |
+
+Current addresses of example BalanceCredentialIssuer on Polygon Main.
+
+|                             |                    Sig                     |
+|:---------------------------:|:------------------------------------------:|
+|    **Poseidon2Elements**    | 0x7A26D06B1dA4b4c526eF5Ea88d0880536032871b |
+|    **Poseidon3Elements**    | 0xF1DD455cB686B3a7309c83b48eB679d609c24f7B |
+|    **Poseidon4Elements**    | 0x151462e7E6ED90f8B45F3764A7fde4004d411d90 |
+|         **SmtLib**          | 0xB9F9AE33395dDB7b994eEBFB9B870a32E79887D6 |
+|      **ClaimBuilder**       | 0x3E84F4493E53015f89908e62873860Bb80eb8378 |
+|       **IdentityLib**       | 0x3Fc8eaAcE2f46044B6A4745Ff71F7452612e4E9A |
+| **BalanceCredentialIssuer** | 0x029301b6cC1399D9260a08943aC0CB9f18C12acC |
+
+
+
+
 
 Legacy addresses on Polygon Mumbai testnet.
 

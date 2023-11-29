@@ -27,9 +27,13 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable {
     struct Claim {
         uint256[8] claim;
     }
-    
 
-    // jsonldSchemaHash hash of jsonld schema. 
+    /**
+     * @dev Version of contract
+     */
+    string public constant VERSION = "1.0.0";
+
+    // jsonldSchemaHash hash of jsonld schema.
     // More about schema: https://devs.polygonid.com/docs/issuer-node/issuer-node-api/claim/apis/#get-claims
     uint256 private constant jsonldSchemaHash = 134825296953649542485291823871789853562;
 
