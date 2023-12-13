@@ -47,6 +47,7 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
     }
 
     struct W3CCredential {
+        uint64 id;
         string[3] context;
         string[2] types;
         uint64 expirationDate;
@@ -61,6 +62,7 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
     struct CredentialMetadata {
         uint64 expirationDate;
         uint64 issuanceDate;
+        uint64 sequenceNumber;
     }
 
     struct CredentialSubject {
@@ -137,6 +139,7 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
 
         return
             W3CCredential({
+                id: _claim.credentialMetadata.sequenceNumber,
                 context: [
                     'https://www.w3.org/2018/credentials/v1',
                     'https://schema.iden3.io/core/jsonld/iden3proofs.jsonld',
@@ -154,7 +157,7 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
                 }),
                 credentialStatus: buildCredentialStatusVerifiableCredential(
                     address(this),
-                    countOfIssuedClaims
+                    _claim.credentialMetadata.sequenceNumber
                 ),
                 credentialSchema: CredentialSchema({
                     id: 'https://gist.githubusercontent.com/ilya-korotya/26ba81feb4da2f49f4b473661b80e8e3/raw/32113f4725088f32f31a6b06b4abdc94bc4b2d17/balance.json',
@@ -202,6 +205,7 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
             valueDataSlotB: 0
         });
         uint256[8] memory claim = ClaimBuilder.build(claimData);
+        // TODO (illia-korotia): don't save duplicate data.
         Claim memory internalClaim = Claim({
             claim: claim,
             credentialSubject: CredentialSubject({
@@ -212,7 +216,8 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
             }),
             credentialMetadata: CredentialMetadata({
                 expirationDate: expirationDate,
-                issuanceDate: convertTime(block.timestamp)
+                issuanceDate: convertTime(block.timestamp),
+                sequenceNumber: countOfIssuedClaims
             })
         });
         addClaimAndTransit(claim);
