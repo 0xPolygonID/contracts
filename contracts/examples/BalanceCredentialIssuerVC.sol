@@ -113,7 +113,6 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
     function getVerifiableCredential(
         Claim memory _claim
     ) private view returns (W3CCredential memory) {
-        // TODO(illia-korotia): should we do this on creation step?
         uint256 hi = PoseidonUnit4L.poseidon(
             [_claim.claim[0], _claim.claim[1], _claim.claim[2], _claim.claim[3]]
         );
@@ -129,13 +128,12 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
         IssuerData memory issuerData = IssuerData({id: address(this), state: _state});
         ProofPresentation memory mtpProof = ProofPresentation({
             types: 'Iden3SparseMerkleTreeProof',
-            coreClaim: _claim.claim, // TODO (illia-korotia): Compute on client side for less gas
+            coreClaim: _claim.claim,
             proof: proof,
             issuerData: issuerData
         });
         ProofPresentation[] memory proofs = new ProofPresentation[](1);
         proofs[0] = mtpProof;
-        // END TODO
 
         return
             W3CCredential({
@@ -269,7 +267,7 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
         bytes memory credentialStatusId = abi.encodePacked(
             addressToString(_address),
             '/credentialStatus?revocationNonce=',
-            uint64ToString(_revocationNonce), // TODO(illia-korotia): have revocationNonce in id is not required. Need to check JSSDK and mobile SDK.
+            uint64ToString(_revocationNonce),
             '&contractAddress=',
             uint64ToString(uint64(id)),
             ':',
