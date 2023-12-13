@@ -75,7 +75,6 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
         uint256[8] claim;
         CredentialSubject credentialSubject;
         CredentialMetadata credentialMetadata;
-        State issuerState;
     }
 
     /**
@@ -119,8 +118,15 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
             [_claim.claim[0], _claim.claim[1], _claim.claim[2], _claim.claim[3]]
         );
 
+        State memory _state = State({
+            rootOfRoots: super.getLatestPublishedRootsRoot(),
+            claimsTreeRoot: super.getLatestPublishedClaimsRoot(),
+            revocationTreeRoot: super.getLatestPublishedRevocationsRoot(),
+            value: super.getLatestPublishedState()
+        });
+        
         SmtLib.Proof memory proof = super.getClaimProof(hi);
-        IssuerData memory issuerData = IssuerData({id: address(this), state: _claim.issuerState});
+        IssuerData memory issuerData = IssuerData({id: address(this), state: _state});
         ProofPresentation memory mtpProof = ProofPresentation({
             types: 'Iden3SparseMerkleTreeProof',
             coreClaim: _claim.claim, // TODO (illia-korotia): Compute on client side for less gas
@@ -209,16 +215,9 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
             credentialMetadata: CredentialMetadata({
                 expirationDate: expirationDate,
                 issuanceDate: convertTime(block.timestamp)
-            }),
-            issuerState: State({rootOfRoots: 0, claimsTreeRoot: 0, revocationTreeRoot: 0, value: 0})
+            })
         });
         addClaimAndTransit(claim);
-
-        internalClaim.issuerState.value = super.getLatestPublishedState();
-        internalClaim.issuerState.rootOfRoots = super.getLatestPublishedRootsRoot();
-        internalClaim.issuerState.claimsTreeRoot = super.getLatestPublishedClaimsRoot();
-        internalClaim.issuerState.revocationTreeRoot = super.getLatestPublishedRevocationsRoot();
-
         saveClaim(_userId, internalClaim);
     }
 
