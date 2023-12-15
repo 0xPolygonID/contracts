@@ -101,33 +101,36 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
         __Ownable_init();
     }
 
+    /**
+     * @dev Get user's verifiable credentials
+     * @param _userId - user id
+     */
     function getUserVerifiableCredentials(
         uint256 _userId
     ) public view returns (W3CCredential[] memory) {
         Claim[] memory claims = claimStorage[_userId];
         W3CCredential[] memory credentials = new W3CCredential[](claims.length);
         for (uint i = 0; i < claims.length; i++) {
-            credentials[i] = getVerifiableCredential(claims[i]);
+            credentials[i] = convertToVerifiableCredential(claims[i]);
         }
         return credentials;
     }
 
-    function getVerifiableCredential(
+    function convertToVerifiableCredential(
         Claim memory _claim
     ) private view returns (W3CCredential memory) {
-        uint256 hi = PoseidonUnit4L.poseidon(
-            [_claim.claim[0], _claim.claim[1], _claim.claim[2], _claim.claim[3]]
-        );
-
         State memory _state = State({
             rootOfRoots: super.getLatestPublishedRootsRoot(),
             claimsTreeRoot: super.getLatestPublishedClaimsRoot(),
             revocationTreeRoot: super.getLatestPublishedRevocationsRoot(),
             value: super.getLatestPublishedState()
         });
-        
-        SmtLib.Proof memory proof = super.getClaimProof(hi);
         IssuerData memory issuerData = IssuerData({id: address(this), state: _state});
+
+        uint256 hi = PoseidonUnit4L.poseidon(
+            [_claim.claim[0], _claim.claim[1], _claim.claim[2], _claim.claim[3]]
+        );
+        SmtLib.Proof memory proof = super.getClaimProof(hi);
         ProofPresentation memory mtpProof = ProofPresentation({
             types: 'Iden3SparseMerkleTreeProof',
             coreClaim: _claim.claim,
@@ -224,8 +227,6 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
         saveClaim(_userId, internalClaim);
     }
 
-
-
     // saveClaim save a claim to storage
     function saveClaim(uint256 _userId, Claim memory _claim) private {
         claimStorage[_userId].push(_claim);
@@ -286,7 +287,7 @@ contract BalanceCredentialIssuerVC is IdentityBase, OwnableUpgradeable {
             });
     }
 
-    function uint64ToString(uint64 _value) public pure returns (string memory) {
+    function uint64ToString(uint64 _value) private pure returns (string memory) {
         if (_value == 0) {
             return '0';
         }
