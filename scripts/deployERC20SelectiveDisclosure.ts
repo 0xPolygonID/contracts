@@ -39,7 +39,7 @@ async function main() {
   const circuitIdV3 = 'credentialAtomicQueryV3OnChain';
 
   // current v3 validator address on mumbai
-  const validatorAddressV3 = '0xeEBE8f9E7b2B8b496e806872C4639d447661fBB7';
+  const validatorAddressV3 = '0x736Ed8bf664cb607f5bBF085A3DF19644622ed5f';
 
   const chainId = 80001;
 
