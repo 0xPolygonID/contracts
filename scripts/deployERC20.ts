@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { packV3ValidatorParams, packValidatorParams } from '../test/utils/pack-utils';
+import { packValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash } from '../test/utils/utils';
 
 const Operators = {
@@ -37,7 +37,6 @@ async function main() {
   // set default query
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
-  const circuitIdV3 = 'credentialAtomicQueryV3OnChain';
 
   // current sig validator address on mumbai
   const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
@@ -106,8 +105,8 @@ async function main() {
                 $lt: value[0]
               }
             },
-            type: type,
-          },
+            type: type
+          }
         }
       ]
     }
