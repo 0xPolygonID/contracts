@@ -31,6 +31,8 @@
   },
   "dependencies": {
     "@iden3/contracts": "1.4.0",
+    "@iden3/js-crypto": "^1.0.3",
+    "@iden3/js-iden3-core": "^1.2.0",
     "@openzeppelin/contracts": "^4.6.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "braces": ">=3.0.2",
