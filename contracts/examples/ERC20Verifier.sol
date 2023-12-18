@@ -4,11 +4,12 @@ pragma solidity 0.8.16;
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
-import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
+import {ZKPVerifier} from './ZKPVerifier.sol';
 
 contract ERC20Verifier is ERC20, ZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 1;
     uint64 public constant TRANSFER_REQUEST_ID_MTP_VALIDATOR = 2;
+    uint64 public constant TRANSFER_REQUEST_ID_V3_VALIDATOR = 1000003;
 
     mapping(uint256 => address) public idToAddress;
     mapping(address => uint256) public addressToId;
@@ -33,7 +34,8 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         uint256[] memory inputs,
         ICircuitValidator validator
     ) internal override {
-        if (requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR || requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR ){
+        if (requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR || requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR ||
+            requestId == TRANSFER_REQUEST_ID_V3_VALIDATOR){
             // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
             uint256 id = inputs[1];
             if (idToAddress[id] == address(0) && addressToId[_msgSender()] == 0) {
@@ -50,7 +52,8 @@ contract ERC20Verifier is ERC20, ZKPVerifier {
         uint256 /* amount */
     ) internal view override {
         require(
-            proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||  proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
+            proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||  proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR] ||
+            proofs[to][TRANSFER_REQUEST_ID_V3_VALIDATOR],
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
     }

@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { packValidatorParams } from '../test/utils/pack-utils';
+import { packV3ValidatorParams, packValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash } from '../test/utils/utils';
 
 const Operators = {
@@ -37,12 +37,16 @@ async function main() {
   // set default query
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
+  const circuitIdV3 = 'credentialAtomicQueryV3OnChain';
 
   // current sig validator address on mumbai
   const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
 
   // current mtp validator address on mumbai
   const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
+
+  // current v3 validator address on mumbai
+  const validatorAddressV3 = '0xeEBE8f9E7b2B8b496e806872C4639d447661fBB7';
 
   const chainId = 80001;
 
@@ -74,11 +78,16 @@ async function main() {
     circuitIds: [circuitIdSig],
     allowedIssuers: [],
     skipClaimRevocationCheck: false,
-    claimPathNotExists: claimPathDoesntExist
+    claimPathNotExists: claimPathDoesntExist,
+    nullifierSessionID: 0,
+    verifierID: 0,
+    groupID: 0,
+    proofType: 1
   };
 
   const requestIdSig = await erc20instance.TRANSFER_REQUEST_ID_SIG_VALIDATOR();
   const requestIdMtp = await erc20instance.TRANSFER_REQUEST_ID_MTP_VALIDATOR();
+  const requestIdV3 = await erc20instance.TRANSFER_REQUEST_ID_V3_VALIDATOR();
 
   const invokeRequestMetadata = {
     id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
@@ -105,8 +114,8 @@ async function main() {
                 $lt: value[0]
               }
             },
-            type: type
-          }
+            type: type,
+          },
         }
       ]
     }
@@ -119,14 +128,13 @@ async function main() {
       validator: validatorAddressSig,
       data: packValidatorParams(query)
     });
-
+    await txSig.wait();
+    console.log(txSig.hash);
+    
+    // mtp request set
     query.circuitIds = [circuitIdMTP];
     invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
     invokeRequestMetadata.body.scope[0].id = requestIdMtp;
-
-    console.log(txSig.hash);
-    await txSig.wait();
-    // mtp request set
     const txMtp = await erc20instance.setZKPRequest(requestIdMtp, {
       metadata: JSON.stringify(invokeRequestMetadata),
       validator: validatorAddressMTP,
@@ -135,6 +143,19 @@ async function main() {
 
     console.log(txMtp.hash);
     await txMtp.wait();
+
+    // v3 request set
+    query.circuitIds = [circuitIdV3];
+    invokeRequestMetadata.body.scope[0].circuitId = circuitIdV3;
+    invokeRequestMetadata.body.scope[0].id = requestIdV3;
+    const txV3 = await erc20instance.setZKPRequest(requestIdV3, {
+      metadata: JSON.stringify(invokeRequestMetadata),
+      validator: validatorAddressV3,
+      data: packV3ValidatorParams(query)
+    });
+
+    console.log(txV3.hash);
+    await txV3.wait();
   } catch (e) {
     console.log('error: ', e);
   }
