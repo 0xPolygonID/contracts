@@ -22,7 +22,7 @@ async function main() {
   const type = 'KYCAgeCredential';
   const schemaClaimPathKey =
     '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  const value = [19960424, ...new Array(63).fill(0)];
+  const value = [0, ...new Array(63).fill(0)];
   const slotIndex = 0; // because schema  is merklized for merklized credential, otherwise you should actual put slot index  https://docs.iden3.io/protocol/non-merklized/#motivation
 
   const contractName = 'ERC20SelectiveDisclosureVerifier';
