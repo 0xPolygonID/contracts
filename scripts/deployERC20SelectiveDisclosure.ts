@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
-import { packV3ValidatorParams, packValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHash } from '../test/utils/utils';
+import { packV3ValidatorParams } from '../test/utils/pack-utils';
+import { calculateQueryHash, buildVerifierId } from '../test/utils/utils';
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -45,6 +45,8 @@ async function main() {
 
   const network = 'polygon-mumbai';
 
+  const id = buildVerifierId(erc20instance.address);
+
   // current v3 validator address on main
   // const validatorAddressV3 = '';
 
@@ -70,7 +72,7 @@ async function main() {
     skipClaimRevocationCheck: false,
     claimPathNotExists: claimPathDoesntExist,
     nullifierSessionID: 0,
-    verifierID: 0,
+    verifierID: id.bigInt().toString(),
     groupID: 0,
     proofType: 1
   };
