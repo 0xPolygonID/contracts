@@ -1,6 +1,7 @@
 import { ethers } from 'hardhat';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash, buildVerifierId } from '../test/utils/utils';
+import { ChainIds, DidMethod } from '@iden3/js-iden3-core';
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -45,7 +46,20 @@ async function main() {
 
   const network = 'polygon-mumbai';
 
-  const id = buildVerifierId(erc20instance.address);
+  const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);
+
+  if (!networkFlag) {
+    throw new Error(`Invalid chain id ${chainId}`);
+  }
+  const [blockchain, networkId] = networkFlag.split(':');
+
+  const id = buildVerifierId(erc20instance.address, {
+    blockchain,
+    networkId,
+    method: DidMethod.Iden3
+  });
+
+  console.log('verifier id = ' + id.bigInt().toString())
 
   // current v3 validator address on main
   // const validatorAddressV3 = '';

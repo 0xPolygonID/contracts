@@ -70,15 +70,14 @@ let coreSchemaFromStr = (schemaIntString: string) => {
   return SchemaHash.newSchemaHashFromInt(schemaInt);
 };
 
-export function buildVerifierId(address: string): Id {
-  if (address.startsWith('0x')) {
-    address = address.slice(2);
-  }
+export function buildVerifierId(address: string,
+  info: { method: string; blockchain: string; networkId: string }): Id {
+  address = address.replace('0x', '');
   const ethAddrBytes = Hex.decodeString(address);
   const ethAddr = ethAddrBytes.slice(0, 20);
   const genesis = genesisFromEthAddress(ethAddr);
 
-  const tp = buildDIDType(DidMethod.Iden3, Blockchain.Polygon, NetworkId.Mumbai);
+  const tp = buildDIDType(info.method, info.blockchain, info.networkId);
 
   return new Id(tp, genesis);
 }
