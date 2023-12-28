@@ -1,11 +1,9 @@
-import { expect } from 'chai';
-import { ethers, network } from 'hardhat';
-import { BalanceCredentialIssuerDeployHelper } from '../helpers/BalanceCredentialIssuerDeployHelperVC';
+import { ethers } from 'hardhat';
+import { BalanceCredentialIssuerDeployHelper } from '../helpers/BalanceCredentialIssuerDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 
-describe.only('Next tests reproduce identity life cycle', function () {
+describe.only('Reproduce identity life cycle', function () {
   this.timeout(10000);
-
   let identity;
 
   before(async function () {
@@ -25,9 +23,9 @@ describe.only('Next tests reproduce identity life cycle', function () {
 
   describe('create identity', function () {
     it("validate identity's id", async function () {
-      const tx = await identity.issueBalanceCredential(1);
+      const tx = await identity.issueCredential(1);
       await tx.wait();
-      const vcs = await identity.getUserVerifiableCredentials(1);
+      const vcs = await identity.getCredentials(1);
       console.log('json result:', JSON.stringify(vcs[0]));
     });
   });

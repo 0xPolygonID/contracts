@@ -42,7 +42,8 @@ export class BalanceCredentialIssuerDeployHelper {
       {
         libraries: {
           ClaimBuilder: cb.address,
-          IdentityLib: il.address
+          IdentityLib: il.address,
+          PoseidonUnit4L: poseidon4.address
         }
       }
     );
