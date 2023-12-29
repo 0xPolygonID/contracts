@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { BalanceCredentialIssuerDeployHelper } from '../helpers/BalanceCredentialIssuerDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 
-describe.only('Reproduce identity life cycle', function () {
+describe('Reproduce identity life cycle', function () {
   this.timeout(10000);
   let identity;
 
