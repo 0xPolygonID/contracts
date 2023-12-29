@@ -25,8 +25,9 @@ describe.only('Reproduce identity life cycle', function () {
     it("validate identity's id", async function () {
       const tx = await identity.issueCredential(1);
       await tx.wait();
-      const vcs = await identity.getCredentials(1);
-      console.log('json result:', JSON.stringify(vcs[0]));
+      const usersCredentials = await identity.listUserCredentials(1);
+      const credential = await identity.getCredential(1, usersCredentials[0].id);
+      console.log('json result:', JSON.stringify(credential));
     });
   });
 });
