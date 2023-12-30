@@ -71,6 +71,25 @@ export async function deployERC20ZKPVerifierToken(
   return erc20Verifier;
 }
 
+export async function deployERC20LinkedUniversalVerifier(
+  name: string,
+  symbol: string
+): Promise<{
+  universalVerifier: Contract;
+  erc20LinkedUniversalVerifier: Contract;
+}> {
+  const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
+  const universalVerifier = await UniversalVerifier.deploy();
+  const ERC20LinkedUniversalVerifier = await ethers.getContractFactory("ERC20LinkedUniversalVerifier");
+  const erc20LinkedUniversalVerifier = await ERC20LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
+  await erc20LinkedUniversalVerifier.deployed();
+  console.log('ERC20LinkedUniversalVerifier deployed to:', erc20LinkedUniversalVerifier.address);
+  return {
+    universalVerifier,
+    erc20LinkedUniversalVerifier
+  };
+}
+
 export interface VerificationInfo {
   inputs: Array<string>;
   pi_a: Array<string>;
