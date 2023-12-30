@@ -40,6 +40,7 @@
     "circomlib": "0.2.2",
     "circomlibjs": "^0.1.7",
     "codecov": "^3.8.2",
+    "contracts_temp": "github:iden3/contracts#41ed1d0f",
     "diff": ">=5.0.0",
     "ethereumjs-util": "^7.1.4",
     "jsonfile": "^6.1.0",
@@ -52,6 +53,7 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
+    "test:universal_verifier": "npx hardhat test ./test/validators/index_univ_ver.ts",
     "test:gas": "REPORT_GAS=true npx hardhat test",
     "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:mumbai:erc20": "npx hardhat run scripts/deployERC20.ts --network mumbai",
