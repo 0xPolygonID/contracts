@@ -11,8 +11,6 @@ contract ERC20LinkedUniversalVerifier is ERC20 {
     uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 0;
     uint64 public constant TRANSFER_REQUEST_ID_MTP_VALIDATOR = 1;
 
-    mapping(uint256 => address) public idToAddress;
-    mapping(address => uint256) public addressToId;
     UniversalVerifier public verifier;
 
     uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10**uint256(decimals());
