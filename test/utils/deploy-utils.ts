@@ -90,6 +90,25 @@ export async function deployERC20LinkedUniversalVerifier(
   };
 }
 
+export async function deployERC721LinkedUniversalVerifier(
+  name: string,
+  symbol: string
+): Promise<{
+  universalVerifier: Contract;
+  erc721LinkedUniversalVerifier: Contract;
+}> {
+  const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
+  const universalVerifier = await UniversalVerifier.deploy();
+  const ERC721LinkedUniversalVerifier = await ethers.getContractFactory("ERC721LinkedUniversalVerifier");
+  const erc721LinkedUniversalVerifier = await ERC721LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
+  await erc721LinkedUniversalVerifier.deployed();
+  console.log('ERC721LinkedUniversalVerifier deployed to:', erc721LinkedUniversalVerifier.address);
+  return {
+    universalVerifier,
+    erc721LinkedUniversalVerifier
+  };
+}
+
 export interface VerificationInfo {
   inputs: Array<string>;
   pi_a: Array<string>;
