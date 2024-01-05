@@ -8,7 +8,8 @@ const Operators = {
   GT: 3, // greater than
   IN: 4, // in
   NIN: 5, // not in
-  NE: 6 // not equal
+  NE: 6, // not equal
+  SD: 16 // selective disclosure
 };
 
 export const QueryOperators = {
@@ -18,55 +19,52 @@ export const QueryOperators = {
   $gt: Operators.GT,
   $in: Operators.IN,
   $nin: Operators.NIN,
-  $ne: Operators.NE
+  $ne: Operators.NE,
+  $sd: Operators.SD
 };
 
 async function main() {
-  // sig:validator:    // current sig validator address on mumbai
-  const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
+  // current v3 validator address on mumbai
+  const validatorAddressV3 = '0xCBde9B14fcF5d56B709234528C44798B4ea64761';
 
-  // mtp:validator:    // current mtp validator address on mumbai
-  const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
-
-  const erc20verifierAddress = '0xD75638D319B1aE2a9491DC61f87a800AD362D168'; //with sig    validatorc
+  const erc20verifierAddress = '0xD0Fd3E9fDF448e5B86Cc0f73E5Ee7D2F284884c0'; //with sig    validatorc
 
   const owner = (await ethers.getSigners())[0];
 
-  const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
+  const ERC20Verifier = await ethers.getContractFactory('ERC20SelectiveDisclosureVerifier');
   const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address on mumbai
 
   // await erc20Verifier.deployed();
   console.log(erc20Verifier, ' attached to:', erc20Verifier.address);
 
   // set default query
-  const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
-  const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
+  const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.0';
 
   const type = 'KYCAgeCredential';
 
   const queryHash = '';
-  const circuitIds = [circuitIdSig];
+  const circuitIds = [circuitIdV3];
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
-  // const schemaUrl =
-  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
-  // const schema = '74977327600848231385663280181476307657';
-  // const schemaClaimPathKey =
-  //   '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  // const slotIndex = 0;
-  // const claimPathDoesntExist = 0;
-  // const requestIdModifier = 1;
+  const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
+  const schema = '74977327600848231385663280181476307657';
+  const schemaClaimPathKey =
+    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+  const slotIndex = 0;
+  const claimPathDoesntExist = 0;
+  const requestIdModifier = 1;
 
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
 
   // init these values for non-merklized credential use case
-  const schemaUrl =
-    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
-  const schemaClaimPathKey = '0';
-  const slotIndex = 2;
-  const claimPathDoesntExist = 1;
-  const schema = '198285726510688200335207273836123338699';
-  const requestIdModifier = 100;
+  // const schemaUrl =
+  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
+  // const schemaClaimPathKey = '0';
+  // const slotIndex = 2;
+  // const claimPathDoesntExist = 1;
+  // const schema = '198285726510688200335207273836123338699';
+  // const requestIdModifier = 100;
 
   const ageQueries = [
     // EQ
@@ -275,7 +273,7 @@ async function main() {
           scope: [
             {
               id: query.requestId,
-              circuitId: circuitIdSig,
+              circuitId: circuitIdV3,
               query: {
                 allowedIssuers: ['*'],
                 context: schemaUrl,
@@ -296,27 +294,12 @@ async function main() {
 
       const tx = await erc20Verifier.setZKPRequest(query.requestId, {
         metadata: JSON.stringify(invokeRequestMetadata),
-        validator: validatorAddressSig,
+        validator: validatorAddressV3,
         data: packValidatorParams(query)
       });
 
       console.log(tx.hash);
       await tx.wait();
-
-      query.circuitIds = [circuitIdMTP];
-      query.requestId = query.requestId + 1000;
-      console.log(query.requestId);
-
-      invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
-      invokeRequestMetadata.body.scope[0].id = query.requestId;
-      // mtp request set
-      const txMtp = await erc20Verifier.setZKPRequest(query.requestId, {
-        metadata: JSON.stringify(invokeRequestMetadata),
-        validator: validatorAddressMTP,
-        data: packValidatorParams(query)
-      });
-      console.log(txMtp.hash);
-      await txMtp.wait();
     }
   } catch (e) {
     console.log('error: ', e);

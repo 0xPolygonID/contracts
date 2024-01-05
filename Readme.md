@@ -10,7 +10,7 @@ We aim to provide deployment of:
 
 Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
 
-Current addresses on Polygon Mumbai testnet. (V1.0.1)
+Current addresses on Polygon Mumbai testnet. (V1.0.1 V2 validators)
 
 |                   |                             Sig                             |                             MTP                              |
 |:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
@@ -18,9 +18,19 @@ Current addresses on Polygon Mumbai testnet. (V1.0.1)
 |  **Validators**   |         0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878          |          0x0682fbaA2E4C478aD5d24d992069dba409766121          |
 | **ERC20 example** | 0xD75638D319B1aE2a9491DC61f87a800AD362D168 (request id = 1) | 0xD75638D319B1aE2a9491DC61f87a800AD362D168  (request id = 2) |
 
+Current addresses for V3 beta circuit on Polygon Mumbai testnet. (1.0.0-beta.0 V3 validator)
+
+|                      |                                                    V3 validator 1.0.0-beta.0                                                    |   
+|:--------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
+|     **Verifier**     |                                           0x3dE74ffCf9Fc0AA6c9fD73b511342a0E653B4129                                            | 
+|    **Validators**    |                                           0xCBde9B14fcF5d56B709234528C44798B4ea64761                                            |     
+| **ERC20 SD example** |                                   0xD0Fd3E9fDF448e5B86Cc0f73E5Ee7D2F284884c0 (request id = 3)                                   |
+|     **ERC20  **      | 0xD0Fd3E9fDF448e5B86Cc0f73E5Ee7D2F284884c0 (request id = 100 - 650 merklized (step 50) / 10000 - 65000 nonmerklized (step 5000) |
 
 
-Current addresses on Polygon Main  (V1.0.1)
+
+
+Current addresses on Polygon Main  (V1.0.1 V2 validators) 
 
 |                   |                                Sig                                |                                MTP                                |
 |:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|

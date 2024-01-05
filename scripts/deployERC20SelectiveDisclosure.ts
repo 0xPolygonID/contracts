@@ -15,7 +15,7 @@ const Operators = {
 };
 
 async function main() {
-  // you can run https://go.dev/play/p/rnrRbxXTRY6 to get schema hash and claimPathKey using YOUR schema
+  // you can run https://go.dev/play/p/3id7HAhf-Wi  to get schema hash and claimPathKey using YOUR schema
   const schema = '74977327600848231385663280181476307657';
   // merklized path to field in the W3C credential according to JSONLD  schema e.g. birthday in the KYCAgeCredential under the url "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld"
   const schemaUrl =
@@ -37,10 +37,10 @@ async function main() {
   console.log(contractName, ' deployed to:', erc20instance.address);
 
   // set default query
-  const circuitIdV3 = 'credentialAtomicQueryV3OnChain';
+  const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.0';
 
   // current v3 validator address on mumbai
-  const validatorAddressV3 = '0x736Ed8bf664cb607f5bBF085A3DF19644622ed5f';
+  const validatorAddressV3 = '0xCBde9B14fcF5d56B709234528C44798B4ea64761';
 
   const chainId = 80001;
 
