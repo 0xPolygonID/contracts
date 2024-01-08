@@ -1,6 +1,7 @@
 import { ethers } from 'hardhat';
-import { packValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHash } from '../test/utils/utils';
+import { packV3ValidatorParams } from '../test/utils/pack-utils';
+import { ChainIds, DidMethod } from '@iden3/js-iden3-core';
+import { buildVerifierId, calculateQueryHash } from '../test/utils/utils';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal
@@ -58,14 +59,31 @@ async function main() {
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
 
   // init these values for non-merklized credential use case
-  // const schemaUrl =
-  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
-  // const schemaClaimPathKey = '0';
-  // const slotIndex = 2;
-  // const claimPathDoesntExist = 1;
-  // const schema = '198285726510688200335207273836123338699';
-  // const requestIdModifier = 100;
+  //  const schemaUrl =
+  //    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
+  //  const schemaClaimPathKey = '0';
+  //  const slotIndex = 2;
+  //  const claimPathDoesntExist = 1;
+  //  const schema = '198285726510688200335207273836123338699';
+  //  const requestIdModifier = 100;
 
+  const chainId = 80001;
+
+  const network = 'polygon-mumbai';
+
+  const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);
+
+  if (!networkFlag) {
+    throw new Error(`Invalid chain id ${chainId}`);
+  }
+  const [blockchain, networkId] = networkFlag.split(':');
+
+  const verifierId = buildVerifierId(erc20Verifier.address, {
+    blockchain,
+    networkId,
+    method: DidMethod.Iden3
+  });
+  console.log(verifierId.bigInt());
   const ageQueries = [
     // EQ
     {
@@ -79,9 +97,13 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
-    //     // LT
+    // LT
     {
       requestId: 200 * requestIdModifier,
       schema: schema,
@@ -93,7 +115,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // GT
     {
@@ -107,7 +133,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // IN
     {
@@ -121,7 +151,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // NIN
     {
@@ -135,7 +169,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // NE
     {
@@ -149,7 +187,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // EQ (corner)
 
@@ -164,7 +206,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
 
     // LT
@@ -179,7 +225,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // GT
     {
@@ -193,7 +243,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // IN corner
 
@@ -208,7 +262,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // NIN corner
     {
@@ -222,7 +280,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     },
     // NE corner
     {
@@ -236,7 +298,11 @@ async function main() {
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
-      claimPathNotExists: claimPathDoesntExist
+      claimPathNotExists: claimPathDoesntExist,
+      verifierID: verifierId.bigInt().toString(),
+      nullifierSessionID: 0,
+      groupID: 0,
+      proofType: 0
     }
   ];
 
@@ -267,8 +333,8 @@ async function main() {
           transaction_data: {
             contract_address: erc20verifierAddress,
             method_id: 'b68967e2',
-            chain_id: 80001,
-            network: 'polygon-mumbai'
+            chain_id: chainId,
+            network: network
           },
           scope: [
             {
@@ -295,7 +361,7 @@ async function main() {
       const tx = await erc20Verifier.setZKPRequest(query.requestId, {
         metadata: JSON.stringify(invokeRequestMetadata),
         validator: validatorAddressV3,
-        data: packValidatorParams(query)
+        data: packV3ValidatorParams(query)
       });
 
       console.log(tx.hash);

@@ -110,6 +110,7 @@ async function main() {
         {
           id: requestIdV3,
           circuitId: circuitIdV3,
+          proofType: 'BJJSignature2021',
           query: {
             allowedIssuers: ['*'],
             context: schemaUrl,
@@ -117,7 +118,7 @@ async function main() {
               birthday: {}
             },
             type: type,
-          },
+          }
         }
       ]
     }
