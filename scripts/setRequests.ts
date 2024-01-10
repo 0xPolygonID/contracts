@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { packValidatorParams } from '../test/utils/pack-utils';
+import { packV2ValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash } from '../test/utils/utils';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -297,7 +297,7 @@ async function main() {
       const tx = await erc20Verifier.setZKPRequest(query.requestId, {
         metadata: JSON.stringify(invokeRequestMetadata),
         validator: validatorAddressSig,
-        data: packValidatorParams(query)
+        data: packV2ValidatorParams(query)
       });
 
       console.log(tx.hash);
@@ -313,7 +313,7 @@ async function main() {
       const txMtp = await erc20Verifier.setZKPRequest(query.requestId, {
         metadata: JSON.stringify(invokeRequestMetadata),
         validator: validatorAddressMTP,
-        data: packValidatorParams(query)
+        data: packV2ValidatorParams(query)
       });
       console.log(txMtp.hash);
       await txMtp.wait();
