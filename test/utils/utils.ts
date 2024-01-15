@@ -38,7 +38,7 @@ export function calculateQueryHash(
   const expValue = prepareCircuitArrayValues(values, 64);
   const valueHash = poseidon.spongeHashX(expValue, 6);
   const schemaHash = coreSchemaFromStr(schema);
-  const quaryHash = poseidon.hash([
+  const queryHash = poseidon.hash([
     schemaHash.bigInt(),
     BigInt(slotIndex),
     BigInt(operator),
@@ -46,7 +46,7 @@ export function calculateQueryHash(
     BigInt(claimPathNotExists),
     valueHash
   ]);
-  return quaryHash;
+  return queryHash;
 }
 
 let prepareCircuitArrayValues = (arr: bigint[], size: number): bigint[] => {

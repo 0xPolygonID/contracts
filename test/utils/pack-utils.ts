@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 
-export function packValidatorParams(query: any, allowedIssuers: any[] = []) {
+export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []) {
   let web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.encodeParameter(
     {

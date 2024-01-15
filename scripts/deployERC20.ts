@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { packValidatorParams } from '../test/utils/pack-utils';
+import { packV2ValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash } from '../test/utils/utils';
 
 const Operators = {
@@ -13,7 +13,7 @@ const Operators = {
 };
 
 async function main() {
-  // you can run https://go.dev/play/p/rnrRbxXTRY6 to get schema hash and claimPathKey using YOUR schema
+  // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
   const schema = '74977327600848231385663280181476307657';
   // merklized path to field in the W3C credential according to JSONLD  schema e.g. birthday in the KYCAgeCredential under the url "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld"
   const schemaUrl =
@@ -117,7 +117,7 @@ async function main() {
     const txSig = await erc20instance.setZKPRequest(requestIdSig, {
       metadata: JSON.stringify(invokeRequestMetadata),
       validator: validatorAddressSig,
-      data: packValidatorParams(query)
+      data: packV2ValidatorParams(query)
     });
     await txSig.wait();
     console.log(txSig.hash);
@@ -129,7 +129,7 @@ async function main() {
     const txMtp = await erc20instance.setZKPRequest(requestIdMtp, {
       metadata: JSON.stringify(invokeRequestMetadata),
       validator: validatorAddressMTP,
-      data: packValidatorParams(query)
+      data: packV2ValidatorParams(query)
     });
 
     console.log(txMtp.hash);
