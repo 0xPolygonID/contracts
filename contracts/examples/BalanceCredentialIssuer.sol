@@ -11,6 +11,7 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
 import {GenesisUtils} from '@iden3/contracts/lib/GenesisUtils.sol';
 import {IState} from '@iden3/contracts/interfaces/IState.sol';
 import {IW3CVerifiableCredential} from '@iden3/contracts/interfaces/IW3CVerifiableCredential.sol';
+import {Strings} from '@openzeppelin/contracts/utils/Strings.sol';
 
 /**
  * @dev Example of decentralized balance credential issuer.
@@ -108,17 +109,14 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable, IW3CVerifi
             value: super.getLatestPublishedState()
         });
 
-        uint256 issuerID = GenesisUtils.calcIdFromEthAddress(
-            state.getDefaultIdType(),
-            address(this)
-        );
         IW3CVerifiableCredential.IssuerData memory issuerData = IW3CVerifiableCredential
-            .IssuerData({id: issuerID, state: _state});
+            .IssuerData({id: identity.id, state: _state});
 
         uint256 hi = PoseidonUnit4L.poseidon(
             [_claim.claim[0], _claim.claim[1], _claim.claim[2], _claim.claim[3]]
         );
         SmtLib.Proof memory mtp = super.getClaimProof(hi);
+        require(mtp.existence, 'Claim does not exist in issuer state');
         IW3CVerifiableCredential.IssuanceProof memory mtpProof = IW3CVerifiableCredential
             .IssuanceProof({
                 _type: 'Iden3SparseMerkleTreeProof',
@@ -166,12 +164,17 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable, IW3CVerifi
 
         return
             IW3CVerifiableCredential.Credential({
-                id: _claim.credentialMetadata.sequenceNumber,
+                id: string(
+                    abi.encodePacked(
+                        'uri:uuid:',
+                        Strings.toString(_claim.credentialMetadata.sequenceNumber)
+                    )
+                ),
                 context: credentialContext,
                 _type: credentialType,
                 expirationDate: _claim.credentialMetadata.expirationDate,
                 issuanceDate: _claim.credentialMetadata.issuanceDate,
-                issuer: issuerID,
+                issuer: identity.id,
                 credentialSubject: credentialSubject,
                 credentialStatus: buildCredentialStatusVerifiableCredential(
                     _claim.credentialMetadata.sequenceNumber
