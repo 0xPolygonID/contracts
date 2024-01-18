@@ -23,10 +23,8 @@ export class OnchainIdentityDeployHelper {
   }
 
   async deployIdentity(
-    state: Contract,
+    stateAddress: string,
     smtLib: Contract,
-    poseidon1: Contract,
-    poseidon2: Contract,
     poseidon3: Contract,
     poseidon4: Contract
   ): Promise<{
@@ -46,7 +44,7 @@ export class OnchainIdentityDeployHelper {
         IdentityLib: il.address
       }
     });
-    const Identity = await upgrades.deployProxy(IdentityFactory, [state.address], {
+    const Identity = await upgrades.deployProxy(IdentityFactory, [stateAddress], {
       unsafeAllowLinkedLibraries: true
     });
     await Identity.deployed();
