@@ -4,40 +4,16 @@ pragma solidity 0.8.16;
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
-import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
+import {OnchainNonMerklizedIdentityBase} from '@iden3/contracts/lib/OnchainNonMerklizedIdentityBase.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
-import {SmtLib} from '@iden3/contracts/lib/SmtLib.sol';
 import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
-import {GenesisUtils} from '@iden3/contracts/lib/GenesisUtils.sol';
-import {IState} from '@iden3/contracts/interfaces/IState.sol';
-import {IW3CVerifiableCredential} from '@iden3/contracts/interfaces/IW3CVerifiableCredential.sol';
-import {Strings} from '@openzeppelin/contracts/utils/Strings.sol';
 
 /**
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable, IW3CVerifiableCredential {
+contract BalanceCredentialIssuer is OnchainNonMerklizedIdentityBase, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
-    IState private state;
-
-    struct BalanceCredentialSubject {
-        uint256 balance;
-        uint256 ownerAddress;
-    }
-
-    struct CredentialMetadata {
-        uint64 expirationDate;
-        uint64 issuanceDate;
-        uint64 sequenceNumber;
-    }
-
-    // Claim representation
-    struct Claim {
-        uint256[8] claim;
-        BalanceCredentialSubject balanceCredentialSubject;
-        CredentialMetadata credentialMetadata;
-    }
 
     /**
      * @dev Version of contract
@@ -48,143 +24,69 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable, IW3CVerifi
     // More about schema: https://devs.polygonid.com/docs/issuer-node/issuer-node-api/claim/apis/#get-claims
     uint256 private constant jsonldSchemaHash = 134825296953649542485291823871789853562;
 
-    uint256[500] private __gap_before;
+    struct ClaimData {
+        CredentialMetadata metadata;
+        Claim claim;
+    }
 
+    uint256[500] private __gap_before;
     // countOfIssuedClaims count of issued claims for incrementing id and revocation nonce for new claims
     uint64 private countOfIssuedClaims = 0;
-    mapping(uint256 => Claim[]) private claimStorage;
-
-    uint256[48] private __gap_after;
+    // claims sotre
+    mapping(uint256 => Id[]) private userClaims;
+    mapping(uint256 => ClaimData) private idToClaim;
+    // this mapping is used to store credential subject fields
+    // to escape additional copy in issueCredential function
+    // since "Copying of type struct OnchainNonMerklizedIdentityBase.SubjectField memory[] memory to storage not yet supported.""
+    mapping(uint256 => SubjectField[]) private idToCredentialSubject;
+    uint256[46] private __gap_after;
 
     function initialize(address _stateContractAddr) public override initializer {
-        IdentityBase.initialize(_stateContractAddr);
-        state = IState(_stateContractAddr);
+        super.initialize(_stateContractAddr);
         __Ownable_init();
     }
 
     /**
-     * @dev Get user's credentials ids
+     * @dev Get user's id list of credentials
      * @param _userId - user id
+     * @return list of credential ids
      */
-    function listUserCredentials(
-        uint256 _userId
-    ) public view returns (IW3CVerifiableCredential.Id[] memory) {
-        Claim[] memory claims = claimStorage[_userId];
-        IW3CVerifiableCredential.Id[] memory credentials = new IW3CVerifiableCredential.Id[](
-            claims.length
-        );
-        for (uint i = 0; i < claims.length; i++) {
-            credentials[i] = IW3CVerifiableCredential.Id(
-                claims[i].credentialMetadata.sequenceNumber
-            );
-        }
-        return credentials;
+    function listUserCredentials(uint256 _userId) external view override returns (Id[] memory) {
+        return userClaims[_userId];
     }
 
     /**
-     * @dev Get user's verifiable credentials
+     * @dev Get credential by id
      * @param _userId - user id
      * @param _credentialId - credential id
+     * @return credential data
      */
     function getCredential(
         uint256 _userId,
         uint256 _credentialId
-    ) public view returns (IW3CVerifiableCredential.Credential memory) {
-        Claim[] memory claims = claimStorage[_userId];
-        for (uint i = 0; i < claims.length; i++) {
-            if (claims[i].credentialMetadata.sequenceNumber == _credentialId) {
-                return convertToVerifiableCredential(claims[i]);
-            }
-        }
-        revert('Credential not found');
-    }
+    ) external view override returns (CredentialData memory) {
+        string[] memory jsonLDContextUrls = new string[](1);
+        //prettier-ignore
+        jsonLDContextUrls[0] = 
+            'https://gist.githubusercontent.com/ilya-korotya/ac20f870943abd4805fe882ae8f3dccd/raw/1d9969a6d0454280c8d5e79b959faf9b3978b497/balance.jsonld';
 
-    function convertToVerifiableCredential(
-        Claim memory _claim
-    ) private view returns (IW3CVerifiableCredential.Credential memory) {
-        IW3CVerifiableCredential.State memory _state = IW3CVerifiableCredential.State({
-            rootOfRoots: super.getLatestPublishedRootsRoot(),
-            claimsTreeRoot: super.getLatestPublishedClaimsRoot(),
-            revocationTreeRoot: super.getLatestPublishedRevocationsRoot(),
-            value: super.getLatestPublishedState()
-        });
-
-        IW3CVerifiableCredential.IssuerData memory issuerData = IW3CVerifiableCredential
-            .IssuerData({id: identity.id, state: _state});
-
-        uint256 hi = PoseidonUnit4L.poseidon(
-            [_claim.claim[0], _claim.claim[1], _claim.claim[2], _claim.claim[3]]
-        );
-        SmtLib.Proof memory mtp = super.getClaimProof(hi);
-        require(mtp.existence, 'Claim does not exist in issuer state');
-        IW3CVerifiableCredential.IssuanceProof memory mtpProof = IW3CVerifiableCredential
-            .IssuanceProof({
-                _type: 'Iden3SparseMerkleTreeProof',
-                coreClaim: _claim.claim,
-                mtp: mtp,
-                issuerData: issuerData
-            });
-        IW3CVerifiableCredential.IssuanceProof[]
-            memory proofs = new IW3CVerifiableCredential.IssuanceProof[](1);
-        proofs[0] = mtpProof;
-
-        IW3CVerifiableCredential.SubjectField[]
-            memory credentialSubject = new IW3CVerifiableCredential.SubjectField[](4);
-        credentialSubject[0] = IW3CVerifiableCredential.SubjectField({
-            key: 'id',
-            value: _claim.claim[1],
-            rawValue: ''
-        });
-        credentialSubject[1] = IW3CVerifiableCredential.SubjectField({
-            key: 'balance',
-            value: _claim.balanceCredentialSubject.balance,
-            rawValue: ''
-        });
-        credentialSubject[2] = IW3CVerifiableCredential.SubjectField({
-            key: 'address',
-            value: _claim.balanceCredentialSubject.ownerAddress,
-            rawValue: ''
-        });
-        credentialSubject[3] = IW3CVerifiableCredential.SubjectField({
-            key: 'type',
-            value: 0,
-            rawValue: bytes('Balance')
-        });
-
-        string[] memory credentialContext = new string[](3);
-        credentialContext[0] = 'https://www.w3.org/2018/credentials/v1';
-        credentialContext[1] = 'https://schema.iden3.io/core/jsonld/iden3proofs.jsonld';
-        credentialContext[
-            2
-        ] = 'https://gist.githubusercontent.com/ilya-korotya/ac20f870943abd4805fe882ae8f3dccd/raw/1d9969a6d0454280c8d5e79b959faf9b3978b497/balance.jsonld';
-
-        string[] memory credentialType = new string[](2);
-        credentialType[0] = 'VerifiableCredential';
-        credentialType[1] = 'Balance';
-
+        ClaimData memory claim = idToClaim[_credentialId];
         return
-            IW3CVerifiableCredential.Credential({
-                id: string(
-                    abi.encodePacked(
-                        'uri:uuid:',
-                        Strings.toString(_claim.credentialMetadata.sequenceNumber)
-                    )
-                ),
-                context: credentialContext,
-                _type: credentialType,
-                expirationDate: _claim.credentialMetadata.expirationDate,
-                issuanceDate: _claim.credentialMetadata.issuanceDate,
-                issuer: identity.id,
-                credentialSubject: credentialSubject,
-                credentialStatus: buildCredentialStatusVerifiableCredential(
-                    _claim.credentialMetadata.sequenceNumber
-                ),
-                credentialSchema: IW3CVerifiableCredential.Schema({
-                    id: 'https://gist.githubusercontent.com/ilya-korotya/26ba81feb4da2f49f4b473661b80e8e3/raw/32113f4725088f32f31a6b06b4abdc94bc4b2d17/balance.json',
-                    _type: 'JsonSchema2023'
+            processOnchainCredentialData(
+                CredentialInformation({
+                    jsonLDContextUrls: jsonLDContextUrls,
+                    jsonSchemaUrl: 'https://gist.githubusercontent.com/ilya-korotya/26ba81feb4da2f49f4b473661b80e8e3/raw/32113f4725088f32f31a6b06b4abdc94bc4b2d17/balance.json',
+                    _type: 'Balance'
                 }),
-                proof: proofs
-            });
+                CredentialMetadata({
+                    id: claim.metadata.id,
+                    revocationNonce: claim.metadata.revocationNonce,
+                    issuanceDate: claim.metadata.issuanceDate,
+                    expirationDate: claim.metadata.expirationDate
+                }),
+                idToCredentialSubject[_credentialId],
+                claim.claim
+            );
     }
 
     /**
@@ -225,31 +127,43 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable, IW3CVerifi
         });
         uint256[8] memory claim = ClaimBuilder.build(claimData);
 
-        Claim memory internalClaim = Claim({
-            claim: claim,
-            balanceCredentialSubject: BalanceCredentialSubject({
-                ownerAddress: ownerAddress,
-                balance: ownerBalance
-            }),
-            credentialMetadata: CredentialMetadata({
-                sequenceNumber: countOfIssuedClaims,
+        uint256 hashIndex = PoseidonUnit4L.poseidon([claim[0], claim[1], claim[2], claim[3]]);
+        uint256 hashValue = PoseidonUnit4L.poseidon([claim[4], claim[5], claim[6], claim[7]]);
+
+        ClaimData memory claimToSave = ClaimData(
+            CredentialMetadata({
+                id: countOfIssuedClaims,
+                revocationNonce: countOfIssuedClaims,
                 issuanceDate: convertTime(block.timestamp),
                 expirationDate: expirationDate
-            })
-        });
-        addClaimAndTransit(claim);
-        saveClaim(_userId, internalClaim);
+            }),
+            Claim({coreClaim: claim, hashIndex: hashIndex, hashValue: hashValue})
+        );
+
+        idToCredentialSubject[countOfIssuedClaims].push(
+            SubjectField({key: 'balance', value: ownerBalance, rawValue: ''})
+        );
+        idToCredentialSubject[countOfIssuedClaims].push(
+            SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
+        );
+        idToCredentialSubject[countOfIssuedClaims].push(
+            SubjectField({key: 'id', value: _userId, rawValue: ''})
+        );
+
+        addClaimHashAndTransit(hashIndex, hashValue);
+        saveClaim(_userId, claimToSave);
     }
 
     // saveClaim save a claim to storage
-    function saveClaim(uint256 _userId, Claim memory _claim) private {
-        claimStorage[_userId].push(_claim);
+    function saveClaim(uint256 _userId, ClaimData memory _claim) private {
+        userClaims[_userId].push(Id({id: countOfIssuedClaims}));
+        idToClaim[countOfIssuedClaims] = _claim;
         countOfIssuedClaims++;
     }
 
     // addClaimAndTransit add a claim to the identity and transit state
-    function addClaimAndTransit(uint256[8] memory _claim) private {
-        identity.addClaim(_claim);
+    function addClaimHashAndTransit(uint256 hashIndex, uint256 hashValue) private {
+        identity.addClaimHash(hashIndex, hashValue);
         identity.transitState();
     }
 
@@ -260,16 +174,5 @@ contract BalanceCredentialIssuer is IdentityBase, OwnableUpgradeable, IW3CVerifi
     function convertTime(uint256 timestamp) private pure returns (uint64) {
         require(timestamp <= type(uint64).max, 'Timestamp exceeds uint64 range');
         return uint64(timestamp);
-    }
-
-    function buildCredentialStatusVerifiableCredential(
-        uint64 _revocationNonce
-    ) private pure returns (IW3CVerifiableCredential.Status memory) {
-        return
-            IW3CVerifiableCredential.Status({
-                id: '/credentialStatus',
-                _type: 'Iden3OnchainSparseMerkleTreeProof2023',
-                revocationNonce: _revocationNonce
-            });
     }
 }
