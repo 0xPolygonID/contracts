@@ -130,8 +130,12 @@ export class StateDeployHelper {
     const ValidatorFactory = await ethers.getContractFactory(validatorContractName);
     const validator = await upgrades.upgradeProxy(validatorAddress, ValidatorFactory);
     await validator.deployed();
-    const s = await validator.getSupportedCircuitIds();
-    console.log('======== validator: ', s);
+    const circuits = await validator.getSupportedCircuitIds();
+
+    console.log('======== validator circuits: ', circuits);
+
+    const version = await validator.VERSION();
+    console.log('======== validator version: ', version);
 
     console.log(
       `Validator contract upgraded at address ${validator.address} from ${owner.address}`

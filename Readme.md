@@ -20,7 +20,7 @@ Current addresses on Polygon Mumbai testnet. (V1.0.1 V2 validators)
 
 Current addresses for V3 beta circuit on Polygon Mumbai testnet. (1.0.0-beta.0 V3 validator)
 
-|                      |                                                    V3 validator 1.0.0-beta.0                                                    |   
+|                      |                                                    V3 validator 1.0.1-beta.0                                                    |   
 |:--------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
 |     **Verifier**     |                                           0x3dE74ffCf9Fc0AA6c9fD73b511342a0E653B4129                                            | 
 |    **Validators**    |                                           0xCBde9B14fcF5d56B709234528C44798B4ea64761                                            |     
