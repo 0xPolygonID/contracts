@@ -4,7 +4,7 @@ pragma solidity 0.8.16;
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
-import {OnchainNonMerklizedIdentityBase} from '@iden3/contracts/lib/OnchainNonMerklizedIdentityBase.sol';
+import {NonMerklizedIssuer} from '@iden3/contracts/lib/NonMerklizedIssuer.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
 
@@ -12,7 +12,7 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is OnchainNonMerklizedIdentityBase, OwnableUpgradeable {
+contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
     /**
@@ -33,7 +33,7 @@ contract BalanceCredentialIssuer is OnchainNonMerklizedIdentityBase, OwnableUpgr
     // countOfIssuedClaims count of issued claims for incrementing id and revocation nonce for new claims
     uint64 private countOfIssuedClaims = 0;
     // claims sotre
-    mapping(uint256 => Id[]) private userClaims;
+    mapping(uint256 => uint256[]) private userClaims;
     mapping(uint256 => ClaimData) private idToClaim;
     // this mapping is used to store credential subject fields
     // to escape additional copy in issueCredential function
@@ -51,7 +51,7 @@ contract BalanceCredentialIssuer is OnchainNonMerklizedIdentityBase, OwnableUpgr
      * @param _userId - user id
      * @return list of credential ids
      */
-    function listUserCredentials(uint256 _userId) external view override returns (Id[] memory) {
+    function listUserCredentialIds(uint256 _userId) external view override returns (uint256[] memory) {
         return userClaims[_userId];
     }
 
@@ -85,7 +85,7 @@ contract BalanceCredentialIssuer is OnchainNonMerklizedIdentityBase, OwnableUpgr
                     expirationDate: claim.metadata.expirationDate
                 }),
                 idToCredentialSubject[_credentialId],
-                claim.claim
+                claim.claim,
             );
     }
 
@@ -146,17 +146,14 @@ contract BalanceCredentialIssuer is OnchainNonMerklizedIdentityBase, OwnableUpgr
         idToCredentialSubject[countOfIssuedClaims].push(
             SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
         );
-        idToCredentialSubject[countOfIssuedClaims].push(
-            SubjectField({key: 'id', value: _userId, rawValue: ''})
-        );
-
+       
         addClaimHashAndTransit(hashIndex, hashValue);
         saveClaim(_userId, claimToSave);
     }
 
     // saveClaim save a claim to storage
     function saveClaim(uint256 _userId, ClaimData memory _claim) private {
-        userClaims[_userId].push(Id({id: countOfIssuedClaims}));
+        userClaims[_userId].push(countOfIssuedClaims);
         idToClaim[countOfIssuedClaims] = _claim;
         countOfIssuedClaims++;
     }

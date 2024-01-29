@@ -50,8 +50,8 @@ const config: HardhatUserConfig = {
     // },
     mumbai: {
       chainId: 80001,
-      url: `${process.env.MUMBAI_RPC_URL}`,
-      accounts: [`0x${process.env.MUMBAI_PRIVATE_KEY}`]
+      url: `https://polygon-mumbai.g.alchemy.com/v2/6S0RiH55rrmlnrkMiEm0IL2Zy4O-VrnQ`,
+      accounts: ['794b190c537189d5b74440122ea1a91546164fc887673f8155665c334d88912d']
     },
     localhost: {
       url: 'http://127.0.0.1:8545',

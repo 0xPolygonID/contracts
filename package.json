@@ -64,7 +64,6 @@
     "deploy:main:erc20": "npx hardhat run scripts/deployERC20.ts --network main",
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "lint:contracts": "npx solhint contracts/**/*.sol",
-    "lint:contracts:format": "npx prettier --write contracts/**/*.sol",
-    "deploy:mumbai:balanceVC": "REPORT_GAS=true npx hardhat run scripts/deployBalanceCredentialIssuerVC.ts --network mumbai"
+    "lint:contracts:format": "npx prettier --write contracts/**/*.sol"
   }
 }
