@@ -1,6 +1,10 @@
+# Contracts
+
+This repository contains examples of smart contracts and deployment scripts.
+
 ## ERC20 example
 
-Repository contains implementation of the example smart contract and deployed sig/mtp validator onchain zero-knowledge proof verification.
+Example of ERC20 smart contract.
 
 We aim to provide deployment of:
 
@@ -39,6 +43,10 @@ Current addresses on Polygon Main  (V1.0.1 V2 validators)
 | **ERC20 example** | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B (request id = 1 (sig)) | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B  (request id = 2 (mtp) |
 
 
+## BalanceCredentialIssuer
+
+Example of non-merklized onchain issuer.
+
 Current addresses of example BalanceCredentialIssuer on Polygon Mumbai testnet.
 
 |                             |                    Sig                     |
@@ -65,7 +73,7 @@ Current addresses of example BalanceCredentialIssuer on Polygon Main.
 
 
 
-
+## Legacy
 
 Legacy addresses on Polygon Mumbai testnet.
 
@@ -87,3 +95,18 @@ Legacy ERC20 examples with airdrop use case, not restricted
 |:------------------:|:------------------------------------------:|:-----------------------------------------:|
 |   **Validators**   |0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b  |0x5f24dD9FbEa358B9dD96daA281e82160fdefD3CD |
 | **ERC20 examples** |0x7C14Aa764130852A8B64BA7058bf71E4292d677F  |0xa3Bc012FCf034bee8d16161730CE4eAb34C35100 |
+
+## Deploy scripts
+
+1. **deploy:mumbai:erc20** - deploy erc20 smart contract to polygon mumbai
+1. **deploy:mumbai:sig** - deploy signature validator to polygon mumbai
+1. **deploy:mumbai:mtp** - deploy MTP validator to polygon mumbai
+1. **deploy:main:erc20** - deploy erc20 smart contract to polygon mainnet
+1. **deploy:main:sig** - deploy signature validator to polygon mainnet
+1. **deploy:main:mtp** - deploy MTP validator to polygon mainnet
+
+1. **deploy:mumbai:identityexample** - deploy onchain merklized issuer example to polygon mumbai
+1. **deploy:main:identityexample** - deploy onchain merklized issuer example to polygon mainnet
+
+1. **deploy:mumbai:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mumbai
+1. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mainnet
