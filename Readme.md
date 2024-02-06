@@ -4,7 +4,7 @@ This repository contains examples of smart contracts and deployment scripts.
 
 ## ERC20 example
 
-Example of ERC20 smart contract.
+The example of ERC20 smart contract. This example shows how to use sig/mtp validator to verification zero-knowledge proof on-chain.
 
 We aim to provide deployment of:
 
@@ -45,7 +45,7 @@ Current addresses on Polygon Main  (V1.0.1 V2 validators)
 
 ## BalanceCredentialIssuer
 
-Example of non-merklized onchain issuer.
+Here is an example of a **non-merklized** on-chain issuer. This example demonstrates how to use the IdentityBase library to create your own on-chain issuer implementation.
 
 Current addresses of example BalanceCredentialIssuer on Polygon Mumbai testnet.
 
@@ -72,6 +72,9 @@ Current addresses of example BalanceCredentialIssuer on Polygon Main.
 | **BalanceCredentialIssuer** | 0x029301b6cC1399D9260a08943aC0CB9f18C12acC |
 
 
+## IdentityExample
+
+Here is an example of a **merklized** on-chain issuer. This example demonstrates how to use the IdentityBase library to create your own on-chain issuer implementation. There is no deployed contracts since each user is required to deploy the contract independently. Only the contract owner has the authority to issue a claim.
 
 ## Legacy
 
