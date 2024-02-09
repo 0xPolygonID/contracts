@@ -4,7 +4,8 @@ pragma solidity 0.8.16;
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
-import {NonMerklizedIssuer} from '@iden3/contracts/lib/NonMerklizedIssuer.sol';
+import {INonMerklizedIssuer, NonMerklizedIssuerLib} from '@iden3/contracts/lib/NonMerklizedIssuer.sol';
+import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
 
@@ -12,7 +13,7 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
+contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
     /**
@@ -22,11 +23,14 @@ contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
 
     // jsonldSchemaHash hash of jsonld schema.
     // More about schema: https://devs.polygonid.com/docs/issuer-node/issuer-node-api/claim/apis/#get-claims
-    uint256 private constant jsonldSchemaHash = 134825296953649542485291823871789853562;
+    uint256 private constant jsonldSchemaHash = 148834697620350657501993499321116864501;
+    string private constant jsonSchema = "https://gist.githubusercontent.com/ilya-korotya/e10cd79a8cc26ab6e40400a11838617e/raw/575edc33d485e2a4c806baad97e21117f3c90a9f/non-merklized-non-zero-balance.json";
+    string private constant jsonldSchema = "https://gist.githubusercontent.com/ilya-korotya/660496c859f8d31a7d2a92ca5e970967/raw/6b5fc14fe630c17bfa52e05e08fdc8394c5ea0ce/non-merklized-non-zero-balance.jsonld";
 
-    struct ClaimData {
-        CredentialMetadata metadata;
-        Claim claim;
+    struct ClaimItem {
+        uint256 id;
+        uint64 issuanceDate;
+        uint256[8] claim;
     }
 
     uint256[500] private __gap_before;
@@ -34,11 +38,11 @@ contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
     uint64 private countOfIssuedClaims = 0;
     // claims sotre
     mapping(uint256 => uint256[]) private userClaims;
-    mapping(uint256 => ClaimData) private idToClaim;
+    mapping(uint256 => ClaimItem) private idToClaim;
     // this mapping is used to store credential subject fields
     // to escape additional copy in issueCredential function
-    // since "Copying of type struct OnchainNonMerklizedIdentityBase.SubjectField memory[] memory to storage not yet supported.""
-    mapping(uint256 => SubjectField[]) private idToCredentialSubject;
+    // since "Copying of type struct OnchainNonMerklizedIdentityBase.SubjectField memory[] memory to storage not yet supported."
+    mapping(uint256 => NonMerklizedIssuerLib.SubjectField[]) private idToCredentialSubject;
     uint256[46] private __gap_after;
 
     function initialize(address _stateContractAddr) public override initializer {
@@ -46,12 +50,17 @@ contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
         __Ownable_init();
     }
 
+    // credentialProtocolVersion returns the version of the credential protocol
+    function credentialProtocolVersion() external pure returns (string memory) {
+        return NonMerklizedIssuerLib.CREDENTIAL_PROTOCOL_VERSION;
+    }
+
     /**
      * @dev Get user's id list of credentials
      * @param _userId - user id
      * @return list of credential ids
      */
-    function listUserCredentialIds(uint256 _userId) external view override returns (uint256[] memory) {
+    function listUserCredentialIds(uint256 _userId) external view returns (uint256[] memory) {
         return userClaims[_userId];
     }
 
@@ -64,29 +73,23 @@ contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
     function getCredential(
         uint256 _userId,
         uint256 _credentialId
-    ) external view override returns (CredentialData memory) {
+    ) external view override returns (
+        NonMerklizedIssuerLib.CredentialData memory, 
+        uint256[8] memory, 
+        NonMerklizedIssuerLib.SubjectField[] memory
+    ) {
         string[] memory jsonLDContextUrls = new string[](1);
-        //prettier-ignore
-        jsonLDContextUrls[0] = 
-            'https://gist.githubusercontent.com/ilya-korotya/ac20f870943abd4805fe882ae8f3dccd/raw/1d9969a6d0454280c8d5e79b959faf9b3978b497/balance.jsonld';
+        jsonLDContextUrls[0] = jsonldSchema;
 
-        ClaimData memory claim = idToClaim[_credentialId];
-        return
-            processOnchainCredentialData(
-                CredentialInformation({
-                    jsonLDContextUrls: jsonLDContextUrls,
-                    jsonSchemaUrl: 'https://gist.githubusercontent.com/ilya-korotya/26ba81feb4da2f49f4b473661b80e8e3/raw/32113f4725088f32f31a6b06b4abdc94bc4b2d17/balance.json',
-                    _type: 'Balance'
-                }),
-                CredentialMetadata({
-                    id: claim.metadata.id,
-                    revocationNonce: claim.metadata.revocationNonce,
-                    issuanceDate: claim.metadata.issuanceDate,
-                    expirationDate: claim.metadata.expirationDate
-                }),
-                idToCredentialSubject[_credentialId],
-                claim.claim,
-            );
+        ClaimItem memory claimItem = idToClaim[_credentialId];
+        NonMerklizedIssuerLib.CredentialData memory credentialData = NonMerklizedIssuerLib.CredentialData({
+            id: claimItem.id,
+            context: jsonLDContextUrls,
+            _type: 'Balance',
+            issuanceDate: claimItem.issuanceDate,
+            credentialSchema: jsonSchema
+        });
+        return (credentialData, claimItem.claim, idToCredentialSubject[_credentialId]);
     }
 
     /**
@@ -105,7 +108,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
     function issueCredential(uint256 _userId) public {
         uint64 expirationDate = convertTime(block.timestamp + 30 days);
         uint256 ownerAddress = PrimitiveTypeUtils.addressToUint256(msg.sender);
-        uint256 ownerBalance = weiToGwei(msg.sender.balance);
+        uint256 ownerBalance = msg.sender.balance;
 
         ClaimBuilder.ClaimData memory claimData = ClaimBuilder.ClaimData({
             // metadata
@@ -130,21 +133,17 @@ contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
         uint256 hashIndex = PoseidonUnit4L.poseidon([claim[0], claim[1], claim[2], claim[3]]);
         uint256 hashValue = PoseidonUnit4L.poseidon([claim[4], claim[5], claim[6], claim[7]]);
 
-        ClaimData memory claimToSave = ClaimData(
-            CredentialMetadata({
-                id: countOfIssuedClaims,
-                revocationNonce: countOfIssuedClaims,
-                issuanceDate: convertTime(block.timestamp),
-                expirationDate: expirationDate
-            }),
-            Claim({coreClaim: claim, hashIndex: hashIndex, hashValue: hashValue})
-        );
+        ClaimItem memory claimToSave = ClaimItem({
+            id: countOfIssuedClaims,
+            issuanceDate: convertTime(block.timestamp),
+            claim: claim
+        });
 
         idToCredentialSubject[countOfIssuedClaims].push(
-            SubjectField({key: 'balance', value: ownerBalance, rawValue: ''})
+            NonMerklizedIssuerLib.SubjectField({key: 'balance', value: ownerBalance, rawValue: ''})
         );
         idToCredentialSubject[countOfIssuedClaims].push(
-            SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
+            NonMerklizedIssuerLib.SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
         );
        
         addClaimHashAndTransit(hashIndex, hashValue);
@@ -152,20 +151,16 @@ contract BalanceCredentialIssuer is NonMerklizedIssuer, OwnableUpgradeable {
     }
 
     // saveClaim save a claim to storage
-    function saveClaim(uint256 _userId, ClaimData memory _claim) private {
+    function saveClaim(uint256 _userId, ClaimItem memory _claim) private {
         userClaims[_userId].push(countOfIssuedClaims);
         idToClaim[countOfIssuedClaims] = _claim;
         countOfIssuedClaims++;
     }
 
-    // addClaimAndTransit add a claim to the identity and transit state
+    // addClaimHashAndTransit add a claim to the identity and transit state
     function addClaimHashAndTransit(uint256 hashIndex, uint256 hashValue) private {
         identity.addClaimHash(hashIndex, hashValue);
         identity.transitState();
-    }
-
-    function weiToGwei(uint weiAmount) private pure returns (uint256) {
-        return weiAmount / 1e9;
     }
 
     function convertTime(uint256 timestamp) private pure returns (uint64) {

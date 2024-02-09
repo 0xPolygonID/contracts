@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { BalanceCredentialIssuerDeployHelper } from '../helpers/BalanceCredentialIssuerDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 
-describe.only('Reproduce identity life cycle', function () {
+describe('Reproduce identity life cycle', function () {
   this.timeout(10000);
   let identity;
 
@@ -25,8 +25,8 @@ describe.only('Reproduce identity life cycle', function () {
     it("validate identity's id", async function () {
       const tx = await identity.issueCredential(1);
       await tx.wait();
-      const usersCredentials = await identity.listUserCredentials(1);
-      const credential = await identity.getCredential(1, usersCredentials[0].id);
+      const usersCredentials = await identity.listUserCredentialIds(1);
+      const credential = await identity.getCredential(1, usersCredentials[0]);
       console.log('json result:', JSON.stringify(credential));
     });
   });
