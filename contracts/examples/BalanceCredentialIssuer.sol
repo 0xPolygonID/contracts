@@ -16,6 +16,29 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
 contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
+    /// @custom:storage-location erc7201:balance.credential.issuer.storage
+    struct Storage {
+        // countOfIssuedClaims count of issued claims for incrementing id and revocation nonce for new claims
+        uint64 countOfIssuedClaims;
+        // claims sotre
+        mapping(uint256 => uint256[]) userClaims;
+        mapping(uint256 => ClaimItem) idToClaim;
+        // this mapping is used to store credential subject fields
+        // to escape additional copy in issueCredential function
+        // since "Copying of type struct OnchainNonMerklizedIdentityBase.SubjectField memory[] memory to storage not yet supported."
+        mapping(uint256 => NonMerklizedIssuerLib.SubjectField[]) idToCredentialSubject;
+    }
+
+    bytes32 private constant STORAGE_LOCATION =
+        0x019dfb46485f789e684dc5f54f13de3e6ef161b4d8709723f90193e84ea09c53;
+
+    function getStorage() private pure returns (Storage storage $) {
+        bytes32 location = STORAGE_LOCATION;
+        assembly {
+            $.slot := location
+        }
+    }
+
     /**
      * @dev Version of contract
      */
@@ -33,17 +56,6 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
         uint256[8] claim;
     }
 
-    uint256[500] private __gap_before;
-    // countOfIssuedClaims count of issued claims for incrementing id and revocation nonce for new claims
-    uint64 private countOfIssuedClaims = 0;
-    // claims sotre
-    mapping(uint256 => uint256[]) private userClaims;
-    mapping(uint256 => ClaimItem) private idToClaim;
-    // this mapping is used to store credential subject fields
-    // to escape additional copy in issueCredential function
-    // since "Copying of type struct OnchainNonMerklizedIdentityBase.SubjectField memory[] memory to storage not yet supported."
-    mapping(uint256 => NonMerklizedIssuerLib.SubjectField[]) private idToCredentialSubject;
-    uint256[46] private __gap_after;
 
     function initialize(address _stateContractAddr) public override initializer {
         super.initialize(_stateContractAddr);
@@ -61,7 +73,8 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
      * @return list of credential ids
      */
     function listUserCredentialIds(uint256 _userId) external view returns (uint256[] memory) {
-        return userClaims[_userId];
+        Storage storage $ = getStorage();
+        return $.userClaims[_userId];
     }
 
     /**
@@ -78,10 +91,12 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
         uint256[8] memory, 
         NonMerklizedIssuerLib.SubjectField[] memory
     ) {
+        Storage storage $ = getStorage();
+
         string[] memory jsonLDContextUrls = new string[](1);
         jsonLDContextUrls[0] = jsonldSchema;
 
-        ClaimItem memory claimItem = idToClaim[_credentialId];
+        ClaimItem memory claimItem = $.idToClaim[_credentialId];
         NonMerklizedIssuerLib.CredentialData memory credentialData = NonMerklizedIssuerLib.CredentialData({
             id: claimItem.id,
             context: jsonLDContextUrls,
@@ -89,7 +104,7 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
             issuanceDate: claimItem.issuanceDate,
             credentialSchema: jsonSchema
         });
-        return (credentialData, claimItem.claim, idToCredentialSubject[_credentialId]);
+        return (credentialData, claimItem.claim, $.idToCredentialSubject[_credentialId]);
     }
 
     /**
@@ -106,6 +121,8 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
      * @param _userId - user id for which the claim is issued
      */
     function issueCredential(uint256 _userId) public {
+        Storage storage $ = getStorage();
+
         uint64 expirationDate = convertTime(block.timestamp + 30 days);
         uint256 ownerAddress = PrimitiveTypeUtils.addressToUint256(msg.sender);
         uint256 ownerBalance = msg.sender.balance;
@@ -119,7 +136,7 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
             merklizedRootPosition: 0,
             version: 0,
             id: _userId,
-            revocationNonce: countOfIssuedClaims,
+            revocationNonce: $.countOfIssuedClaims,
             expirationDate: expirationDate,
             // data
             merklizedRoot: 0,
@@ -134,15 +151,15 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
         uint256 hashValue = PoseidonUnit4L.poseidon([claim[4], claim[5], claim[6], claim[7]]);
 
         ClaimItem memory claimToSave = ClaimItem({
-            id: countOfIssuedClaims,
+            id: $.countOfIssuedClaims,
             issuanceDate: convertTime(block.timestamp),
             claim: claim
         });
 
-        idToCredentialSubject[countOfIssuedClaims].push(
+        $.idToCredentialSubject[$.countOfIssuedClaims].push(
             NonMerklizedIssuerLib.SubjectField({key: 'balance', value: ownerBalance, rawValue: ''})
         );
-        idToCredentialSubject[countOfIssuedClaims].push(
+        $.idToCredentialSubject[$.countOfIssuedClaims].push(
             NonMerklizedIssuerLib.SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
         );
        
@@ -152,9 +169,11 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
 
     // saveClaim save a claim to storage
     function saveClaim(uint256 _userId, ClaimItem memory _claim) private {
-        userClaims[_userId].push(countOfIssuedClaims);
-        idToClaim[countOfIssuedClaims] = _claim;
-        countOfIssuedClaims++;
+        Storage storage $ = getStorage();
+        
+        $.userClaims[_userId].push($.countOfIssuedClaims);
+        $.idToClaim[$.countOfIssuedClaims] = _claim;
+        $.countOfIssuedClaims++;
     }
 
     // addClaimHashAndTransit add a claim to the identity and transit state
