@@ -1,9 +1,9 @@
 import { ethers } from 'hardhat';
 import { BalanceCredentialIssuerDeployHelper } from '../helpers/BalanceCredentialIssuerDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
+import { expect } from 'chai';
 
 describe('Reproduce identity life cycle', function () {
-  this.timeout(10000);
   let identity;
 
   before(async function () {
@@ -27,7 +27,33 @@ describe('Reproduce identity life cycle', function () {
       await tx.wait();
       const usersCredentials = await identity.listUserCredentialIds(1);
       const credential = await identity.getCredential(1, usersCredentials[0]);
-      console.log('json result:', JSON.stringify(credential));
+
+      const credentialData = credential[0];
+      expect(credentialData.id).to.be.equal(0);
+      expect(credentialData.context)
+        .to.be.an('array')
+        .that.includes(
+          'https://gist.githubusercontent.com/ilya-korotya/660496c859f8d31a7d2a92ca5e970967/raw/6b5fc14fe630c17bfa52e05e08fdc8394c5ea0ce/non-merklized-non-zero-balance.jsonld'
+        );
+      expect(credentialData._type).to.be.equal('Balance');
+      expect(credentialData.credentialSchema).to.be.equal(
+        'https://gist.githubusercontent.com/ilya-korotya/e10cd79a8cc26ab6e40400a11838617e/raw/575edc33d485e2a4c806baad97e21117f3c90a9f/non-merklized-non-zero-balance.json'
+      );
+
+      const coreClaim = credential[1];
+      expect(coreClaim).to.be.not.empty;
+
+      const credentialSubject = credential[2];
+      expect(credentialSubject).to.be.an('array').that.length(2);
+
+      const balanceField = credentialSubject[0];
+      expect(balanceField.key).to.be.equal('balance');
+      expect(balanceField.value).to.be.not.equal(0);
+
+      const addressFiled = credentialSubject[1];
+      expect(addressFiled.key).to.be.equal('address');
+      const bigIntAddress = BigInt('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+      expect(addressFiled.value).to.be.equal(bigIntAddress);
     });
   });
 });
