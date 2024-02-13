@@ -4,7 +4,8 @@ pragma solidity 0.8.16;
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
-import {INonMerklizedIssuer, NonMerklizedIssuerLib} from '@iden3/contracts/lib/NonMerklizedIssuer.sol';
+import {INonMerklizedIssuer} from '@iden3/contracts/interfaces/INonMerklizedIssuer.sol';
+import {NonMerklizedIssuerBase} from '@iden3/contracts/lib/NonMerklizedIssuerBase.sol';
 import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
@@ -13,20 +14,20 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUpgradeable {
+contract BalanceCredentialIssuer is IdentityBase, NonMerklizedIssuerBase, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
     /// @custom:storage-location erc7201:balance.credential.issuer.storage
     struct Storage {
         // countOfIssuedClaims count of issued claims for incrementing id and revocation nonce for new claims
         uint64 countOfIssuedClaims;
-        // claims sotre
+        // claim store
         mapping(uint256 => uint256[]) userClaims;
         mapping(uint256 => ClaimItem) idToClaim;
         // this mapping is used to store credential subject fields
         // to escape additional copy in issueCredential function
         // since "Copying of type struct OnchainNonMerklizedIdentityBase.SubjectField memory[] memory to storage not yet supported."
-        mapping(uint256 => NonMerklizedIssuerLib.SubjectField[]) idToCredentialSubject;
+        mapping(uint256 => INonMerklizedIssuer.SubjectField[]) idToCredentialSubject;
     }
 
     bytes32 private constant STORAGE_LOCATION =
@@ -62,11 +63,6 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
         __Ownable_init();
     }
 
-    // credentialProtocolVersion returns the version of the credential protocol
-    function credentialProtocolVersion() external pure returns (string memory) {
-        return NonMerklizedIssuerLib.CREDENTIAL_PROTOCOL_VERSION;
-    }
-
     /**
      * @dev Get user's id list of credentials
      * @param _userId - user id
@@ -87,9 +83,9 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
         uint256 _userId,
         uint256 _credentialId
     ) external view override returns (
-        NonMerklizedIssuerLib.CredentialData memory, 
+        INonMerklizedIssuer.CredentialData memory, 
         uint256[8] memory, 
-        NonMerklizedIssuerLib.SubjectField[] memory
+        INonMerklizedIssuer.SubjectField[] memory
     ) {
         Storage storage $ = getStorage();
 
@@ -97,7 +93,7 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
         jsonLDContextUrls[0] = jsonldSchema;
 
         ClaimItem memory claimItem = $.idToClaim[_credentialId];
-        NonMerklizedIssuerLib.CredentialData memory credentialData = NonMerklizedIssuerLib.CredentialData({
+        INonMerklizedIssuer.CredentialData memory credentialData = INonMerklizedIssuer.CredentialData({
             id: claimItem.id,
             context: jsonLDContextUrls,
             _type: 'Balance',
@@ -157,10 +153,10 @@ contract BalanceCredentialIssuer is IdentityBase, INonMerklizedIssuer, OwnableUp
         });
 
         $.idToCredentialSubject[$.countOfIssuedClaims].push(
-            NonMerklizedIssuerLib.SubjectField({key: 'balance', value: ownerBalance, rawValue: ''})
+            INonMerklizedIssuer.SubjectField({key: 'balance', value: ownerBalance, rawValue: ''})
         );
         $.idToCredentialSubject[$.countOfIssuedClaims].push(
-            NonMerklizedIssuerLib.SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
+            INonMerklizedIssuer.SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
         );
        
         addClaimHashAndTransit(hashIndex, hashValue);
