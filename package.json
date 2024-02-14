@@ -32,7 +32,7 @@
   "dependencies": {
     "@iden3/contracts": "^1.4.7",
     "@iden3/js-crypto": "^1.0.3",
-    "@iden3/js-iden3-core": "^1.1.0",
+    "@iden3/js-iden3-core": "^1.2.0",
     "@openzeppelin/contracts": "^4.6.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "braces": ">=3.0.2",
@@ -57,6 +57,8 @@
     "deploy:mumbai:erc20": "npx hardhat run scripts/deployERC20.ts --network mumbai",
     "deploy:mumbai:sig": "npx hardhat run scripts/deploySigValidator.ts --network mumbai",
     "deploy:mumbai:mtp": "npx hardhat run scripts/deployMTPValidator.ts --network mumbai",
+    "deploy:mumbai:identityexample": "npx hardhat run scripts/deployIdentityExample.ts --network mumbai",
+    "deploy:main:identityexample": "npx hardhat run scripts/deployIdentityExample.ts --network main",
     "deploy:mumbai:balancecredentialissuer": "npx hardhat run scripts/deployBalanceCredentialIssuer.ts --network mumbai",
     "deploy:main:balancecredentialissuer": "npx hardhat run scripts/deployBalanceCredentialIssuer.ts --network main",
     "deploy:main:sig": "npx hardhat run scripts/deploySigValidator.ts --network main",

@@ -1,6 +1,10 @@
+# Contracts
+
+This repository contains examples of smart contracts and deployment scripts.
+
 ## ERC20 example
 
-Repository contains implementation of the example smart contract and deployed sig/mtp validator onchain zero-knowledge proof verification.
+The example of ERC20 smart contract. This example shows how to use sig/mtp validator to verification zero-knowledge proof on-chain.
 
 We aim to provide deployment of:
 
@@ -10,7 +14,7 @@ We aim to provide deployment of:
 
 Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
 
-Current addresses on Polygon Mumbai testnet. (V1.0.1)
+Current addresses on Polygon Mumbai testnet. (V1.0.1 V2 validators)
 
 |                   |                             Sig                             |                             MTP                              |
 |:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
@@ -18,9 +22,19 @@ Current addresses on Polygon Mumbai testnet. (V1.0.1)
 |  **Validators**   |         0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878          |          0x0682fbaA2E4C478aD5d24d992069dba409766121          |
 | **ERC20 example** | 0xD75638D319B1aE2a9491DC61f87a800AD362D168 (request id = 1) | 0xD75638D319B1aE2a9491DC61f87a800AD362D168  (request id = 2) |
 
+Current addresses for V3 beta circuit on Polygon Mumbai testnet. (1.0.0-beta.0 V3 validator)
+
+|                      |                                                    V3 validator 1.0.0-beta.0                                                    |   
+|:--------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
+|     **Verifier**     |                                           0x3dE74ffCf9Fc0AA6c9fD73b511342a0E653B4129                                            | 
+|    **Validators**    |                                           0xCBde9B14fcF5d56B709234528C44798B4ea64761                                            |     
+| **ERC20 SD example** |                                   0xD0Fd3E9fDF448e5B86Cc0f73E5Ee7D2F284884c0 (request id = 3)                                   |
+|     **ERC20  **      | 0xD0Fd3E9fDF448e5B86Cc0f73E5Ee7D2F284884c0 (request id = 100 - 650 merklized (step 50) / 10000 - 65000 nonmerklized (step 5000) |
 
 
-Current addresses on Polygon Main  (V1.0.1)
+
+
+Current addresses on Polygon Main  (V1.0.1 V2 validators) 
 
 |                   |                                Sig                                |                                MTP                                |
 |:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
@@ -28,6 +42,10 @@ Current addresses on Polygon Main  (V1.0.1)
 |  **Validators**   |            0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb             |            0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d             |
 | **ERC20 example** | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B (request id = 1 (sig)) | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B  (request id = 2 (mtp) |
 
+
+## BalanceCredentialIssuer
+
+Here is an example of a **non-merklized** on-chain issuer. This example demonstrates how to use the IdentityBase library to create your own on-chain issuer implementation.
 
 Current addresses of example BalanceCredentialIssuer on Polygon Mumbai testnet.
 
@@ -54,8 +72,11 @@ Current addresses of example BalanceCredentialIssuer on Polygon Main.
 | **BalanceCredentialIssuer** | 0x029301b6cC1399D9260a08943aC0CB9f18C12acC |
 
 
+## IdentityExample
 
+Here is an example of a **merklized** on-chain issuer. This example demonstrates how to use the IdentityBase library to create your own on-chain issuer implementation. There is no deployed contracts since each user is required to deploy the contract independently. Only the contract owner has the authority to issue a claim.
 
+## Legacy
 
 Legacy addresses on Polygon Mumbai testnet.
 
@@ -77,3 +98,18 @@ Legacy ERC20 examples with airdrop use case, not restricted
 |:------------------:|:------------------------------------------:|:-----------------------------------------:|
 |   **Validators**   |0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b  |0x5f24dD9FbEa358B9dD96daA281e82160fdefD3CD |
 | **ERC20 examples** |0x7C14Aa764130852A8B64BA7058bf71E4292d677F  |0xa3Bc012FCf034bee8d16161730CE4eAb34C35100 |
+
+## Deploy scripts
+
+1. **deploy:mumbai:erc20** - deploy erc20 smart contract to polygon mumbai
+1. **deploy:mumbai:sig** - deploy signature validator to polygon mumbai
+1. **deploy:mumbai:mtp** - deploy MTP validator to polygon mumbai
+1. **deploy:main:erc20** - deploy erc20 smart contract to polygon mainnet
+1. **deploy:main:sig** - deploy signature validator to polygon mainnet
+1. **deploy:main:mtp** - deploy MTP validator to polygon mainnet
+
+1. **deploy:mumbai:identityexample** - deploy onchain merklized issuer example to polygon mumbai
+1. **deploy:main:identityexample** - deploy onchain merklized issuer example to polygon mainnet
+
+1. **deploy:mumbai:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mumbai
+1. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mainnet

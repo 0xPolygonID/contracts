@@ -6,7 +6,7 @@ import {
   prepareInputs,
   publishState
 } from '../utils/deploy-utils';
-import { packValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
+import { packV2ValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
 
 const tenYears = 315360000;
 describe('ERC 20 test', function () {
@@ -136,7 +136,7 @@ describe('ERC 20 test', function () {
       await token.setZKPRequest(requestId, {
         metadata: 'metadata',
         validator: sig.address,
-        data: packValidatorParams(query)
+        data: packV2ValidatorParams(query)
       });
     }, 'credentialAtomicQuerySigV2OnChain');
   });
@@ -146,7 +146,7 @@ describe('ERC 20 test', function () {
       await token.setZKPRequest(requestId, {
         metadata: 'metadata',
         validator: mtp.address,
-        data: packValidatorParams(query)
+        data: packV2ValidatorParams(query)
       });
     }, 'credentialAtomicQueryMTPV2OnChain');
   });

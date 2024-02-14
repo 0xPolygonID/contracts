@@ -1,5 +1,5 @@
-import { poseidon } from '@iden3/js-crypto';
-import { SchemaHash } from '@iden3/js-iden3-core';
+import { Hex, poseidon } from '@iden3/js-crypto';
+import { Blockchain, buildDIDType, DidMethod, genesisFromEthAddress, Id, NetworkId, SchemaHash } from '@iden3/js-iden3-core';
 
 type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends (...a: infer X) => void
   ? X
@@ -38,7 +38,7 @@ export function calculateQueryHash(
   const expValue = prepareCircuitArrayValues(values, 64);
   const valueHash = poseidon.spongeHashX(expValue, 6);
   const schemaHash = coreSchemaFromStr(schema);
-  const quaryHash = poseidon.hash([
+  const queryHash = poseidon.hash([
     schemaHash.bigInt(),
     BigInt(slotIndex),
     BigInt(operator),
@@ -46,7 +46,7 @@ export function calculateQueryHash(
     BigInt(claimPathNotExists),
     valueHash
   ]);
-  return quaryHash;
+  return queryHash;
 }
 
 let prepareCircuitArrayValues = (arr: bigint[], size: number): bigint[] => {
@@ -69,3 +69,15 @@ let coreSchemaFromStr = (schemaIntString: string) => {
   const schemaInt = BigInt(schemaIntString);
   return SchemaHash.newSchemaHashFromInt(schemaInt);
 };
+
+export function buildVerifierId(address: string,
+  info: { method: string; blockchain: string; networkId: string }): Id {
+  address = address.replace('0x', '');
+  const ethAddrBytes = Hex.decodeString(address);
+  const ethAddr = ethAddrBytes.slice(0, 20);
+  const genesis = genesisFromEthAddress(ethAddr);
+
+  const tp = buildDIDType(info.method, info.blockchain, info.networkId);
+
+  return new Id(tp, genesis);
+}
