@@ -33,12 +33,17 @@ describe('Reproduce identity life cycle', function () {
       expect(credentialData.context)
         .to.be.an('array')
         .that.includes(
-          'https://gist.githubusercontent.com/ilya-korotya/660496c859f8d31a7d2a92ca5e970967/raw/6b5fc14fe630c17bfa52e05e08fdc8394c5ea0ce/non-merklized-non-zero-balance.jsonld'
+          'https://gist.githubusercontent.com/ilya-korotya/660496c859f8d31a7d2a92ca5e970967/raw/6b5fc14fe630c17bfa52e05e08fdc8394c5ea0ce/non-merklized-non-zero-balance.jsonld',
+          'https://schema.iden3.io/core/jsonld/displayMethod.jsonld'
         );
       expect(credentialData._type).to.be.equal('Balance');
       expect(credentialData.credentialSchema).to.be.equal(
         'https://gist.githubusercontent.com/ilya-korotya/e10cd79a8cc26ab6e40400a11838617e/raw/575edc33d485e2a4c806baad97e21117f3c90a9f/non-merklized-non-zero-balance.json'
       );
+      expect(credentialData.displayMethod.id).to.be.equal(
+        'ipfs://QmS8eY8ZCiAAW8qgx3T6SQ3HDGeddwLZsjPXNAZExQwRY4'
+      );
+      expect(credentialData.displayMethod['_type']).to.be.equal('Iden3BasicDisplayMethodV1');
 
       const coreClaim = credential[1];
       expect(coreClaim).to.be.not.empty;

@@ -89,8 +89,9 @@ contract BalanceCredentialIssuer is IdentityBase, NonMerklizedIssuerBase, Ownabl
     ) {
         Storage storage $ = getStorage();
 
-        string[] memory jsonLDContextUrls = new string[](1);
+        string[] memory jsonLDContextUrls = new string[](2);
         jsonLDContextUrls[0] = jsonldSchema;
+        jsonLDContextUrls[1] = "https://schema.iden3.io/core/jsonld/displayMethod.jsonld";
 
         ClaimItem memory claimItem = $.idToClaim[_credentialId];
         INonMerklizedIssuer.CredentialData memory credentialData = INonMerklizedIssuer.CredentialData({
@@ -98,7 +99,11 @@ contract BalanceCredentialIssuer is IdentityBase, NonMerklizedIssuerBase, Ownabl
             context: jsonLDContextUrls,
             _type: 'Balance',
             issuanceDate: claimItem.issuanceDate,
-            credentialSchema: jsonSchema
+            credentialSchema: jsonSchema,
+            displayMethod: INonMerklizedIssuer.DisplayMethod({
+                id: "ipfs://QmS8eY8ZCiAAW8qgx3T6SQ3HDGeddwLZsjPXNAZExQwRY4",
+                _type: "Iden3BasicDisplayMethodV1"
+            })
         });
         return (credentialData, claimItem.claim, $.idToCredentialSubject[_credentialId]);
     }
