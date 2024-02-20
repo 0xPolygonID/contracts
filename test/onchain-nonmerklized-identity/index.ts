@@ -61,4 +61,15 @@ describe('Reproduce identity life cycle', function () {
       expect(addressFiled.value).to.be.equal(bigIntAddress);
     });
   });
+
+  describe('check interface implementation', function () {
+    it('EIP165 implementation', async function () {
+      const isEIP165 = await identity.supportsInterface('0x01ffc9a7');
+      expect(isEIP165).to.be.true;
+    });
+    it('check interface INonMerklizedIssuer implementation', async function () {
+      const isINonMerklizedIssuer = await identity.supportsInterface('0xd60c24ab');
+      expect(isINonMerklizedIssuer).to.be.true;
+    });
+  });
 });
