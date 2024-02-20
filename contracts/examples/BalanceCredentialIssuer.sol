@@ -6,7 +6,6 @@ import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {INonMerklizedIssuer} from '@iden3/contracts/interfaces/INonMerklizedIssuer.sol';
 import {NonMerklizedIssuerBase} from '@iden3/contracts/lib/NonMerklizedIssuerBase.sol';
-import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
 
@@ -14,7 +13,7 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is IdentityBase, NonMerklizedIssuerBase, OwnableUpgradeable {
+contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
     /// @custom:storage-location erc7201:balance.credential.issuer.storage
