@@ -65,9 +65,9 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
     /**
      * @dev Get user's id list of credentials
      * @param _userId - user id
-     * @return list of credential ids
+     * @return array of credential ids
      */
-    function listUserCredentialIds(uint256 _userId) external view returns (uint256[] memory) {
+    function getUserCredentialIds(uint256 _userId) external view returns (uint256[] memory) {
         Storage storage $ = getStorage();
         return $.userClaims[_userId];
     }

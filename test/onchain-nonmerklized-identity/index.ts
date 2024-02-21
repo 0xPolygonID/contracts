@@ -25,7 +25,7 @@ describe('Reproduce identity life cycle', function () {
     it("validate identity's id", async function () {
       const tx = await identity.issueCredential(1);
       await tx.wait();
-      const usersCredentials = await identity.listUserCredentialIds(1);
+      const usersCredentials = await identity.getUserCredentialIds(1);
       const credential = await identity.getCredential(1, usersCredentials[0]);
 
       const credentialData = credential[0];
@@ -68,7 +68,7 @@ describe('Reproduce identity life cycle', function () {
       expect(isEIP165).to.be.true;
     });
     it('check interface INonMerklizedIssuer implementation', async function () {
-      const isINonMerklizedIssuer = await identity.supportsInterface('0xd60c24ab');
+      const isINonMerklizedIssuer = await identity.supportsInterface('0x58874949');
       expect(isINonMerklizedIssuer).to.be.true;
     });
   });
