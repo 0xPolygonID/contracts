@@ -37,9 +37,10 @@ describe('Reproduce identity life cycle', function () {
           'https://schema.iden3.io/core/jsonld/displayMethod.jsonld'
         );
       expect(credentialData._type).to.be.equal('Balance');
-      expect(credentialData.credentialSchema).to.be.equal(
+      expect(credentialData.credentialSchema.id).to.be.equal(
         'https://gist.githubusercontent.com/ilya-korotya/e10cd79a8cc26ab6e40400a11838617e/raw/575edc33d485e2a4c806baad97e21117f3c90a9f/non-merklized-non-zero-balance.json'
       );
+      expect(credentialData.credentialSchema['_type']).to.be.equal('JsonSchema2023');
       expect(credentialData.displayMethod.id).to.be.equal(
         'ipfs://QmS8eY8ZCiAAW8qgx3T6SQ3HDGeddwLZsjPXNAZExQwRY4'
       );

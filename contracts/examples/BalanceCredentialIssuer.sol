@@ -98,7 +98,10 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
             context: jsonLDContextUrls,
             _type: 'Balance',
             issuanceDate: claimItem.issuanceDate,
-            credentialSchema: jsonSchema,
+            credentialSchema: INonMerklizedIssuer.CredentialSchema({
+                id: jsonSchema,
+                _type: 'JsonSchema2023'
+            }),
             displayMethod: INonMerklizedIssuer.DisplayMethod({
                 id: "ipfs://QmS8eY8ZCiAAW8qgx3T6SQ3HDGeddwLZsjPXNAZExQwRY4",
                 _type: "Iden3BasicDisplayMethodV1"
