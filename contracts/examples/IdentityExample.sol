@@ -89,6 +89,7 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
         return claimData;
     }
 
+    // TODO(illia-korotia): need to remove from the contract.
     /**
      * @dev Builds claim
      * @param claimData - claim data
