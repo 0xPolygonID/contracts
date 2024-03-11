@@ -74,7 +74,7 @@ async function main() {
     circuitIds: [circuitIdSig],
     allowedIssuers: [],
     skipClaimRevocationCheck: false,
-    claimPathNotExists: claimPathDoesntExist,
+    claimPathNotExists: claimPathDoesntExist
   };
 
   const requestIdSig = await erc20instance.TRANSFER_REQUEST_ID_SIG_VALIDATOR();
@@ -121,7 +121,7 @@ async function main() {
     });
     await txSig.wait();
     console.log(txSig.hash);
-    
+
     // mtp request set
     query.circuitIds = [circuitIdMTP];
     invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;

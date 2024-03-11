@@ -15,14 +15,14 @@ describe('ERC 20 test', function () {
   beforeEach(async () => {
     const contractsSig = await deployValidatorContracts(
       'VerifierSigWrapper',
-      'CredentialAtomicQuerySigValidator'
+      'CredentialAtomicQuerySigV2Validator'
     );
     state = contractsSig.state;
     sig = contractsSig.validator;
 
     const contractsMTP = await deployValidatorContracts(
       'VerifierMTPWrapper',
-      'CredentialAtomicQueryMTPValidator',
+      'CredentialAtomicQueryMTPV2Validator',
       state.address
     );
     mtp = contractsMTP.validator;
@@ -115,7 +115,7 @@ describe('ERC 20 test', function () {
     );
 
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
-    expect(await token.proofs(account, requestId)).to.be.true; // check proof is assigned
+    expect(await token.isProofSubmitted(account, requestId)).to.be.true; // check proof is assigned
 
     // check that tokens were minted
 

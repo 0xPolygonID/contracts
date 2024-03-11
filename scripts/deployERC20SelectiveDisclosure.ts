@@ -59,7 +59,7 @@ async function main() {
     method: DidMethod.Iden3
   });
 
-  console.log('verifier id = ' + id.bigInt().toString())
+  console.log('verifier id = ' + id.bigInt().toString());
 
   // current v3 validator address on main
   // const validatorAddressV3 = '';
@@ -117,7 +117,7 @@ async function main() {
             credentialSubject: {
               birthday: {}
             },
-            type: type,
+            type: type
           }
         }
       ]

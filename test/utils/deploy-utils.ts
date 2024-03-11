@@ -65,8 +65,18 @@ export async function deployERC20ZKPVerifierToken(
   address: string;
 }> {
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
-  const erc20Verifier = await ERC20Verifier.deploy(name, symbol);
+  const signers = await ethers.getSigners();
+  console.log('ad in d ' + signers[0].address);
+  const erc20Verifier = await upgrades.deployProxy(
+    ERC20Verifier,
+    [name, symbol, signers[0].address],
+    {
+      initializer: 'init'
+    }
+  );
   await erc20Verifier.deployed();
+  // const erc20Verifier = await ERC20Verifier.deploy(name, symbol);
+  // await erc20Verifier.deployed();
   console.log('ERC20Verifier deployed to:', erc20Verifier.address);
   return erc20Verifier;
 }

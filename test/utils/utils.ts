@@ -1,5 +1,10 @@
 import { Hex, poseidon } from '@iden3/js-crypto';
-import { Blockchain, buildDIDType, DidMethod, genesisFromEthAddress, Id, NetworkId, SchemaHash } from '@iden3/js-iden3-core';
+import {
+  buildDIDType,
+  genesisFromEthAddress,
+  Id,
+  SchemaHash
+} from '@iden3/js-iden3-core';
 
 type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends (...a: infer X) => void
   ? X
@@ -70,8 +75,10 @@ let coreSchemaFromStr = (schemaIntString: string) => {
   return SchemaHash.newSchemaHashFromInt(schemaInt);
 };
 
-export function buildVerifierId(address: string,
-  info: { method: string; blockchain: string; networkId: string }): Id {
+export function buildVerifierId(
+  address: string,
+  info: { method: string; blockchain: string; networkId: string }
+): Id {
   address = address.replace('0x', '');
   const ethAddrBytes = Hex.decodeString(address);
   const ethAddr = ethAddrBytes.slice(0, 20);

@@ -26,10 +26,8 @@ describe('Next tests reproduce identity life cycle', function () {
     const deployHelper = await OnchainIdentityDeployHelper.initialize([signer]);
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state,
+      stContracts.state.address,
       stContracts.smtLib,
-      stContracts.poseidon1,
-      stContracts.poseidon2,
       stContracts.poseidon3,
       stContracts.poseidon4
     );
@@ -235,10 +233,8 @@ describe('Claims tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state,
+      stContracts.state.address,
       stContracts.smtLib,
-      stContracts.poseidon1,
-      stContracts.poseidon2,
       stContracts.poseidon3,
       stContracts.poseidon4
     );
@@ -291,10 +287,8 @@ describe('Revocation tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state,
+      stContracts.state.address,
       stContracts.smtLib,
-      stContracts.poseidon1,
-      stContracts.poseidon2,
       stContracts.poseidon3,
       stContracts.poseidon4
     );
@@ -347,10 +341,8 @@ describe('Root of roots tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state,
+      stContracts.state.address,
       stContracts.smtLib,
-      stContracts.poseidon1,
-      stContracts.poseidon2,
       stContracts.poseidon3,
       stContracts.poseidon4
     );
@@ -414,10 +406,8 @@ describe('Compare historical roots with latest roots from tree', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state,
+      stContracts.state.address,
       stContracts.smtLib,
-      stContracts.poseidon1,
-      stContracts.poseidon2,
       stContracts.poseidon3,
       stContracts.poseidon4
     );
@@ -466,10 +456,8 @@ describe('Compare historical roots with latest roots from tree', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state,
+      stContracts.state.address,
       stContracts.smtLib,
-      stContracts.poseidon1,
-      stContracts.poseidon2,
       stContracts.poseidon3,
       stContracts.poseidon4
     );
@@ -549,10 +537,8 @@ describe("Genesis state doens't have history of states", () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state,
+      stContracts.state.address,
       stContracts.smtLib,
-      stContracts.poseidon1,
-      stContracts.poseidon2,
       stContracts.poseidon3,
       stContracts.poseidon4
     );

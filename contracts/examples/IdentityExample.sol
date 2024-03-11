@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.16;
+pragma solidity 0.8.20;
 
-import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
-import {IState} from '@iden3/contracts/interfaces/IState.sol';
+import {Ownable2StepUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
@@ -11,7 +10,7 @@ import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
  * @dev Example of centralized credential issuer.
  * This issuer issue merklized credentials centralized.
  */
-contract IdentityExample is IdentityBase, OwnableUpgradeable {
+contract IdentityExample is IdentityBase, Ownable2StepUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
     // This empty reserved space is put in place to allow future versions
@@ -26,7 +25,7 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
 
     function initialize(address _stateContractAddr) public override initializer {
         super.initialize(_stateContractAddr);
-        __Ownable_init();
+        __Ownable_init(_msgSender());
     }
 
     function addClaimAndTransit(uint256[8] calldata claim) public onlyOwner {
@@ -49,7 +48,7 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
      * @param claim - claim data
      */
     function addClaim(uint256[8] calldata claim) public virtual onlyOwner {
-        identity.addClaim(claim);
+        _getMainStorage().identity.addClaim(claim);
     }
 
     /**
@@ -58,7 +57,7 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
      * @param hashValue - hash of claim value part
      */
     function addClaimHash(uint256 hashIndex, uint256 hashValue) public virtual onlyOwner {
-        identity.addClaimHash(hashIndex, hashValue);
+        _getMainStorage().identity.addClaimHash(hashIndex, hashValue);
     }
 
     /**
@@ -66,14 +65,14 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
      * @param revocationNonce - revocation nonce
      */
     function revokeClaim(uint64 revocationNonce) public virtual onlyOwner {
-        identity.revokeClaim(revocationNonce);
+        _getMainStorage().identity.revokeClaim(revocationNonce);
     }
 
     /**
      * @dev Make state transition
      */
     function transitState() public virtual onlyOwner {
-        identity.transitState();
+        _getMainStorage().identity.transitState();
     }
 
     /**
@@ -81,7 +80,7 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
      * @return IdentityState
      */
     function calcIdentityState() public view virtual returns (uint256) {
-        return identity.calcIdentityState();
+        return _getMainStorage().identity.calcIdentityState();
     }
 
     function newClaimData() public pure virtual returns (ClaimBuilder.ClaimData memory) {
@@ -95,12 +94,9 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
      * @param claimData - claim data
      * @return binary claim
      */
-    function buildClaim(ClaimBuilder.ClaimData calldata claimData)
-        public
-        pure
-        virtual
-        returns (uint256[8] memory)
-    {
+    function buildClaim(
+        ClaimBuilder.ClaimData calldata claimData
+    ) public pure virtual returns (uint256[8] memory) {
         return ClaimBuilder.build(claimData);
     }
 }
