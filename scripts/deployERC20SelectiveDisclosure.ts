@@ -33,7 +33,7 @@ async function main() {
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
   const erc20instance = await upgrades.deployProxy(
     ERC20ContractFactory,
-    [name, symbol, owner],
+    [name, symbol, owner.address],
     {
       initializer: 'init'
     }

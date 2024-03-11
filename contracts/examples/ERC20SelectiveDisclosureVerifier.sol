@@ -13,7 +13,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
     mapping(address => uint256) public addressToId;
     mapping(uint256 => uint256) private _idToOperatorOutput;
 
-    uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
+    uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
 
     function init(
         string memory name_,
