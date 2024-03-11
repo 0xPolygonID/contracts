@@ -6,7 +6,7 @@ import {
   prepareInputs,
   publishState
 } from '../utils/deploy-utils';
-import { packV2ValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
+import { packV2ValidatorParams, unpackV2ValidatorParams } from '../utils/pack-utils';
 
 const tenYears = 315360000;
 describe('ERC 20 test', function () {
@@ -96,12 +96,13 @@ describe('ERC 20 test', function () {
     await callBack(query, token, requestId);
 
     const requestData = await token.getZKPRequest(requestId);
-    const parsed = unpackValidatorParams(requestData.data);
+    const parsed = unpackV2ValidatorParams(requestData.data);
 
     expect(parsed.queryHash.toString()).to.be.equal(query.queryHash);
     expect(parsed.claimPathKey.toString()).to.be.equal(query.claimPathKey.toString());
     expect(parsed.circuitIds[0].toString()).to.be.equal(query.circuitIds[0].toString());
     expect(parsed.operator.toString()).to.be.equal(query.operator.toString());
+    expect(parsed.claimPathNotExists.toString()).to.be.equal(query.claimPathNotExists.toString());
     // check that query is assigned
     expect(await token.getZKPRequestsCount()).to.be.equal(1);
 

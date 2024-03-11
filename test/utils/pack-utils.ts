@@ -70,7 +70,7 @@ export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []) {
   );
 }
 
-export function unpackValidatorParams(hex: string) {
+export function unpackV3ValidatorParams(hex: string) {
   let web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.decodeParameter(
     {
@@ -88,6 +88,27 @@ export function unpackValidatorParams(hex: string) {
         nullifierSessionID: "uint256",
         proofType: "uint256",
         verifierID: "uint256",
+      }
+    },
+    hex
+  );
+}
+
+export function unpackV2ValidatorParams(hex: string) {
+  let web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
+  return web3.eth.abi.decodeParameter(
+    {
+      CredentialAtomicQuery: {
+        schema: "uint256",
+        claimPathKey: "uint256",
+        operator: "uint256",
+        slotIndex: "uint256",
+        value: "uint256[]",
+        queryHash: "uint256",
+        allowedIssuers: "uint256[]",
+        circuitIds: "string[]",
+        skipClaimRevocationCheck: "bool",
+        claimPathNotExists: 'uint256'
       }
     },
     hex
