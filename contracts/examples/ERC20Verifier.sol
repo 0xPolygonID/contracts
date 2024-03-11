@@ -16,8 +16,6 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
 
     uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
 
-    // constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {}
-
     function init(
         string memory name_,
         string memory symbol_,

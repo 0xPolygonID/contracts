@@ -1,7 +1,6 @@
 import { ethers, upgrades } from 'hardhat';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 import { Contract } from 'ethers';
-import { deployPoseidonFacade } from './deploy-poseidons.util';
 
 export async function deploySpongePoseidon(poseidon6ContractAddress: string): Promise<Contract> {
   const SpongePoseidonFactory = await ethers.getContractFactory('SpongePoseidon', {
@@ -66,7 +65,6 @@ export async function deployERC20ZKPVerifierToken(
 }> {
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
   const signers = await ethers.getSigners();
-  console.log('ad in d ' + signers[0].address);
   const erc20Verifier = await upgrades.deployProxy(
     ERC20Verifier,
     [name, symbol, signers[0].address],

@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash, buildVerifierId } from '../test/utils/utils';
 import { ChainIds, DidMethod } from '@iden3/js-iden3-core';
@@ -29,8 +29,15 @@ async function main() {
   const contractName = 'ERC20SelectiveDisclosureVerifier';
   const name = 'ERC20SelectiveDisclosureVerifier';
   const symbol = 'ERCZKP';
+  const owner = (await ethers.getSigners())[0];
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
-  const erc20instance = await ERC20ContractFactory.deploy(name, symbol);
+  const erc20instance = await upgrades.deployProxy(
+    ERC20ContractFactory,
+    [name, symbol, owner],
+    {
+      initializer: 'init'
+    }
+  );
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
   await erc20instance.deployed();

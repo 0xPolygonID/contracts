@@ -17,7 +17,15 @@ contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
 
     uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
 
-    constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {}
+    function init(
+        string memory name_,
+        string memory symbol_,
+        address initialOwner
+    ) public initializer {
+        super.__ERC20_init(name_, symbol_);
+        super.initialize(initialOwner);
+        TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
+    }
 
     function _beforeProofSubmit(
         uint64 /* requestId */,
