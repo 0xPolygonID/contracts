@@ -77,16 +77,4 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
         );
         _;
     }
-
-    // function _msgSender() internal view override(ContextUpgradeable) returns (address) {
-    //     return msg.sender;
-    // }
-
-    // function _msgData() internal view override(ContextUpgradeable) returns (bytes calldata) {
-    //     return msg.data;
-    // }
-
-    // function _contextSuffixLength() internal view override(ContextUpgradeable) returns (uint256) {
-    //     return 0;
-    // }
 }
