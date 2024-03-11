@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import {ERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
-import {ContextUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol';
-import {Context} from '@openzeppelin/contracts/utils/Context.sol';
 
-contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
+contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID_V3_VALIDATOR = 3;
 
     mapping(uint256 => address) public idToAddress;
@@ -23,7 +21,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
         address initialOwner
     ) public initializer {
         super.__ERC20_init(name_, symbol_);
-        super.initialize(initialOwner);
+        super.__ZKPVerifier_init(initialOwner);
         TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 
@@ -84,25 +82,4 @@ contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
         return _idToOperatorOutput[id];
     }
 
-    function _msgSender() internal view override(ContextUpgradeable, Context) returns (address) {
-        return msg.sender;
-    }
-
-    function _msgData()
-        internal
-        view
-        override(ContextUpgradeable, Context)
-        returns (bytes calldata)
-    {
-        return msg.data;
-    }
-
-    function _contextSuffixLength()
-        internal
-        view
-        override(ContextUpgradeable, Context)
-        returns (uint256)
-    {
-        return 0;
-    }
 }

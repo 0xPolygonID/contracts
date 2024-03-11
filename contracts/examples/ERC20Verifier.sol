@@ -5,7 +5,6 @@ import {ERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
-import 'hardhat/console.sol';
 
 contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 1;
@@ -22,7 +21,7 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
         address initialOwner
     ) public initializer {
         super.__ERC20_init(name_, symbol_);
-        super.initialize(initialOwner);
+        super.__ZKPVerifier_init(initialOwner);
         TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 
