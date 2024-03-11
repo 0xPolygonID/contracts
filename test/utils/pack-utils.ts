@@ -33,25 +33,24 @@ export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []) {
 }
 
 export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []) {
-  const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
+  const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
   return web3.eth.abi.encodeParameter(
     {
       CredentialAtomicQueryV3: {
-        schema: 'uint256',
-        claimPathKey: 'uint256',
-        operator: 'uint256',
-        slotIndex: 'uint256',
-        value: 'uint256[]',
-        queryHash: 'uint256',
-        allowedIssuers: 'uint256[]',
-        circuitIds: 'string[]',
-        skipClaimRevocationCheck: 'bool',
-        claimPathNotExists: 'uint256',
-        groupID: 'uint256',
-        nullifierSessionID: 'uint256',
-        proofType: 'uint256',
-        verifierID: 'uint256'
-      }
+        schema: "uint256",
+        claimPathKey: "uint256",
+        operator: "uint256",
+        slotIndex: "uint256",
+        value: "uint256[]",
+        queryHash: "uint256",
+        allowedIssuers: "uint256[]",
+        circuitIds: "string[]",
+        skipClaimRevocationCheck: "bool",
+        groupID: "uint256",
+        nullifierSessionID: "uint256",
+        proofType: "uint256",
+        verifierID: "uint256",
+      },
     },
     {
       schema: query.schema,
@@ -63,11 +62,10 @@ export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []) {
       allowedIssuers: allowedIssuers,
       circuitIds: query.circuitIds,
       skipClaimRevocationCheck: query.skipClaimRevocationCheck,
-      claimPathNotExists: query.claimPathNotExists,
       groupID: query.groupID,
       nullifierSessionID: query.nullifierSessionID,
       proofType: query.proofType,
-      verifierID: query.verifierID
+      verifierID: query.verifierID,
     }
   );
 }
@@ -76,17 +74,20 @@ export function unpackValidatorParams(hex: string) {
   let web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.decodeParameter(
     {
-      CredentialAtomicQuery: {
-        schema: 'uint256',
-        claimPathKey: 'uint256',
-        operator: 'uint256',
-        slotIndex: 'uint256',
-        value: 'uint256[]',
-        queryHash: 'uint256',
-        allowedIssuers: 'uint256[]',
-        circuitIds: 'string[]',
-        skipClaimRevocationCheck: 'bool',
-        claimPathNotExists: 'uint256'
+      CredentialAtomicQueryV3: {
+        schema: "uint256",
+        claimPathKey: "uint256",
+        operator: "uint256",
+        slotIndex: "uint256",
+        value: "uint256[]",
+        queryHash: "uint256",
+        allowedIssuers: "uint256[]",
+        circuitIds: "string[]",
+        skipClaimRevocationCheck: "bool",
+        groupID: "uint256",
+        nullifierSessionID: "uint256",
+        proofType: "uint256",
+        verifierID: "uint256",
       }
     },
     hex

@@ -102,7 +102,6 @@ describe('ERC 20 test', function () {
     expect(parsed.claimPathKey.toString()).to.be.equal(query.claimPathKey.toString());
     expect(parsed.circuitIds[0].toString()).to.be.equal(query.circuitIds[0].toString());
     expect(parsed.operator.toString()).to.be.equal(query.operator.toString());
-    expect(parsed.claimPathNotExists.toString()).to.be.equal(query.claimPathNotExists.toString());
     // check that query is assigned
     expect(await token.getZKPRequestsCount()).to.be.equal(1);
 
