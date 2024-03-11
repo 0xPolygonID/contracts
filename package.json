@@ -31,7 +31,7 @@
     "@openzeppelin/contracts-upgradeable-v4": "npm:@openzeppelin/contracts-upgradeable@^4.9.5"
   },
   "dependencies": {
-    "@iden3/contracts": "^2.0.0",
+    "@iden3/contracts": "^2.0.1",
     "@iden3/js-crypto": "^1.0.3",
     "@iden3/js-iden3-core": "^1.2.0",
     "@openzeppelin/contracts": "^5.0.1",
