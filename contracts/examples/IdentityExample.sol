@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.20;
 
-import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+import {Ownable2StepUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
@@ -10,7 +10,7 @@ import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
  * @dev Example of centralized credential issuer.
  * This issuer issue merklized credentials centralized.
  */
-contract IdentityExample is IdentityBase, OwnableUpgradeable {
+contract IdentityExample is IdentityBase, Ownable2StepUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
     function initialize(address _stateContractAddr) public override initializer {
@@ -84,12 +84,9 @@ contract IdentityExample is IdentityBase, OwnableUpgradeable {
      * @param claimData - claim data
      * @return binary claim
      */
-    function buildClaim(ClaimBuilder.ClaimData calldata claimData)
-        public
-        pure
-        virtual
-        returns (uint256[8] memory)
-    {
+    function buildClaim(
+        ClaimBuilder.ClaimData calldata claimData
+    ) public pure virtual returns (uint256[8] memory) {
         return ClaimBuilder.build(claimData);
     }
 }

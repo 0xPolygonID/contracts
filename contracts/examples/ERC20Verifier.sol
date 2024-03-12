@@ -5,8 +5,6 @@ import {ERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
-import {Context} from '@openzeppelin/contracts/utils/Context.sol';
-import {ContextUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol';
 
 contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 1;
@@ -17,10 +15,23 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
 
     uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
 
-    function initialize(string memory name_, string memory symbol_) public initializer {
-        ERC20Upgradeable.__ERC20_init(name_, symbol_);
-        ZKPVerifier.__ZKPVerifier_init(_msgSender());
-        TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10**uint256(decimals());
+    modifier beforeTransfer(address to) {
+        MainStorage storage s = _getMainStorage();
+        require(
+            s.proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||
+                s.proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
+            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
+        );
+        _;
+    }
+
+    function initialize(
+        string memory name,
+        string memory symbol
+    ) public initializer {
+        super.__ERC20_init(name, symbol);
+        super.__ZKPVerifier_init(_msgSender());
+        TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 
     function _beforeProofSubmit(
@@ -29,7 +40,9 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
         ICircuitValidator validator
     ) internal view override {
         // check that challenge input is address of sender
-        address addr = PrimitiveTypeUtils.uint256LEToAddress(inputs[validator.inputIndexOf('challenge')]);
+        address addr = PrimitiveTypeUtils.uint256LEToAddress(
+            inputs[validator.inputIndexOf('challenge')]
+        );
         // this is linking between msg.sender and
         require(_msgSender() == addr, 'address in proof is not a sender address');
     }
@@ -39,7 +52,10 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
         uint256[] memory inputs,
         ICircuitValidator validator
     ) internal override {
-        if (requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR || requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR ){
+        if (
+            requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR ||
+            requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR
+        ) {
             // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
             uint256 id = inputs[1];
             if (idToAddress[id] == address(0) && addressToId[_msgSender()] == 0) {
@@ -50,20 +66,11 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
         }
     }
 
-    function _update(address from, address to, uint256 value) internal override {
-        _beforeTokenTransfer(from, to, value);
-        super._update(from, to, value);
-    }
-
-    function _beforeTokenTransfer(
-        address, /* from */
+    function _update(
+        address from /* from */,
         address to,
-        uint256 /* amount */
-    ) internal view {
-        require(
-            ZKPVerifier._getMainStorage().proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||  ZKPVerifier._getMainStorage().proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
-            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
-        );
+        uint256 amount /* amount */
+    ) internal override beforeTransfer(to) {
+        super._update(from, to, amount);
     }
-
 }

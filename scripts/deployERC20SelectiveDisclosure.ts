@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash, buildVerifierId } from '../test/utils/utils';
 import { ChainIds, DidMethod } from '@iden3/js-iden3-core';
@@ -30,7 +30,10 @@ async function main() {
   const name = 'ERC20SelectiveDisclosureVerifier';
   const symbol = 'ERCZKP';
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
-  const erc20instance = await ERC20ContractFactory.deploy(name, symbol);
+  const erc20instance = await upgrades.deployProxy(
+    ERC20ContractFactory,
+    [name, symbol]
+  );
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
   await erc20instance.deployed();
@@ -59,7 +62,7 @@ async function main() {
     method: DidMethod.Iden3
   });
 
-  console.log('verifier id = ' + id.bigInt().toString())
+  console.log('verifier id = ' + id.bigInt().toString());
 
   // current v3 validator address on main
   // const validatorAddressV3 = '';
@@ -117,7 +120,7 @@ async function main() {
             credentialSubject: {
               birthday: {}
             },
-            type: type,
+            type: type
           }
         }
       ]

@@ -6,7 +6,7 @@ import {
   prepareInputs,
   publishState
 } from '../utils/deploy-utils';
-import { packV2ValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
+import { packV2ValidatorParams, unpackV2ValidatorParams } from '../utils/pack-utils';
 
 const tenYears = 315360000;
 describe('ERC 20 test', function () {
@@ -96,7 +96,7 @@ describe('ERC 20 test', function () {
     await callBack(query, token, requestId);
 
     const requestData = await token.getZKPRequest(requestId);
-    const parsed = unpackValidatorParams(requestData.data);
+    const parsed = unpackV2ValidatorParams(requestData.data);
 
     expect(parsed.queryHash.toString()).to.be.equal(query.queryHash);
     expect(parsed.claimPathKey.toString()).to.be.equal(query.claimPathKey.toString());

@@ -35,7 +35,6 @@ async function main() {
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
   const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address on mumbai
 
-  // await erc20Verifier.deployed();
   console.log(erc20Verifier, ' attached to:', erc20Verifier.address);
 
   // set default query

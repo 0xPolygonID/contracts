@@ -1,7 +1,6 @@
 import { ethers, upgrades } from 'hardhat';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 import { Contract } from 'ethers';
-import { deployPoseidonFacade } from './deploy-poseidons.util';
 
 export async function deploySpongePoseidon(poseidon6ContractAddress: string): Promise<Contract> {
   const SpongePoseidonFactory = await ethers.getContractFactory('SpongePoseidon', {
@@ -65,45 +64,12 @@ export async function deployERC20ZKPVerifierToken(
   address: string;
 }> {
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
-  const erc20Verifier = await upgrades.deployProxy(ERC20Verifier, [name, symbol]);
+  const erc20Verifier = await upgrades.deployProxy(
+    ERC20Verifier,
+    [name, symbol]
+  );
   console.log('ERC20Verifier deployed to:', erc20Verifier.address);
   return erc20Verifier;
-}
-
-export async function deployERC20LinkedUniversalVerifier(
-  name: string,
-  symbol: string
-): Promise<{
-  universalVerifier: Contract;
-  erc20LinkedUniversalVerifier: Contract;
-}> {
-  const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
-  const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
-  const ERC20LinkedUniversalVerifier = await ethers.getContractFactory("ERC20LinkedUniversalVerifier");
-  const erc20LinkedUniversalVerifier = await ERC20LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
-  console.log('ERC20LinkedUniversalVerifier deployed to:', erc20LinkedUniversalVerifier.address);
-  return {
-    universalVerifier,
-    erc20LinkedUniversalVerifier
-  };
-}
-
-export async function deployERC721LinkedUniversalVerifier(
-  name: string,
-  symbol: string
-): Promise<{
-  universalVerifier: Contract;
-  erc721LinkedUniversalVerifier: Contract;
-}> {
-  const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
-  const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
-  const ERC721LinkedUniversalVerifier = await ethers.getContractFactory("ERC721LinkedUniversalVerifier");
-  const erc721LinkedUniversalVerifier = await ERC721LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
-  console.log('ERC721LinkedUniversalVerifier deployed to:', erc721LinkedUniversalVerifier.address);
-  return {
-    universalVerifier,
-    erc721LinkedUniversalVerifier
-  };
 }
 
 export interface VerificationInfo {

@@ -8,7 +8,7 @@ async function main() {
   const stateAddress = '0x134b1be34911e39a8397ec6289782989729807a4'; // current iden3 state smart contract on mumbai
 
   const verifierContractWrapperName = 'VerifierSigWrapper';
-  const validatorContractName = 'CredentialAtomicQuerySigValidator';
+  const validatorContractName = 'CredentialAtomicQuerySigV2Validator';
   const VerifierSigWrapper = await ethers.getContractFactory(verifierContractWrapperName);
   const verifierWrapper = await VerifierSigWrapper.deploy();
 

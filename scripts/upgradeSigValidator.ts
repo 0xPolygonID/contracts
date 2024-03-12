@@ -6,7 +6,7 @@ const pathOutputJson = path.join(__dirname, './deploy_validator_output.json');
 
 async function main() {
   const validatorContractAddress = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878'; // mumbai
-  const validatorContractName = 'CredentialAtomicQuerySigValidator';
+  const validatorContractName = 'CredentialAtomicQuerySigV2Validator';
 
   const stateDeployHelper = await StateDeployHelper.initialize();
 

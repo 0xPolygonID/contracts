@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { packV2ValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHash } from '../test/utils/utils';
 
@@ -28,7 +28,10 @@ async function main() {
   const name = 'ERC20ZKPVerifier';
   const symbol = 'ERCZKP';
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
-  const erc20instance = await ERC20ContractFactory.deploy(name, symbol);
+  const erc20instance = await upgrades.deployProxy(
+    ERC20ContractFactory,
+    [name, symbol]
+  );
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
   await erc20instance.deployed();
@@ -74,7 +77,7 @@ async function main() {
     circuitIds: [circuitIdSig],
     allowedIssuers: [],
     skipClaimRevocationCheck: false,
-    claimPathNotExists: claimPathDoesntExist,
+    claimPathNotExists: claimPathDoesntExist
   };
 
   const requestIdSig = await erc20instance.TRANSFER_REQUEST_ID_SIG_VALIDATOR();
@@ -121,7 +124,7 @@ async function main() {
     });
     await txSig.wait();
     console.log(txSig.hash);
-    
+
     // mtp request set
     query.circuitIds = [circuitIdMTP];
     invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
