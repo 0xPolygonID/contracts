@@ -6,7 +6,7 @@ import {
   prepareInputs,
   publishState
 } from '../../utils/deploy-utils';
-import { packV2ValidatorParams, unpackValidatorParams } from '../../utils/pack-utils';
+import { packV2ValidatorParams, unpackV2ValidatorParams } from '../../utils/pack-utils';
 import { Contract } from "ethers";
 
 const tenYears = 315360000;
@@ -137,7 +137,7 @@ describe('ERC721 test', function () {
     expect(requestId).to.be.equal(validator === 'credentialAtomicQuerySigV2OnChain' ? 0 : 1);
 
     const requestData = await universalVerifier.getZKPRequest(requestId);
-    const parsedRD = unpackValidatorParams(requestData.data);
+    const parsedRD = unpackV2ValidatorParams(requestData.data);
 
     expect(parsedRD.queryHash.toString()).to.be.equal(query2.queryHash);
     expect(parsedRD.claimPathKey.toString()).to.be.equal(query2.claimPathKey.toString());
