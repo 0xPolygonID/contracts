@@ -5,8 +5,8 @@ import {
   deployValidatorContracts,
   prepareInputs,
   publishState
-} from '../utils/deploy-utils';
-import { packV2ValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
+} from '../../utils/deploy-utils';
+import { packV2ValidatorParams, unpackValidatorParams } from '../../utils/pack-utils';
 import { Contract } from "ethers";
 
 const tenYears = 315360000;
@@ -49,9 +49,9 @@ describe('ERC721 test', function () {
     mtp = contractsMTP.validator;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    await publishState(state, require('./common-data/user_state_transition.json'));
+    await publishState(state, require('../common-data/user_state_transition.json'));
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    await publishState(state, require('./common-data/issuer_genesis_state.json'));
+    await publishState(state, require('../common-data/issuer_genesis_state.json'));
 
     ({ universalVerifier, erc721LinkedUniversalVerifier: erc721 } = await deployERC721LinkedUniversalVerifier(
       'zkpVerifier',
@@ -109,8 +109,8 @@ describe('ERC721 test', function () {
     const { inputs, pi_a, pi_b, pi_c } = prepareInputs(
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       validator === 'credentialAtomicQuerySigV2OnChain'
-        ? require('./common-data/valid_sig_user_non_genesis_challenge_address.json')
-        : require('./common-data/valid_mtp_user_non_genesis_challenge_address.json')
+        ? require('../common-data/valid_sig_user_non_genesis_challenge_address.json')
+        : require('../common-data/valid_mtp_user_non_genesis_challenge_address.json')
     );
 
     const [signer] = await ethers.getSigners();
