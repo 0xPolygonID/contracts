@@ -33,10 +33,7 @@ async function main() {
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
   const erc20instance = await upgrades.deployProxy(
     ERC20ContractFactory,
-    [name, symbol, owner.address],
-    {
-      initializer: 'init'
-    }
+    [name, symbol, owner.address]
   );
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 

@@ -67,10 +67,7 @@ export async function deployERC20ZKPVerifierToken(
   const signers = await ethers.getSigners();
   const erc20Verifier = await upgrades.deployProxy(
     ERC20Verifier,
-    [name, symbol, signers[0].address],
-    {
-      initializer: 'init'
-    }
+    [name, symbol, signers[0].address]
   );
   await erc20Verifier.deployed();
   // const erc20Verifier = await ERC20Verifier.deploy(name, symbol);
