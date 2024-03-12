@@ -15,6 +15,16 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
 
     uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
 
+    modifier beforeTransfer(address to) {
+        MainStorage storage s = _getMainStorage();
+        require(
+            s.proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||
+                s.proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
+            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
+        );
+        _;
+    }
+
     function initialize(
         string memory name,
         string memory symbol
@@ -63,14 +73,5 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
     ) internal override beforeTransfer(to) {
         super._update(from, to, amount);
     }
-
-    modifier beforeTransfer(address to) {
-        MainStorage storage s = _getMainStorage();
-        require(
-            s.proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||
-                s.proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
-            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
-        );
-        _;
-    }
+    
 }

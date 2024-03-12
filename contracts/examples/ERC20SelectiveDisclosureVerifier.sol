@@ -15,6 +15,15 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
 
     uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
 
+    modifier beforeTransfer(address to) {
+        MainStorage storage s = _getMainStorage();
+        require(
+            _getMainStorage().proofs[to][TRANSFER_REQUEST_ID_V3_VALIDATOR],
+            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
+        );
+        _;
+    }
+
     function initialize(
         string memory name,
         string memory symbol
@@ -69,15 +78,6 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
             'sender id doesn''t found'
         );
         return _idToOperatorOutput[id];
-    }
-
-    modifier beforeTransfer(address to) {
-        MainStorage storage s = _getMainStorage();
-        require(
-            _getMainStorage().proofs[to][TRANSFER_REQUEST_ID_V3_VALIDATOR],
-            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
-        );
-        _;
     }
 
 }
