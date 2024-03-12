@@ -29,11 +29,10 @@ async function main() {
   const contractName = 'ERC20SelectiveDisclosureVerifier';
   const name = 'ERC20SelectiveDisclosureVerifier';
   const symbol = 'ERCZKP';
-  const owner = (await ethers.getSigners())[0];
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
   const erc20instance = await upgrades.deployProxy(
     ERC20ContractFactory,
-    [name, symbol, owner.address]
+    [name, symbol]
   );
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
