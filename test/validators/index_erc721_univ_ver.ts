@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import {
-  deployERC20LinkedUniversalVerifier, deployERC721LinkedUniversalVerifier,
+  deployERC721LinkedUniversalVerifier,
   deployValidatorContracts,
   prepareInputs,
   publishState
 } from '../utils/deploy-utils';
-import { packValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
+import { packV2ValidatorParams, unpackValidatorParams } from '../utils/pack-utils';
 import { Contract } from "ethers";
 
 const tenYears = 315360000;
@@ -36,14 +36,14 @@ describe('ERC721 test', function () {
   before(async () => {
     const contractsSig = await deployValidatorContracts(
       'VerifierSigWrapper',
-      'CredentialAtomicQuerySigValidator'
+      'CredentialAtomicQuerySigV2Validator'
     );
     state = contractsSig.state;
     sig = contractsSig.validator;
 
     const contractsMTP = await deployValidatorContracts(
       'VerifierMTPWrapper',
-      'CredentialAtomicQueryMTPValidator',
+      'CredentialAtomicQueryMTPV2Validator',
       state.address
     );
     mtp = contractsMTP.validator;
@@ -58,43 +58,52 @@ describe('ERC721 test', function () {
       'ZKP'
     ));
 
-    await addZKPRequests();
+    await universalVerifier.addWhitelistedValidator(sig.address);
+    await universalVerifier.addWhitelistedValidator(mtp.address);
+
+    await setZKPRequests();
   });
 
   it('Requests count', async () => {
     expect(await universalVerifier.getZKPRequestsCount()).to.be.equal(2);
   });
 
-  it('Example ERC20 Verifier: set zkp request Sig validator', async () => {
+  it('Example ERC721 Verifier: set zkp request Sig validator', async () => {
     await sig.setProofExpirationTimeout(tenYears);
-    await erc20VerifierFlow('credentialAtomicQuerySigV2OnChain');
+    await verifierFlow('credentialAtomicQuerySigV2OnChain');
   });
 
-  it('Example ERC20 Verifier: set zkp request Mtp validator', async () => {
+  it('Example ERC721 Verifier: set zkp request Mtp validator', async () => {
     await mtp.setProofExpirationTimeout(tenYears);
-    await erc20VerifierFlow('credentialAtomicQueryMTPV2OnChain');
+    await verifierFlow('credentialAtomicQueryMTPV2OnChain');
   });
 
-  async function addZKPRequests() {
-    async function addRequest(query, validatorAddress) {
-      await universalVerifier.addZKPRequest({
-        metadata: 'metadata',
-        validator: validatorAddress,
-        data: packValidatorParams(query)
-      });
+  async function setZKPRequests() {
+    async function setRequest(requestId, query, validatorAddress) {
+      const [signer] = await ethers.getSigners();
+
+      await universalVerifier.setZKPRequest(
+        requestId, {
+          metadata: 'metadata',
+          validator: validatorAddress,
+          data: packV2ValidatorParams(query),
+          controller: signer.address,
+          isDisabled: false
+        }
+      );
     }
 
     const query2 = Object.assign({}, query);
     query2.circuitIds = ['credentialAtomicQuerySigV2OnChain'];
     query2.skipClaimRevocationCheck = false;
-    await addRequest(query2, sig.address);
+    await setRequest(0, query2, sig.address);
 
     query2.circuitIds = ['credentialAtomicQueryMTPV2OnChain'];
     query2.skipClaimRevocationCheck = true;
-    await addRequest(query2, mtp.address);
+    await setRequest(1, query2, mtp.address);
   }
 
-  async function erc20VerifierFlow(
+  async function verifierFlow(
     validator: 'credentialAtomicQueryMTPV2OnChain' | 'credentialAtomicQuerySigV2OnChain'
   ): Promise<void> {
     const { inputs, pi_a, pi_b, pi_c } = prepareInputs(
@@ -139,7 +148,8 @@ describe('ERC721 test', function () {
     );
 
     await universalVerifier.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
-    expect(await universalVerifier.getProofStatus(account, requestId)).to.be.true; // check proof is assigned
+    const proofStatus = await universalVerifier.getProofStatus(account, requestId);
+    expect(proofStatus.isProved).to.be.true; // check proof is assigned
 
     // check that tokens were minted
     const balanceBefore = await erc721.balanceOf(account);

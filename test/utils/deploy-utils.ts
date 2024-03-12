@@ -65,8 +65,7 @@ export async function deployERC20ZKPVerifierToken(
   address: string;
 }> {
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
-  const erc20Verifier = await ERC20Verifier.deploy(name, symbol);
-  await erc20Verifier.deployed();
+  const erc20Verifier = await upgrades.deployProxy(ERC20Verifier, [name, symbol]);
   console.log('ERC20Verifier deployed to:', erc20Verifier.address);
   return erc20Verifier;
 }
@@ -79,10 +78,9 @@ export async function deployERC20LinkedUniversalVerifier(
   erc20LinkedUniversalVerifier: Contract;
 }> {
   const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
-  const universalVerifier = await UniversalVerifier.deploy();
+  const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
   const ERC20LinkedUniversalVerifier = await ethers.getContractFactory("ERC20LinkedUniversalVerifier");
   const erc20LinkedUniversalVerifier = await ERC20LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
-  await erc20LinkedUniversalVerifier.deployed();
   console.log('ERC20LinkedUniversalVerifier deployed to:', erc20LinkedUniversalVerifier.address);
   return {
     universalVerifier,
@@ -98,10 +96,9 @@ export async function deployERC721LinkedUniversalVerifier(
   erc721LinkedUniversalVerifier: Contract;
 }> {
   const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
-  const universalVerifier = await UniversalVerifier.deploy();
+  const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
   const ERC721LinkedUniversalVerifier = await ethers.getContractFactory("ERC721LinkedUniversalVerifier");
   const erc721LinkedUniversalVerifier = await ERC721LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
-  await erc721LinkedUniversalVerifier.deployed();
   console.log('ERC721LinkedUniversalVerifier deployed to:', erc721LinkedUniversalVerifier.address);
   return {
     universalVerifier,

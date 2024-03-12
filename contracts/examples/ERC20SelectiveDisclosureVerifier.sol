@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.16;
+pragma solidity 0.8.20;
 
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
+import {Context} from '@openzeppelin/contracts/utils/Context.sol';
+import {ContextUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol';
 
 contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID_V3_VALIDATOR = 3;
@@ -23,7 +25,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
         ICircuitValidator validator
     ) internal view override {
         // check that challenge input is address of sender
-        address addr = PrimitiveTypeUtils.int256ToAddress(inputs[validator.inputIndexOf('challenge')]);
+        address addr = PrimitiveTypeUtils.uint256ToAddress(inputs[validator.inputIndexOf('challenge')]);
         // this is linking between msg.sender and
         require(_msgSender() == addr, 'address in proof is not a sender address');
     }
@@ -45,13 +47,18 @@ contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
         }
     }
 
+    function _update(address from, address to, uint256 value) internal override {
+        _beforeTokenTransfer(from, to, value);
+        super._update(from, to, value);
+    }
+
     function _beforeTokenTransfer(
         address, /* from */
         address to,
         uint256 /* amount */
-    ) internal view override {
+    ) internal view {
         require(
-            proofs[to][TRANSFER_REQUEST_ID_V3_VALIDATOR],
+            ZKPVerifier._getMainStorage().proofs[to][TRANSFER_REQUEST_ID_V3_VALIDATOR],
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
     }
@@ -62,4 +69,15 @@ contract ERC20SelectiveDisclosureVerifier is ERC20, ZKPVerifier {
         return _idToOperatorOutput[id];
     }
 
+    function _contextSuffixLength() internal view override(Context, ContextUpgradeable) returns (uint256) {
+        return super._contextSuffixLength();
+    }
+
+    function _msgData() internal view override(Context, ContextUpgradeable) returns (bytes calldata) {
+        return super._msgData();
+    }
+
+    function _msgSender() internal view override(Context, ContextUpgradeable) returns (address) {
+        return super._msgSender();
+    }
 }

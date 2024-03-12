@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.16;
+pragma solidity 0.8.20;
 
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {INonMerklizedIssuer} from '@iden3/contracts/interfaces/INonMerklizedIssuer.sol';
+import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 import {NonMerklizedIssuerBase} from '@iden3/contracts/lib/NonMerklizedIssuerBase.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
@@ -59,7 +60,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
 
     function initialize(address _stateContractAddr) public override initializer {
         super.initialize(_stateContractAddr);
-        __Ownable_init();
+        __Ownable_init(_msgSender());
     }
 
     /**
@@ -82,8 +83,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
         uint256 _userId,
         uint256 _credentialId
     ) external view override returns (
-        INonMerklizedIssuer.CredentialData memory, 
-        uint256[8] memory, 
+        INonMerklizedIssuer.CredentialData memory,
+        uint256[8] memory,
         INonMerklizedIssuer.SubjectField[] memory
     ) {
         Storage storage $ = getStorage();
@@ -115,8 +116,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
      * @param _revocationNonce  - revocation nonce
      */
     function revokeClaimAndTransit(uint64 _revocationNonce) public onlyOwner {
-        identity.revokeClaim(_revocationNonce);
-        identity.transitState();
+        IdentityBase._getMainStorage().identity.revokeClaim(_revocationNonce);
+        IdentityBase._getMainStorage().identity.transitState();
     }
 
     /**
@@ -165,7 +166,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
         $.idToCredentialSubject[$.countOfIssuedClaims].push(
             INonMerklizedIssuer.SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
         );
-       
+
         addClaimHashAndTransit(hashIndex, hashValue);
         saveClaim(_userId, claimToSave);
     }
@@ -173,7 +174,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
     // saveClaim save a claim to storage
     function saveClaim(uint256 _userId, ClaimItem memory _claim) private {
         Storage storage $ = getStorage();
-        
+
         $.userClaims[_userId].push($.countOfIssuedClaims);
         $.idToClaim[$.countOfIssuedClaims] = _claim;
         $.countOfIssuedClaims++;
@@ -181,8 +182,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
 
     // addClaimHashAndTransit add a claim to the identity and transit state
     function addClaimHashAndTransit(uint256 hashIndex, uint256 hashValue) private {
-        identity.addClaimHash(hashIndex, hashValue);
-        identity.transitState();
+        IdentityBase._getMainStorage().identity.addClaimHash(hashIndex, hashValue);
+        IdentityBase._getMainStorage().identity.transitState();
     }
 
     function convertTime(uint256 timestamp) private pure returns (uint64) {
