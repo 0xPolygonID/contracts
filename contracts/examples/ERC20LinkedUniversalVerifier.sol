@@ -13,17 +13,22 @@ contract ERC20LinkedUniversalVerifier is ERC20 {
 
     UniversalVerifier public verifier;
 
-    uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10**uint256(decimals());
+    uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
 
     modifier beforeTokenTransfer(address to) {
         require(
-            verifier.getProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isProved ||  verifier.getProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isProved,
+            verifier.getProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isProved ||
+                verifier.getProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isProved,
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;
     }
 
-    constructor(UniversalVerifier verifier_, string memory name_, string memory symbol_) ERC20(name_, symbol_) {
+    constructor(
+        UniversalVerifier verifier_,
+        string memory name_,
+        string memory symbol_
+    ) ERC20(name_, symbol_) {
         verifier = verifier_;
     }
 
@@ -31,7 +36,11 @@ contract ERC20LinkedUniversalVerifier is ERC20 {
         _mint(to, TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
     }
 
-    function _update(address from, address to, uint256 value) internal override beforeTokenTransfer(to) {
+    function _update(
+        address from,
+        address to,
+        uint256 value
+    ) internal override beforeTokenTransfer(to) {
         super._update(from, to, value);
     }
 }

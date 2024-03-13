@@ -1,7 +1,7 @@
 import { ethers, upgrades } from 'hardhat';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHash, buildVerifierId } from '../test/utils/utils';
-import { ChainIds, DidMethod } from '@iden3/js-iden3-core';
+import { calculateQueryHashV3, buildVerifierId, coreSchemaFromStr } from '../test/utils/utils';
+import { ChainIds, DID, DidMethod } from '@iden3/js-iden3-core';
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -23,27 +23,27 @@ async function main() {
   const type = 'KYCAgeCredential';
   const schemaClaimPathKey =
     '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  const value = [0, ...new Array(63).fill(0)];
+  const value = [];
+  const actualValueArraySize = 0;
+  const merklized = 1;
   const slotIndex = 0; // because schema  is merklized for merklized credential, otherwise you should actual put slot index  https://docs.iden3.io/protocol/non-merklized/#motivation
+  const isRevocationChecked = 1;
 
   const contractName = 'ERC20SelectiveDisclosureVerifier';
   const name = 'ERC20SelectiveDisclosureVerifier';
   const symbol = 'ERCZKP';
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
-  const erc20instance = await upgrades.deployProxy(
-    ERC20ContractFactory,
-    [name, symbol]
-  );
+  const erc20instance = await upgrades.deployProxy(ERC20ContractFactory, [name, symbol]);
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
   await erc20instance.deployed();
   console.log(contractName, ' deployed to:', erc20instance.address);
 
   // set default query
-  const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.0';
+  const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.1';
 
   // current v3 validator address on mumbai
-  const validatorAddressV3 = '0xCBde9B14fcF5d56B709234528C44798B4ea64761';
+  const validatorAddressV3 = '0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a';
 
   const chainId = 80001;
 
@@ -59,9 +59,11 @@ async function main() {
   const id = buildVerifierId(erc20instance.address, {
     blockchain,
     networkId,
-    method: DidMethod.Iden3
+    method: DidMethod.PolygonId
   });
-
+  const verifierID = id.bigInt();
+  const nullifierSessionID = 0;
+  const schemaHash = coreSchemaFromStr(schema);
   console.log('verifier id = ' + id.bigInt().toString());
 
   // current v3 validator address on main
@@ -76,31 +78,36 @@ async function main() {
     operator: Operators.SD,
     slotIndex: slotIndex,
     value: value,
-    queryHash: calculateQueryHash(
+    queryHash: calculateQueryHashV3(
       value,
-      schema,
+      schemaHash,
       slotIndex,
       Operators.SD,
       schemaClaimPathKey,
-      claimPathDoesntExist
+      actualValueArraySize,
+      merklized,
+      isRevocationChecked,
+      verifierID.toString(),
+      nullifierSessionID
     ).toString(),
     circuitIds: [circuitIdV3],
     allowedIssuers: [],
     skipClaimRevocationCheck: false,
-    claimPathNotExists: claimPathDoesntExist,
     nullifierSessionID: 0,
-    verifierID: id.bigInt().toString(),
+    verifierID: verifierID.toString(),
     groupID: 0,
     proofType: 1
   };
 
   const requestIdV3 = await erc20instance.TRANSFER_REQUEST_ID_V3_VALIDATOR();
 
+  console.log(DID.parseFromId(id).string());
   const invokeRequestMetadata = {
     id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
     typ: 'application/iden3comm-plain-json',
     type: 'https://iden3-communication.io/proofs/1.0/contract-invoke-request',
     thid: '7f38a193-0918-4a48-9fac-36adfdb8b542',
+    from: DID.parseFromId(id).string(),
     body: {
       reason: 'for testing',
       transaction_data: {

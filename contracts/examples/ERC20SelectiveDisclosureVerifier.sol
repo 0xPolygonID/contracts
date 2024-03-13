@@ -24,17 +24,14 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
         _;
     }
 
-    function initialize(
-        string memory name,
-        string memory symbol
-    ) public initializer {
+    function initialize(string memory name, string memory symbol) public initializer {
         super.__ERC20_init(name, symbol);
         super.__ZKPVerifier_init(_msgSender());
         TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 
     function _beforeProofSubmit(
-        uint64, /* requestId */
+        uint64 /* requestId */,
         uint256[] memory inputs,
         ICircuitValidator validator
     ) internal view override {
@@ -73,11 +70,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
 
     function getOperatorOutput() public view returns (uint256) {
         uint256 id = addressToId[_msgSender()];
-        require(
-            id != 0,
-            'sender id doesn''t found'
-        );
+        require(id != 0, 'sender id is not found');
         return _idToOperatorOutput[id];
     }
-
 }

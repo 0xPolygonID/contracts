@@ -15,13 +15,18 @@ contract ERC721LinkedUniversalVerifier is ERC721 {
 
     modifier beforeTokenTransfer(address to) {
         require(
-            verifier.getProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isProved ||  verifier.getProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isProved,
+            verifier.getProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isProved ||
+                verifier.getProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isProved,
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;
     }
 
-    constructor(UniversalVerifier verifier_, string memory name_, string memory symbol_) ERC721(name_, symbol_) {
+    constructor(
+        UniversalVerifier verifier_,
+        string memory name_,
+        string memory symbol_
+    ) ERC721(name_, symbol_) {
         verifier = verifier_;
     }
 
@@ -29,7 +34,11 @@ contract ERC721LinkedUniversalVerifier is ERC721 {
         _mint(to, tokenId);
     }
 
-    function _update(address to, uint256 tokenId, address auth) internal override beforeTokenTransfer(to) returns(address) {
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal override beforeTokenTransfer(to) returns (address) {
         return super._update(to, tokenId, auth);
     }
 }

@@ -64,10 +64,7 @@ export async function deployERC20ZKPVerifierToken(
   address: string;
 }> {
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
-  const erc20Verifier = await upgrades.deployProxy(
-    ERC20Verifier,
-    [name, symbol]
-  );
+  const erc20Verifier = await upgrades.deployProxy(ERC20Verifier, [name, symbol]);
   console.log('ERC20Verifier deployed to:', erc20Verifier.address);
   return erc20Verifier;
 }
@@ -203,8 +200,14 @@ export async function deployERC20LinkedUniversalVerifier(
 }> {
   const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
   const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
-  const ERC20LinkedUniversalVerifier = await ethers.getContractFactory("ERC20LinkedUniversalVerifier");
-  const erc20LinkedUniversalVerifier = await ERC20LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
+  const ERC20LinkedUniversalVerifier = await ethers.getContractFactory(
+    'ERC20LinkedUniversalVerifier'
+  );
+  const erc20LinkedUniversalVerifier = await ERC20LinkedUniversalVerifier.deploy(
+    universalVerifier.address,
+    name,
+    symbol
+  );
   console.log('ERC20LinkedUniversalVerifier deployed to:', erc20LinkedUniversalVerifier.address);
   return {
     universalVerifier,
@@ -221,8 +224,14 @@ export async function deployERC721LinkedUniversalVerifier(
 }> {
   const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
   const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
-  const ERC721LinkedUniversalVerifier = await ethers.getContractFactory("ERC721LinkedUniversalVerifier");
-  const erc721LinkedUniversalVerifier = await ERC721LinkedUniversalVerifier.deploy(universalVerifier.address, name, symbol);
+  const ERC721LinkedUniversalVerifier = await ethers.getContractFactory(
+    'ERC721LinkedUniversalVerifier'
+  );
+  const erc721LinkedUniversalVerifier = await ERC721LinkedUniversalVerifier.deploy(
+    universalVerifier.address,
+    name,
+    symbol
+  );
   console.log('ERC721LinkedUniversalVerifier deployed to:', erc721LinkedUniversalVerifier.address);
   return {
     universalVerifier,

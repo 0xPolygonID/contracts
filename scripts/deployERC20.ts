@@ -1,6 +1,6 @@
 import { ethers, upgrades } from 'hardhat';
 import { packV2ValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHash } from '../test/utils/utils';
+import { calculateQueryHashV2 } from '../test/utils/utils';
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -28,10 +28,7 @@ async function main() {
   const name = 'ERC20ZKPVerifier';
   const symbol = 'ERCZKP';
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
-  const erc20instance = await upgrades.deployProxy(
-    ERC20ContractFactory,
-    [name, symbol]
-  );
+  const erc20instance = await upgrades.deployProxy(ERC20ContractFactory, [name, symbol]);
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
   await erc20instance.deployed();
@@ -66,7 +63,7 @@ async function main() {
     operator: Operators.LT,
     slotIndex: slotIndex,
     value: value,
-    queryHash: calculateQueryHash(
+    queryHash: calculateQueryHashV2(
       value,
       schema,
       slotIndex,

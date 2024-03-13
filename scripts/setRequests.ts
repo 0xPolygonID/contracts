@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
 import { packV2ValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHash } from '../test/utils/utils';
+import { calculateQueryHashV2 } from '../test/utils/utils';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal
@@ -249,7 +249,7 @@ async function main() {
       const operatorKey =
         Object.keys(QueryOperators)[Object.values(QueryOperators).indexOf(query.operator)];
 
-      query.queryHash = calculateQueryHash(
+      query.queryHash = calculateQueryHashV2(
         query.value,
         query.schema,
         query.slotIndex,
