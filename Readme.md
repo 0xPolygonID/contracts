@@ -14,6 +14,16 @@ We aim to provide deployment of:
 
 Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
 
+Current addresses on Polygon Mumbai testnet. (V2.0.0 V2 validators)
+
+|                   |                             Sig                             |                             MTP                              |
+|:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
+|   **Verifier**    |         0x81ef49013627F363570a1C60B0D2215E23651B01          |          0xe5DB0489979C5671D9785cF1cBA9D9028041c9Bf          |
+|  **Validators**   |         0x59f2a6D94D0d02F3a2F527a8B6175dc511935624          |          0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6          |
+| **ERC20 example** | 0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03 (request id = 1) | 0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03  (request id = 2) |
+
+
+
 Current addresses on Polygon Mumbai testnet. (V1.0.1 V2 validators)
 
 |                   |                             Sig                             |                             MTP                              |
@@ -34,7 +44,18 @@ Current addresses for V3 beta circuit on Polygon Mumbai testnet. (1.0.0-beta.1 V
 
 
 
-Current addresses on Polygon Main  (V1.0.1 V2 validators) 
+Current addresses on Polygon Main  
+
+(V2.0.0 V2 validators)
+
+|                   |                                Sig                                |                                MTP                                |
+|:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
+|   **Verifier**    |            0xa0495df44ABBDbfCD1da30638869A3307BF21532             |            0x068b3dDE10b55643b55aA4820c7a977dEEEc3c07             |
+|  **Validators**   |            0xEF8540a5e0F4f53B436e7C3A273dCAe1C05d764D             |            0x03Ee09635E9946165dd9538e9414f0ACE57e42e1             |
+| **ERC20 example** | 0xB9Ac8e785f854f9B76bBF6d495213d58226DE813 (request id = 1 (sig)) | 0xB9Ac8e785f854f9B76bBF6d495213d58226DE813  (request id = 2 (mtp) |
+
+
+(V1.0.1 V2 validators) 
 
 |                   |                                Sig                                |                                MTP                                |
 |:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
@@ -43,7 +64,7 @@ Current addresses on Polygon Main  (V1.0.1 V2 validators)
 | **ERC20 example** | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B (request id = 1 (sig)) | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B  (request id = 2 (mtp) |
 
 
-## BalanceCredentialIssuer
+## BalanceCredentialIssuer (v1.0.0)
 
 Here is an example of a **non-merklized** on-chain issuer. This example demonstrates how to use the IdentityBase library to create your own on-chain issuer implementation.
 

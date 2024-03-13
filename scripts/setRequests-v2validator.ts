@@ -23,12 +23,12 @@ export const QueryOperators = {
 
 async function main() {
   // sig:validator:    // current sig validator address on mumbai
-  const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
+  const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
 
   // mtp:validator:    // current mtp validator address on mumbai
-  const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
+  const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
 
-  const erc20verifierAddress = '0xD75638D319B1aE2a9491DC61f87a800AD362D168'; //with sig    validatorc
+  const erc20verifierAddress = '0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03'; //with sig    validatorc
 
   const owner = (await ethers.getSigners())[0];
 

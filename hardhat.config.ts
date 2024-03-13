@@ -41,6 +41,7 @@ const config: HardhatUserConfig = {
     //   chainId: 137,
     //   url: `${process.env.MAIN_RPC_URL}`,
     //   accounts: [`0x${process.env.MAIN_PRIVATE_KEY}`],
+    //   gasPrice: 200000000000
     // },
     // mumbai: {
     //   chainId: 80001,
