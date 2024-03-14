@@ -28,7 +28,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
     }
 
     modifier beforeTransfer(address to) {
-        MainStorage storage $ = ZKPVerifier._getMainStorage();
+        ZKPVerifier.ZKPVerifierStorage storage $ = _getZKPVerifierStorage();
         require(
             $.proofs[to][TRANSFER_REQUEST_ID_V3_VALIDATOR],
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'

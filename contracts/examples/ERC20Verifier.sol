@@ -28,10 +28,10 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
     }
 
     modifier beforeTransfer(address to) {
-        MainStorage storage s = _getMainStorage();
+        ZKPVerifier.ZKPVerifierStorage storage $ = _getZKPVerifierStorage();
         require(
-            s.proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||
-                s.proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
+            $.proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||
+                $.proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;
