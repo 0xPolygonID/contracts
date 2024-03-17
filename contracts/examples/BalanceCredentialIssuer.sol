@@ -27,7 +27,6 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
         // to escape additional copy in issueCredential function
         // since "Copying of type struct OnchainNonMerklizedIdentityBase.SubjectField memory[] memory to storage not yet supported."
         mapping(uint256 => INonMerklizedIssuer.SubjectField[]) idToCredentialSubject;
-        IdentityLib.Data identity;
     }
 
     // keccak256(abi.encode(uint256(keccak256("polygonid.storage.BalanceCredentialIssuer")) - 1)) & ~bytes32(uint256(0xff))
@@ -61,7 +60,6 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
 
     function initialize(address _stateContractAddr) public override initializer {
         super.initialize(_stateContractAddr);
-        _getBalanceCredentialIssuerStorage().identity.initialize(_stateContractAddr, address(this), getSmtDepth());
         __Ownable_init(_msgSender());
     }
 
@@ -124,9 +122,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
      * @param _revocationNonce  - revocation nonce
      */
     function revokeClaimAndTransit(uint64 _revocationNonce) public onlyOwner {
-        BalanceCredentialIssuerStorage storage $ = _getBalanceCredentialIssuerStorage();
-        $.identity.revokeClaim(_revocationNonce);
-        $.identity.transitState();
+        _getIdentityBaseStorage().identity.revokeClaim(_revocationNonce);
+        _getIdentityBaseStorage().identity.transitState();
     }
 
     /**
@@ -191,9 +188,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
 
     // addClaimHashAndTransit add a claim to the identity and transit state
     function addClaimHashAndTransit(uint256 hashIndex, uint256 hashValue) private {
-        BalanceCredentialIssuerStorage storage $ = _getBalanceCredentialIssuerStorage();
-        $.identity.addClaimHash(hashIndex, hashValue);
-        $.identity.transitState();
+        _getIdentityBaseStorage().identity.addClaimHash(hashIndex, hashValue);
+        _getIdentityBaseStorage().identity.transitState();
     }
 
     function convertTime(uint256 timestamp) private pure returns (uint64) {
