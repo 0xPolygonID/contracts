@@ -13,7 +13,7 @@ export class StateDeployHelper {
   ) {}
 
   static async initialize(
-    signers: SignerWithAddress | null = null,
+    signers: SignerWithAddress[] | null = null,
     enableLogging = false
   ): Promise<StateDeployHelper> {
     let sgrs;
@@ -70,7 +70,10 @@ export class StateDeployHelper {
     const { defaultIdType, chainId } = await this.getDefaultIdType();
     this.log(`found defaultIdType ${defaultIdType} for chainId ${chainId}`);
 
-    const state = await upgrades.deployProxy(StateFactory, [verifier.address, defaultIdType], {
+    const state = await upgrades.deployProxy(
+      StateFactory,
+      [verifier.address, defaultIdType, owner.address],
+      {
       unsafeAllowLinkedLibraries: true
     });
     await state.deployed();
