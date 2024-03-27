@@ -67,6 +67,11 @@
     "deploy:mumbai:erc20:v3": "npx hardhat run scripts/deployERC20SelectiveDisclosure.ts --network mumbai",
     "setrequests:mumbai:v3": "npx hardhat run scripts/setRequests-v3validator.ts --network mumbai",
     "setrequests:mumbai:v2": "npx hardhat run scripts/setRequests-v2validator.ts --network mumbai",
+    "upgrade:mumbai:sigv2": "npx hardhat run scripts/upgradeSigValidator.ts --network mumbai",
+    "upgrade:mumbai:mtpv2": "npx hardhat run scripts/upgradeMTPValidator.ts --network mumbai",
+    "upgrade:mumbai:v3": "npx hardhat run scripts/upgradeV3Validator.ts --network mumbai",
+    "upgrade:main:sigv2": "npx hardhat run scripts/upgradeSigValidator.ts --network main",
+    "upgrade:main:mtpv2": "npx hardhat run scripts/upgradeMTPValidator.ts --network main",
 
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "lint:contracts": "npx solhint contracts/**/*.sol",
