@@ -63,9 +63,8 @@ async function main() {
   const slotIndex = 0;
   const merklized = 1;
   const requestIdModifier = 1;
-
+  const groupID = 0;
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
-
   //init these values for non-merklized credential use case
   // const schemaUrl =
   //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
@@ -74,6 +73,11 @@ async function main() {
   // const merklized = 0;
   // const schema = '198285726510688200335207273836123338699';
   // const requestIdModifier = 100;
+
+  // you can set linked requests by changing group id
+
+  // const groupID = 1;
+  // const requestIdModifier = 10000;
 
   const chainId = 80001;
 
@@ -107,7 +111,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // LT
@@ -124,7 +128,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // GT
@@ -141,7 +145,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // IN
@@ -158,7 +162,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // NIN
@@ -175,7 +179,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // NE
@@ -192,7 +196,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
 
@@ -210,7 +214,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
 
@@ -228,7 +232,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
 
@@ -246,7 +250,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // LTE
@@ -263,7 +267,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
 
@@ -281,7 +285,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
 
@@ -300,7 +304,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
 
@@ -318,7 +322,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // GT
@@ -335,7 +339,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // IN corner
@@ -353,7 +357,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // NIN corner
@@ -370,7 +374,7 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     },
     // NE corner
@@ -387,11 +391,12 @@ async function main() {
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt().toString(),
       nullifierSessionID: 0,
-      groupID: 0,
+      groupID,
       proofType: 0
     }
   ];
   console.log(DID.parseFromId(verifierId).string());
+
   try {
     for (let i = 0; i < ageQueries.length; i++) {
       const query = ageQueries[i];
