@@ -2,6 +2,7 @@ import { ethers } from 'hardhat';
 import { BalanceCredentialIssuerDeployHelper } from '../helpers/BalanceCredentialIssuerDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 import { expect } from 'chai';
+import { Claim } from '@iden3/js-iden3-core';
 
 describe('Reproduce identity life cycle', function () {
   let identity;
@@ -60,6 +61,15 @@ describe('Reproduce identity life cycle', function () {
       expect(addressFiled.key).to.be.equal('address');
       const bigIntAddress = BigInt('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
       expect(addressFiled.value).to.be.equal(bigIntAddress);
+
+      const inputs: Array<string> = [];
+      coreClaim.forEach((c) => {
+        inputs.push(c.toString());
+      });
+
+      const claim = new Claim().unMarshalJson(JSON.stringify(inputs));
+      const mtpProof = await identity.getClaimProof(claim.hIndex());
+      expect(mtpProof.existence).to.be.true;
     });
   });
 

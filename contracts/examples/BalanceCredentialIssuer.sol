@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.16;
+pragma solidity 0.8.20;
 
-import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+import {Ownable2StepUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {INonMerklizedIssuer} from '@iden3/contracts/interfaces/INonMerklizedIssuer.sol';
@@ -13,11 +13,11 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
+contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
-    /// @custom:storage-location erc7201:balance.credential.issuer.storage
-    struct Storage {
+    /// @custom:storage-location erc7201:polygonid.storage.BalanceCredentialIssuer
+    struct BalanceCredentialIssuerStorage {
         // countOfIssuedClaims count of issued claims for incrementing id and revocation nonce for new claims
         uint64 countOfIssuedClaims;
         // claim store
@@ -29,13 +29,13 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
         mapping(uint256 => INonMerklizedIssuer.SubjectField[]) idToCredentialSubject;
     }
 
-    bytes32 private constant STORAGE_LOCATION =
-        0x019dfb46485f789e684dc5f54f13de3e6ef161b4d8709723f90193e84ea09c53;
+    // keccak256(abi.encode(uint256(keccak256("polygonid.storage.BalanceCredentialIssuer")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant BalanceCredentialIssuerStorageLocation =
+        0xb775a0063b8bb6b7d39c4f74d1ce330eaeeb81ff68db2df91398ea2d7dc23900;
 
-    function getStorage() private pure returns (Storage storage $) {
-        bytes32 location = STORAGE_LOCATION;
+    function _getBalanceCredentialIssuerStorage() private pure returns (BalanceCredentialIssuerStorage storage $) {
         assembly {
-            $.slot := location
+            $.slot := BalanceCredentialIssuerStorageLocation
         }
     }
 
@@ -47,8 +47,10 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
     // jsonldSchemaHash hash of jsonld schema.
     // More about schema: https://devs.polygonid.com/docs/issuer-node/issuer-node-api/claim/apis/#get-claims
     uint256 private constant jsonldSchemaHash = 148834697620350657501993499321116864501;
-    string private constant jsonSchema = "https://gist.githubusercontent.com/ilya-korotya/e10cd79a8cc26ab6e40400a11838617e/raw/575edc33d485e2a4c806baad97e21117f3c90a9f/non-merklized-non-zero-balance.json";
-    string private constant jsonldSchema = "https://gist.githubusercontent.com/ilya-korotya/660496c859f8d31a7d2a92ca5e970967/raw/6b5fc14fe630c17bfa52e05e08fdc8394c5ea0ce/non-merklized-non-zero-balance.jsonld";
+    string private constant jsonSchema =
+        'https://gist.githubusercontent.com/ilya-korotya/e10cd79a8cc26ab6e40400a11838617e/raw/575edc33d485e2a4c806baad97e21117f3c90a9f/non-merklized-non-zero-balance.json';
+    string private constant jsonldSchema =
+        'https://gist.githubusercontent.com/ilya-korotya/660496c859f8d31a7d2a92ca5e970967/raw/6b5fc14fe630c17bfa52e05e08fdc8394c5ea0ce/non-merklized-non-zero-balance.jsonld';
 
     struct ClaimItem {
         uint256 id;
@@ -56,10 +58,9 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
         uint256[8] claim;
     }
 
-
     function initialize(address _stateContractAddr) public override initializer {
         super.initialize(_stateContractAddr);
-        __Ownable_init();
+        __Ownable_init(_msgSender());
     }
 
     /**
@@ -68,7 +69,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
      * @return array of credential ids
      */
     function getUserCredentialIds(uint256 _userId) external view returns (uint256[] memory) {
-        Storage storage $ = getStorage();
+        BalanceCredentialIssuerStorage storage $ = _getBalanceCredentialIssuerStorage();
         return $.userClaims[_userId];
     }
 
@@ -81,32 +82,38 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
     function getCredential(
         uint256 _userId,
         uint256 _credentialId
-    ) external view override returns (
-        INonMerklizedIssuer.CredentialData memory, 
-        uint256[8] memory, 
-        INonMerklizedIssuer.SubjectField[] memory
-    ) {
-        Storage storage $ = getStorage();
+    )
+        external
+        view
+        override
+        returns (
+            INonMerklizedIssuer.CredentialData memory,
+            uint256[8] memory,
+            INonMerklizedIssuer.SubjectField[] memory
+        )
+    {
+        BalanceCredentialIssuerStorage storage $ = _getBalanceCredentialIssuerStorage();
 
         string[] memory jsonLDContextUrls = new string[](2);
         jsonLDContextUrls[0] = jsonldSchema;
-        jsonLDContextUrls[1] = "https://schema.iden3.io/core/jsonld/displayMethod.jsonld";
+        jsonLDContextUrls[1] = 'https://schema.iden3.io/core/jsonld/displayMethod.jsonld';
 
         ClaimItem memory claimItem = $.idToClaim[_credentialId];
-        INonMerklizedIssuer.CredentialData memory credentialData = INonMerklizedIssuer.CredentialData({
-            id: claimItem.id,
-            context: jsonLDContextUrls,
-            _type: 'Balance',
-            issuanceDate: claimItem.issuanceDate,
-            credentialSchema: INonMerklizedIssuer.CredentialSchema({
-                id: jsonSchema,
-                _type: 'JsonSchema2023'
-            }),
-            displayMethod: INonMerklizedIssuer.DisplayMethod({
-                id: "ipfs://QmS8eY8ZCiAAW8qgx3T6SQ3HDGeddwLZsjPXNAZExQwRY4",
-                _type: "Iden3BasicDisplayMethodV1"
-            })
-        });
+        INonMerklizedIssuer.CredentialData memory credentialData = INonMerklizedIssuer
+            .CredentialData({
+                id: claimItem.id,
+                context: jsonLDContextUrls,
+                _type: 'Balance',
+                issuanceDate: claimItem.issuanceDate,
+                credentialSchema: INonMerklizedIssuer.CredentialSchema({
+                    id: jsonSchema,
+                    _type: 'JsonSchema2023'
+                }),
+                displayMethod: INonMerklizedIssuer.DisplayMethod({
+                    id: 'ipfs://QmS8eY8ZCiAAW8qgx3T6SQ3HDGeddwLZsjPXNAZExQwRY4',
+                    _type: 'Iden3BasicDisplayMethodV1'
+                })
+            });
         return (credentialData, claimItem.claim, $.idToCredentialSubject[_credentialId]);
     }
 
@@ -115,8 +122,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
      * @param _revocationNonce  - revocation nonce
      */
     function revokeClaimAndTransit(uint64 _revocationNonce) public onlyOwner {
-        identity.revokeClaim(_revocationNonce);
-        identity.transitState();
+        _getIdentityBaseStorage().identity.revokeClaim(_revocationNonce);
+        _getIdentityBaseStorage().identity.transitState();
     }
 
     /**
@@ -124,7 +131,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
      * @param _userId - user id for which the claim is issued
      */
     function issueCredential(uint256 _userId) public {
-        Storage storage $ = getStorage();
+        BalanceCredentialIssuerStorage storage $ = _getBalanceCredentialIssuerStorage();
 
         uint64 expirationDate = convertTime(block.timestamp + 30 days);
         uint256 ownerAddress = PrimitiveTypeUtils.addressToUint256(msg.sender);
@@ -165,15 +172,15 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
         $.idToCredentialSubject[$.countOfIssuedClaims].push(
             INonMerklizedIssuer.SubjectField({key: 'address', value: ownerAddress, rawValue: ''})
         );
-       
+
         addClaimHashAndTransit(hashIndex, hashValue);
         saveClaim(_userId, claimToSave);
     }
 
     // saveClaim save a claim to storage
     function saveClaim(uint256 _userId, ClaimItem memory _claim) private {
-        Storage storage $ = getStorage();
-        
+        BalanceCredentialIssuerStorage storage $ = _getBalanceCredentialIssuerStorage();
+
         $.userClaims[_userId].push($.countOfIssuedClaims);
         $.idToClaim[$.countOfIssuedClaims] = _claim;
         $.countOfIssuedClaims++;
@@ -181,8 +188,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, OwnableUpgradeable {
 
     // addClaimHashAndTransit add a claim to the identity and transit state
     function addClaimHashAndTransit(uint256 hashIndex, uint256 hashValue) private {
-        identity.addClaimHash(hashIndex, hashValue);
-        identity.transitState();
+        _getIdentityBaseStorage().identity.addClaimHash(hashIndex, hashValue);
+        _getIdentityBaseStorage().identity.transitState();
     }
 
     function convertTime(uint256 timestamp) private pure returns (uint64) {

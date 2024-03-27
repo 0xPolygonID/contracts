@@ -1,6 +1,6 @@
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { packV2ValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHash } from '../test/utils/utils';
+import { calculateQueryHashV2 } from '../test/utils/utils';
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -28,7 +28,7 @@ async function main() {
   const name = 'ERC20ZKPVerifier';
   const symbol = 'ERCZKP';
   const ERC20ContractFactory = await ethers.getContractFactory(contractName);
-  const erc20instance = await ERC20ContractFactory.deploy(name, symbol);
+  const erc20instance = await upgrades.deployProxy(ERC20ContractFactory, [name, symbol]);
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
   await erc20instance.deployed();
@@ -38,21 +38,21 @@ async function main() {
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
-  // current sig validator address on mumbai
-  const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
+  // // current sig validator address on mumbai
+  const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
 
   // current mtp validator address on mumbai
-  const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
+  const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
 
   const chainId = 80001;
 
   const network = 'polygon-mumbai';
 
   // current sig validator address on polygon main
-  // const validatorAddressSig = '0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb';
+  // const validatorAddressSig = '0xEF8540a5e0F4f53B436e7C3A273dCAe1C05d764D';
   //
   // // current mtp validator address on polygon main
-  // const validatorAddressMTP = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
+  // const validatorAddressMTP = '0x03Ee09635E9946165dd9538e9414f0ACE57e42e1';
   //
   // const network = 'polygon-main';
   //
@@ -63,7 +63,7 @@ async function main() {
     operator: Operators.LT,
     slotIndex: slotIndex,
     value: value,
-    queryHash: calculateQueryHash(
+    queryHash: calculateQueryHashV2(
       value,
       schema,
       slotIndex,
@@ -74,7 +74,7 @@ async function main() {
     circuitIds: [circuitIdSig],
     allowedIssuers: [],
     skipClaimRevocationCheck: false,
-    claimPathNotExists: claimPathDoesntExist,
+    claimPathNotExists: claimPathDoesntExist
   };
 
   const requestIdSig = await erc20instance.TRANSFER_REQUEST_ID_SIG_VALIDATOR();
@@ -121,7 +121,7 @@ async function main() {
     });
     await txSig.wait();
     console.log(txSig.hash);
-    
+
     // mtp request set
     query.circuitIds = [circuitIdMTP];
     invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;

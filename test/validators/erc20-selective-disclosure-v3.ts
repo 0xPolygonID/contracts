@@ -6,46 +6,38 @@ import {
   prepareInputs,
   publishState
 } from '../utils/deploy-utils';
-import { packV2ValidatorParams, unpackV2ValidatorParams } from '../utils/pack-utils';
+import { packV2ValidatorParams, packV3ValidatorParams, unpackV2ValidatorParams, unpackV3ValidatorParams } from '../utils/pack-utils';
 
 const tenYears = 315360000;
-describe('ERC 20 test', function () {
-  let state: any, sig: any, mtp: any;
+describe('ERC 20 Selective Disclosure (V3) test', function () {
+  let state: any, validator: any;
 
   beforeEach(async () => {
-    const contractsSig = await deployValidatorContracts(
-      'VerifierSigWrapper',
-      'CredentialAtomicQuerySigV2Validator'
+    const contractValidator = await deployValidatorContracts(
+      'VerifierV3Wrapper',
+      'CredentialAtomicQueryV3Validator'
     );
-    state = contractsSig.state;
-    sig = contractsSig.validator;
-
-    const contractsMTP = await deployValidatorContracts(
-      'VerifierMTPWrapper',
-      'CredentialAtomicQueryMTPV2Validator',
-      state.address
-    );
-    mtp = contractsMTP.validator;
+    state = contractValidator.state;
+    validator = contractValidator.validator;
   });
 
-  async function erc20VerifierFlow(
+  async function erc20SDVerifierFlow(
     callBack: (q, t, r) => Promise<void>,
-    validator: 'credentialAtomicQueryMTPV2OnChain' | 'credentialAtomicQuerySigV2OnChain'
   ): Promise<void> {
     const token: any = await deployERC20ZKPVerifierToken(
-      'zkpVerifier' + validator,
-      'ZKP' + validator
+      'zkpVerifierSD',
+      'ZKP-SD',
+      'ERC20SelectiveDisclosureVerifier'
     );
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     await publishState(state, require('./common-data/user_state_transition.json'));
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     await publishState(state, require('./common-data/issuer_genesis_state.json'));
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    await publishState(state, require('./common-data/issuer_from_genesis_state_to_first_auth_disabled_transition_v3.json'));
 
     const { inputs, pi_a, pi_b, pi_c } = prepareInputs(
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      validator === 'credentialAtomicQuerySigV2OnChain'
-        ? require('./common-data/valid_sig_user_non_genesis_challenge_address.json')
-        : require('./common-data/valid_mtp_user_non_genesis_challenge_address.json')
+        require('./common-data/valid_sig_v3.json')
     );
 
     const account = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
@@ -62,8 +54,6 @@ describe('ERC 20 test', function () {
     expect(await token.balanceOf(account)).to.equal(0);
 
     // must be no queries
-    console.log('supported requests - zero');
-
     expect(await token.getZKPRequestsCount()).to.be.equal(0);
 
     // set transfer request id
@@ -78,39 +68,35 @@ describe('ERC 20 test', function () {
       value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) =>
         ethers.BigNumber.from(x)
       ),
-      circuitIds: [validator],
+      circuitIds: ['credentialAtomicQueryV3OnChain-beta.1'],
       queryHash: ethers.BigNumber.from(
-        '1496222740463292783938163206931059379817846775593932664024082849882751356658'
+        '19185468473610285815446195195707572856383167010831244369191309337886545428382'
       ),
-      claimPathNotExists: 0,
       metadata: 'test medatada',
-      skipClaimRevocationCheck: validator === 'credentialAtomicQuerySigV2OnChain' ? false : true
+      skipClaimRevocationCheck: false,
+      groupID: 1,
+      nullifierSessionID: "0",
+      verifierID: "21929109382993718606847853573861987353620810345503358891473103689157378049",
+      proofType: 1
     };
 
-    const requestId =
-      validator === 'credentialAtomicQuerySigV2OnChain'
-        ? await token.TRANSFER_REQUEST_ID_SIG_VALIDATOR()
-        : await token.TRANSFER_REQUEST_ID_MTP_VALIDATOR();
-    expect(requestId).to.be.equal(validator === 'credentialAtomicQuerySigV2OnChain' ? 1 : 2);
+    const requestId = await token.TRANSFER_REQUEST_ID_V3_VALIDATOR();
+    expect(requestId).to.be.equal(3);
 
     await callBack(query, token, requestId);
 
     const requestData = await token.getZKPRequest(requestId);
-    const parsed = unpackV2ValidatorParams(requestData.data);
+    const parsed = unpackV3ValidatorParams(requestData.data);
 
     expect(parsed.queryHash.toString()).to.be.equal(query.queryHash);
     expect(parsed.claimPathKey.toString()).to.be.equal(query.claimPathKey.toString());
     expect(parsed.circuitIds[0].toString()).to.be.equal(query.circuitIds[0].toString());
     expect(parsed.operator.toString()).to.be.equal(query.operator.toString());
-    expect(parsed.claimPathNotExists.toString()).to.be.equal(query.claimPathNotExists.toString());
     // check that query is assigned
     expect(await token.getZKPRequestsCount()).to.be.equal(1);
 
-    console.log('supported requests - one');
-
     // submit response for non-existing request
-
-    await expect(token.submitZKPResponse(3, inputs, pi_a, pi_b, pi_c)).to.be.revertedWith(
+    await expect(token.submitZKPResponse(1, inputs, pi_a, pi_b, pi_c)).to.be.revertedWith(
       'validator is not set for this request id'
     );
 
@@ -128,27 +114,20 @@ describe('ERC 20 test', function () {
 
     await token.transfer(account, 1); // we send tokens to ourselves, but no error because we sent proof
     expect(await token.balanceOf(account)).to.equal(ethers.BigNumber.from('5000000000000000000'));
+
+    // check operator output 
+    expect(await token.getOperatorOutput()).to.be.equal(0);
   }
 
-  it('Example ERC20 Verifier: set zkp request Sig validator', async () => {
-    await sig.setProofExpirationTimeout(tenYears);
-    await erc20VerifierFlow(async (query, token, requestId) => {
+  it('Example ERC20 SD Verifier', async () => {
+    await validator.setProofExpirationTimeout(tenYears);
+    await erc20SDVerifierFlow(async (query, token, requestId) => {
       await token.setZKPRequest(requestId, {
         metadata: 'metadata',
-        validator: sig.address,
-        data: packV2ValidatorParams(query)
+        validator: validator.address,
+        data: packV3ValidatorParams(query, [])
       });
-    }, 'credentialAtomicQuerySigV2OnChain');
+    });
   });
-
-  it('Example ERC20 Verifier: set zkp request Mtp validator', async () => {
-    await mtp.setProofExpirationTimeout(tenYears);
-    await erc20VerifierFlow(async (query, token, requestId) => {
-      await token.setZKPRequest(requestId, {
-        metadata: 'metadata',
-        validator: mtp.address,
-        data: packV2ValidatorParams(query)
-      });
-    }, 'credentialAtomicQueryMTPV2OnChain');
-  });
+ 
 });

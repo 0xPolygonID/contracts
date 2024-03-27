@@ -16,7 +16,7 @@ async function main() {
     [2, 3, 4]
   );
 
-  const stDeployHelper = await StateDeployHelper.initialize(owner, true);
+  const stDeployHelper = await StateDeployHelper.initialize([owner], true);
   const smtLib = await stDeployHelper.deploySmtLib(
     poseidon2Elements.address,
     poseidon3Elements.address

@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
 import { packV2ValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHash } from '../test/utils/utils';
+import { calculateQueryHashV2 } from '../test/utils/utils';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal
@@ -23,19 +23,18 @@ export const QueryOperators = {
 
 async function main() {
   // sig:validator:    // current sig validator address on mumbai
-  const validatorAddressSig = '0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878';
+  const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
 
   // mtp:validator:    // current mtp validator address on mumbai
-  const validatorAddressMTP = '0x0682fbaA2E4C478aD5d24d992069dba409766121';
+  const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
 
-  const erc20verifierAddress = '0xD75638D319B1aE2a9491DC61f87a800AD362D168'; //with sig    validatorc
+  const erc20verifierAddress = '0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03'; //with sig    validatorc
 
   const owner = (await ethers.getSigners())[0];
 
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
   const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address on mumbai
 
-  // await erc20Verifier.deployed();
   console.log(erc20Verifier, ' attached to:', erc20Verifier.address);
 
   // set default query
@@ -250,7 +249,7 @@ async function main() {
       const operatorKey =
         Object.keys(QueryOperators)[Object.values(QueryOperators).indexOf(query.operator)];
 
-      query.queryHash = calculateQueryHash(
+      query.queryHash = calculateQueryHashV2(
         query.value,
         query.schema,
         query.slotIndex,
