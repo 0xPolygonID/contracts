@@ -62,8 +62,6 @@ async function main() {
 
   // current sig validator address on polygon amoy
   const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
-
-  // current mtp validator address on polygon main
   const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
 
   const network = 'polygon-amoy';
