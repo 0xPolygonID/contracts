@@ -43,11 +43,20 @@ async function main() {
   const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.1';
 
   // current v3 validator address on mumbai
-  const validatorAddressV3 = '0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a';
+  // const validatorAddressV3 = '0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a';
+  //
+  // const chainId = 80001;
+  //
+  // const network = 'polygon-mumbai';
 
-  const chainId = 80001;
+  // current v3 validator address on amoy
 
-  const network = 'polygon-mumbai';
+  const validatorAddressV3 = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';
+
+  const chainId = 80002;
+
+  const network = 'polygon-amoy';
+
 
   const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);
 

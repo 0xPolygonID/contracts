@@ -38,15 +38,15 @@ async function main() {
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
   const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
 
-  // // current sig validator address on mumbai
-  const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
+  // // // current sig validator address on mumbai
+  // const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
+  //
+  // // current mtp validator address on mumbai
+  // const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
+  //
+  // const chainId = 80001;
 
-  // current mtp validator address on mumbai
-  const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
-
-  const chainId = 80001;
-
-  const network = 'polygon-mumbai';
+  // const network = 'polygon-mumbai';
 
   // current sig validator address on polygon main
   // const validatorAddressSig = '0xEF8540a5e0F4f53B436e7C3A273dCAe1C05d764D';
@@ -57,6 +57,20 @@ async function main() {
   // const network = 'polygon-main';
   //
   // const chainId = 137;
+
+
+
+  // current sig validator address on polygon amoy
+  const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
+
+  // current mtp validator address on polygon main
+  const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
+
+  const network = 'polygon-amoy';
+
+  const chainId = 80002;
+
+
   const query = {
     schema: schema,
     claimPathKey: schemaClaimPathKey,

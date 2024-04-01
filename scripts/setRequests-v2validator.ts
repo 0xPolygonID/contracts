@@ -23,12 +23,22 @@ export const QueryOperators = {
 
 async function main() {
   // sig:validator:    // current sig validator address on mumbai
-  const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
+  // const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
+  //
+  // // mtp:validator:    // current mtp validator address on mumbai
+  // const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
+  //
+  // const erc20verifierAddress = '0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03'; //with sig    validatorc
 
-  // mtp:validator:    // current mtp validator address on mumbai
-  const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
 
-  const erc20verifierAddress = '0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03'; //with sig    validatorc
+  // sig:validator:    // current sig validator address on amoy
+  const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
+
+  // mtp:validator:    // current mtp validator address on amoy
+  const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
+
+  const erc20verifierAddress = '0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880'; //with sig    validatorc
+
 
   const owner = (await ethers.getSigners())[0];
 
@@ -47,25 +57,25 @@ async function main() {
   const circuitIds = [circuitIdSig];
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
-  // const schemaUrl =
-  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
-  // const schema = '74977327600848231385663280181476307657';
-  // const schemaClaimPathKey =
-  //   '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  // const slotIndex = 0;
-  // const claimPathDoesntExist = 0;
-  // const requestIdModifier = 1;
+  const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
+  const schema = '74977327600848231385663280181476307657';
+  const schemaClaimPathKey =
+    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+  const slotIndex = 0;
+  const claimPathDoesntExist = 0;
+  const requestIdModifier = 1;
 
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
 
   // init these values for non-merklized credential use case
-  const schemaUrl =
-    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
-  const schemaClaimPathKey = '0';
-  const slotIndex = 2;
-  const claimPathDoesntExist = 1;
-  const schema = '198285726510688200335207273836123338699';
-  const requestIdModifier = 100;
+  // const schemaUrl =
+  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
+  // const schemaClaimPathKey = '0';
+  // const slotIndex = 2;
+  // const claimPathDoesntExist = 1;
+  // const schema = '198285726510688200335207273836123338699';
+  // const requestIdModifier = 100;
 
   const ageQueries = [
     // EQ
