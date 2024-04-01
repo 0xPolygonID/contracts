@@ -32,7 +32,7 @@
   "dependencies": {
     "@iden3/contracts": "^2.0.5",
     "@iden3/js-crypto": "^1.0.3",
-    "@iden3/js-iden3-core": "^1.2.0",
+    "@iden3/js-iden3-core": "^1.3.1",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "braces": ">=3.0.2",
@@ -62,6 +62,7 @@
     "deploy:main:balancecredentialissuer": "npx hardhat run scripts/deployBalanceCredentialIssuer.ts --network main",
     "deploy:main:sig": "npx hardhat run scripts/deploySigV2Validator.ts --network main",
     "deploy:main:mtp": "npx hardhat run scripts/deployMTPV2Validator.ts --network main",
+
     "deploy:main:erc20": "npx hardhat run scripts/deployERC20.ts --network main",
     "deploy:mumbai:v3": "npx hardhat run scripts/deployV3Validator.ts --network mumbai",
     "deploy:mumbai:erc20:v3": "npx hardhat run scripts/deployERC20SelectiveDisclosure.ts --network mumbai",
@@ -72,6 +73,20 @@
     "upgrade:mumbai:v3": "npx hardhat run scripts/upgradeV3Validator.ts --network mumbai",
     "upgrade:main:sigv2": "npx hardhat run scripts/upgradeSigValidator.ts --network main",
     "upgrade:main:mtpv2": "npx hardhat run scripts/upgradeMTPValidator.ts --network main",
+
+
+    "deploy:amoy:sig": "npx hardhat run scripts/deploySigV2Validator.ts --network amoy",
+    "deploy:amoy:mtp": "npx hardhat run scripts/deployMTPV2Validator.ts --network amoy",
+    "deploy:amoy:v3": "npx hardhat run scripts/deployV3Validator.ts --network amoy",
+    "deploy:amoy:erc20": "npx hardhat run scripts/deployERC20.ts --network amoy",
+    "deploy:amoy:erc20:v3": "npx hardhat run scripts/deployERC20SelectiveDisclosure.ts --network amoy",
+    "setrequests:amoy:v3": "npx hardhat run scripts/setRequests-v3validator.ts --network amoy",
+    "setrequests:amoy:v2": "npx hardhat run scripts/setRequests-v2validator.ts --network amoy",
+    "upgrade:amoy:sigv2": "npx hardhat run scripts/upgradeSigValidator.ts --network amoy",
+    "upgrade:amoy:mtpv2": "npx hardhat run scripts/upgradeMTPValidator.ts --network amoy",
+    "upgrade:amoy:v3": "npx hardhat run scripts/upgradeV3Validator.ts --network amoy",
+    "deploy:amoy:identityexample": "npx hardhat run scripts/deployIdentityExample.ts --network amoy",
+
 
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "lint:contracts": "npx solhint contracts/**/*.sol",

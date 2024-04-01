@@ -36,10 +36,13 @@ export const QueryOperators = {
 
 async function main() {
   // current v3 validator address on mumbai
-  const validatorAddressV3 = '0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a';
-
-  const erc20verifierAddress = '0x36eB0E70a456c310D8d8d15ae01F6D5A7C15309A';
-
+  // const validatorAddressV3 = '0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a';
+  //
+  // const erc20verifierAddress = '0x36eB0E70a456c310D8d8d15ae01F6D5A7C15309A';
+  //
+  // current v3 validator address on amoy
+  const validatorAddressV3 = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';
+  const erc20verifierAddress = '0xc5Cd536cb9Cc3BD24829502A39BE593354986dc4';
   const owner = (await ethers.getSigners())[0];
 
   const ERC20Verifier = await ethers.getContractFactory('ERC20SelectiveDisclosureVerifier');
@@ -55,33 +58,37 @@ async function main() {
   const circuitIds = [circuitIdV3];
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
-  const schemaUrl =
-    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
-  const schema = '74977327600848231385663280181476307657';
-  const schemaClaimPathKey =
-    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  const slotIndex = 0;
-  const merklized = 1;
-  const requestIdModifier = 1;
+  // const schemaUrl =
+  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
+  // const schema = '74977327600848231385663280181476307657';
+  // const schemaClaimPathKey =
+  //   '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+  // const slotIndex = 0;
+  // const merklized = 1;
+  // const requestIdModifier = 1;
   const groupID = 0;
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
   //init these values for non-merklized credential use case
-  // const schemaUrl =
-  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
-  // const schemaClaimPathKey = '0';
-  // const slotIndex = 2;
-  // const merklized = 0;
-  // const schema = '198285726510688200335207273836123338699';
-  // const requestIdModifier = 100;
+  const schemaUrl =
+    'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-nonmerklized.jsonld';
+  const schemaClaimPathKey = '0';
+  const slotIndex = 2;
+  const merklized = 0;
+  const schema = '198285726510688200335207273836123338699';
+  const requestIdModifier = 100;
 
   // you can set linked requests by changing group id
 
   // const groupID = 1;
   // const requestIdModifier = 10000;
+  //
+  // const chainId = 80001;
+  //
+  // const network = 'polygon-mumbai';
 
-  const chainId = 80001;
+  const chainId = 80002;
 
-  const network = 'polygon-mumbai';
+  const network = 'polygon-amoy';
 
   const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);
 
