@@ -44,19 +44,6 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
         $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 
-    function _beforeProofSubmit(
-        uint64 /* requestId */,
-        uint256[] memory inputs,
-        ICircuitValidator validator
-    ) internal view override {
-        // check that challenge input is address of sender
-        address addr = PrimitiveTypeUtils.uint256LEToAddress(
-            inputs[validator.inputIndexOf('challenge')]
-        );
-        // this is linking between msg.sender and
-        require(_msgSender() == addr, 'address in proof is not a sender address');
-    }
-
     function _afterProofSubmit(
         uint64 requestId,
         uint256[] memory inputs,
