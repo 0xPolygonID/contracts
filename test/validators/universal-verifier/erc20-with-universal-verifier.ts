@@ -33,7 +33,7 @@ describe('ERC 20 test', function () {
   let state: any, sig: any, mtp: any;
   let universalVerifier: Contract, erc20LinkedUniversalVerifier: Contract;
 
-  before(async () => {
+  beforeEach(async () => {
     const contractsSig = await deployValidatorContracts(
       'VerifierSigWrapper',
       'CredentialAtomicQuerySigV2Validator'
