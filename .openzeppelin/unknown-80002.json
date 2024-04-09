@@ -29,6 +29,16 @@
       "address": "0xc5Cd536cb9Cc3BD24829502A39BE593354986dc4",
       "txHash": "0xe3182cb2b10da6c6f26de5e0d76f48337877c9cf1ac3b242ae93b9ff9b7991a7",
       "kind": "transparent"
+    },
+    {
+      "address": "0x96Cf83540002a735DEb548111bcF95e01877695f",
+      "txHash": "0x3d602872d7709d1536a057b7b97120d03d75276e3fd3b65a25b9c189c5b17764",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x19875eA86503734f2f9Ed461463e0312A3b42563",
+      "txHash": "0xba5002593532e73a88ef5ed5f12013abebb196c10a455d66d604e96199471475",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -448,6 +458,195 @@
           }
         },
         "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73"
+            }
+          ]
+        }
+      }
+    },
+    "8db0b857316e01e68133d3774bd2601e30bd20d5c492f33bcd5b463e55c73a0b": {
+      "address": "0xFb9df6AA40A19ADF7Ac30023b66071cfdDEA05e0",
+      "txHash": "0xfb87022bad4b8b31a904f973f138f4ce5f6767abb20b40b1c86c22bd687c54c1",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint64": {
+            "label": "uint64"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73"
+            }
+          ]
+        }
+      }
+    },
+    "bb753a504630639ce1199fc847d48e7bd2a69eb16c8c90d67d1d12e409923265": {
+      "address": "0x9309715A8a2621ca70eAd98448Fa36C95df3852B",
+      "txHash": "0x1ee429e86e603fbbc6857f619c33751c7fa5015b3d4ac50aee4834a9777e137b",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_uint64": {
+            "label": "uint64"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_mapping(t_uint256,t_struct(ClaimItem)11930_storage)": {
+            "label": "mapping(uint256 => struct BalanceCredentialIssuer.ClaimItem)"
+          },
+          "t_struct(ClaimItem)11930_storage": {
+            "label": "struct BalanceCredentialIssuer.ClaimItem",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "issuanceDate",
+                "type": "t_uint64"
+              },
+              {
+                "label": "claim",
+                "type": "t_array(t_uint256)8_storage"
+              }
+            ]
+          },
+          "t_array(t_uint256)8_storage": {
+            "label": "uint256[8]"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(SubjectField)675_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct INonMerklizedIssuer.SubjectField[])"
+          },
+          "t_array(t_struct(SubjectField)675_storage)dyn_storage": {
+            "label": "struct INonMerklizedIssuer.SubjectField[]"
+          },
+          "t_struct(SubjectField)675_storage": {
+            "label": "struct INonMerklizedIssuer.SubjectField",
+            "members": [
+              {
+                "label": "key",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "value",
+                "type": "t_uint256"
+              },
+              {
+                "label": "rawValue",
+                "type": "t_bytes_storage"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_bytes_storage": {
+            "label": "bytes"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        },
+        "namespaces": {
+          "erc7201:polygonid.storage.BalanceCredentialIssuer": [
+            {
+              "contract": "BalanceCredentialIssuer",
+              "label": "countOfIssuedClaims",
+              "type": "t_uint64",
+              "src": "contracts/examples/BalanceCredentialIssuer.sol:22"
+            },
+            {
+              "contract": "BalanceCredentialIssuer",
+              "label": "userClaims",
+              "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
+              "src": "contracts/examples/BalanceCredentialIssuer.sol:24"
+            },
+            {
+              "contract": "BalanceCredentialIssuer",
+              "label": "idToClaim",
+              "type": "t_mapping(t_uint256,t_struct(ClaimItem)11930_storage)",
+              "src": "contracts/examples/BalanceCredentialIssuer.sol:25"
+            },
+            {
+              "contract": "BalanceCredentialIssuer",
+              "label": "idToCredentialSubject",
+              "type": "t_mapping(t_uint256,t_array(t_struct(SubjectField)675_storage)dyn_storage)",
+              "src": "contracts/examples/BalanceCredentialIssuer.sol:29"
+            }
+          ],
           "erc7201:openzeppelin.storage.Ownable2Step": [
             {
               "contract": "Ownable2StepUpgradeable",

@@ -100,6 +100,18 @@ Current addresses of example BalanceCredentialIssuer on Polygon Mumbai testnet.
 |       **IdentityLib**       | 0x3476776B9e7ad7Bf187A98acF4dB62e4dBd99345 |
 | **BalanceCredentialIssuer** | 0x81787BE964A59A95B5508f31d153B806169E15f4 |
 
+Current addresses of example BalanceCredentialIssuer on Polygon Amoy testnet.
+
+|                             |                    Sig                     |
+|:---------------------------:|:------------------------------------------:|
+|    **Poseidon2Elements**    | 0xCa06EA29b2f49Db8D575cd04327ac7C679293D5d |
+|    **Poseidon3Elements**    | 0x9e93872F435c90fB16180b4bA072225E89a7c34E |
+|    **Poseidon4Elements**    | 0x9c4Dd271EbF869616f157D58c7755747E6A5f068 |
+|         **SmtLib**          | 0x4c12a0D7DD68E4A5dDd1e92e5EA89F01828aC06B |
+|      **ClaimBuilder**       | 0x3D66491442a6720d94C083CD08038D19393C4cD3 |
+|       **IdentityLib**       | 0x6B8e8E3806379f90e7a7dcA2Cfb3dbd6325F9a25 |
+| **BalanceCredentialIssuer** | 0x19875eA86503734f2f9Ed461463e0312A3b42563 |
+
 Current addresses of example BalanceCredentialIssuer on Polygon Main.
 
 |                             |                    Sig                     |
@@ -116,6 +128,16 @@ Current addresses of example BalanceCredentialIssuer on Polygon Main.
 ## IdentityExample
 
 Here is an example of a **merklized** on-chain issuer. This example demonstrates how to use the IdentityBase library to create your own on-chain issuer implementation. There is no deployed contracts since each user is required to deploy the contract independently. Only the contract owner has the authority to issue a claim.
+
+Amoy:
+
+|                       |                    Sig                     |
+|:---------------------:|:------------------------------------------:|
+| **Poseidon2Elements** | 0x95Da3FBec384912D2348A3C9795596E59ca8adcC |
+| **Poseidon3Elements** | 0x2d01A312925784194F85A94b042889D680db7e46 |
+| **Poseidon4Elements** | 0x5C42859D02C959f896f7839F49D7Ed4c7349e4D9 |
+|      **SmtLib**       | 0x4CD9495A654f3ecd480A8E0637Db1CDeEB00be3d |
+| **Identity Contract** | 0x96Cf83540002a735DEb548111bcF95e01877695f |
 
 ## Legacy
 
@@ -150,7 +172,9 @@ Legacy ERC20 examples with airdrop use case, not restricted
 1. **deploy:main:mtp** - deploy MTP validator to polygon mainnet
 
 1. **deploy:mumbai:identityexample** - deploy onchain merklized issuer example to polygon mumbai
+1. **deploy:amoy:identityexample** - deploy onchain merklized issuer example to polygon amoy
 1. **deploy:main:identityexample** - deploy onchain merklized issuer example to polygon mainnet
 
 1. **deploy:mumbai:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mumbai
+1. **deploy:amoy:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon amoy
 1. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mainnet
