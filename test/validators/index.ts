@@ -23,7 +23,7 @@ describe('ERC 20 test', function () {
     const contractsMTP = await deployValidatorContracts(
       'VerifierMTPWrapper',
       'CredentialAtomicQueryMTPV2Validator',
-      state.address
+      await state.getAddress()
     );
     mtp = contractsMTP.validator;
   });
@@ -69,17 +69,17 @@ describe('ERC 20 test', function () {
     // set transfer request id
 
     const query = {
-      schema: ethers.BigNumber.from('180410020913331409885634153623124536270'),
-      claimPathKey: ethers.BigNumber.from(
+      schema: BigInt('180410020913331409885634153623124536270'),
+      claimPathKey: BigInt(
         '8566939875427719562376598811066985304309117528846759529734201066483458512800'
       ),
-      operator: ethers.BigNumber.from(1),
-      slotIndex: ethers.BigNumber.from(0),
+      operator: BigInt(1),
+      slotIndex: BigInt(0),
       value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) =>
-        ethers.BigNumber.from(x)
+        BigInt(x)
       ),
       circuitIds: [validator],
-      queryHash: ethers.BigNumber.from(
+      queryHash: BigInt(
         '1496222740463292783938163206931059379817846775593932664024082849882751356658'
       ),
       claimPathNotExists: 0,
@@ -119,15 +119,15 @@ describe('ERC 20 test', function () {
 
     // check that tokens were minted
 
-    expect(await token.balanceOf(account)).to.equal(ethers.BigNumber.from('5000000000000000000'));
+    expect(await token.balanceOf(account)).to.equal(BigInt('5000000000000000000'));
 
     // if proof is provided second time, address is not receiving airdrop tokens, but no revert
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
 
-    expect(await token.balanceOf(account)).to.equal(ethers.BigNumber.from('5000000000000000000'));
+    expect(await token.balanceOf(account)).to.equal(BigInt('5000000000000000000'));
 
     await token.transfer(account, 1); // we send tokens to ourselves, but no error because we sent proof
-    expect(await token.balanceOf(account)).to.equal(ethers.BigNumber.from('5000000000000000000'));
+    expect(await token.balanceOf(account)).to.equal(BigInt('5000000000000000000'));
   }
 
   it('Example ERC20 Verifier: set zkp request Sig validator', async () => {
@@ -135,7 +135,7 @@ describe('ERC 20 test', function () {
     await erc20VerifierFlow(async (query, token, requestId) => {
       await token.setZKPRequest(requestId, {
         metadata: 'metadata',
-        validator: sig.address,
+        validator: await sig.getAddress(),
         data: packV2ValidatorParams(query)
       });
     }, 'credentialAtomicQuerySigV2OnChain');
@@ -146,7 +146,7 @@ describe('ERC 20 test', function () {
     await erc20VerifierFlow(async (query, token, requestId) => {
       await token.setZKPRequest(requestId, {
         metadata: 'metadata',
-        validator: mtp.address,
+        validator: await mtp.getAddress(),
         data: packV2ValidatorParams(query)
       });
     }, 'credentialAtomicQueryMTPV2OnChain');

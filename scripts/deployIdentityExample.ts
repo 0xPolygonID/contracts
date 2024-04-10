@@ -19,8 +19,8 @@ async function main() {
 
   const stDeployHelper = await StateDeployHelper.initialize([owner], true);
   const smtLib = await stDeployHelper.deploySmtLib(
-    poseidon2Elements.address,
-    poseidon3Elements.address
+    await poseidon2Elements.getAddress(),
+    await poseidon3Elements.getAddress()
   );
 
   const deployHelper = await OnchainIdentityDeployHelper.initialize([owner], true);
@@ -35,11 +35,11 @@ async function main() {
 
   const outputJson = {
     state: stateAddress,
-    smtLib: smtLib.address,
-    identity: identity.address,
-    poseidon2: poseidon2Elements.address,
-    poseidon3: poseidon3Elements.address,
-    poseidon4: poseidon4Elements.address,
+    smtLib: await smtLib.getAddress(),
+    identity: await identity.getAddress(),
+    poseidon2: await poseidon2Elements.getAddress(),
+    poseidon3: await poseidon3Elements.getAddress(),
+    poseidon4: await poseidon4Elements.getAddress(),
     network: process.env.HARDHAT_NETWORK
   };
   fs.writeFileSync(pathOutputJson, JSON.stringify(outputJson, null, 1));

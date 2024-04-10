@@ -26,7 +26,7 @@ describe('Next tests reproduce identity life cycle', function () {
     const deployHelper = await OnchainIdentityDeployHelper.initialize([signer]);
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -42,13 +42,12 @@ describe('Next tests reproduce identity life cycle', function () {
     it("validate identity's id", async function () {
       const id = await identity.getId();
 
-      console.log(identity.address);
+      console.log("Address", await identity.getAddress());
+      console.log("id: ", BigInt(id).toString(16));
 
       expect(id).to.be.equal(
         16318200065989903207865860093614592605747279308745685922538039864771744258n
       );
-
-      console.log(BigInt(id).toString(16));
     });
   });
 
@@ -233,7 +232,7 @@ describe('Claims tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -287,7 +286,7 @@ describe('Revocation tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -341,7 +340,7 @@ describe('Root of roots tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -406,7 +405,7 @@ describe('Compare historical roots with latest roots from tree', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -456,7 +455,7 @@ describe('Compare historical roots with latest roots from tree', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -537,7 +536,7 @@ describe("Genesis state doens't have history of states", () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -552,7 +551,7 @@ describe("Genesis state doens't have history of states", () => {
         await identity.getRootsByState(latestState);
         expect.fail('The transaction should have thrown an error');
       } catch (err: any) {
-        expect(err.reason).to.be.equal("Roots for this state doesn't exist");
+        expect(err.message).to.include("Roots for this state doesn't exist");
       }
     });
   });

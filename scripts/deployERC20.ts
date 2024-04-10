@@ -31,8 +31,8 @@ async function main() {
   const erc20instance = await upgrades.deployProxy(ERC20ContractFactory, [name, symbol]);
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
-  await erc20instance.deployed();
-  console.log(contractName, ' deployed to:', erc20instance.address);
+  await erc20instance.waitForDeployment();
+  console.log(contractName, ' deployed to:', await erc20instance.getAddress());
 
   // set default query
   const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
@@ -100,7 +100,7 @@ async function main() {
     body: {
       reason: 'for testing',
       transaction_data: {
-        contract_address: erc20instance.address,
+        contract_address: await erc20instance.getAddress(),
         method_id: 'b68967e2',
         chain_id: chainId,
         network: network
@@ -127,7 +127,7 @@ async function main() {
   try {
     // sig request set
     const txSig = await erc20instance.setZKPRequest(requestIdSig, {
-      metadata: JSON.stringify(invokeRequestMetadata),
+      metadata: JSON.stringify(invokeRequestMetadata, (_, v) => typeof v === 'bigint' ? v.toString() : v),
       validator: validatorAddressSig,
       data: packV2ValidatorParams(query)
     });
@@ -139,7 +139,7 @@ async function main() {
     invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
     invokeRequestMetadata.body.scope[0].id = requestIdMtp;
     const txMtp = await erc20instance.setZKPRequest(requestIdMtp, {
-      metadata: JSON.stringify(invokeRequestMetadata),
+      metadata: JSON.stringify(invokeRequestMetadata, (_, v) => typeof v === 'bigint' ? v.toString() : v),
       validator: validatorAddressMTP,
       data: packV2ValidatorParams(query)
     });

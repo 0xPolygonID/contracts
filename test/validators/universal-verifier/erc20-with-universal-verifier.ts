@@ -11,17 +11,17 @@ import { Contract } from "ethers";
 
 const tenYears = 315360000;
 const query= {
-  schema: ethers.BigNumber.from('180410020913331409885634153623124536270'),
-  claimPathKey: ethers.BigNumber.from(
+  schema: BigInt('180410020913331409885634153623124536270'),
+  claimPathKey: BigInt(
     '8566939875427719562376598811066985304309117528846759529734201066483458512800'
   ),
-  operator: ethers.BigNumber.from(1),
-  slotIndex: ethers.BigNumber.from(0),
+  operator: BigInt(1),
+  slotIndex: BigInt(0),
   value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) =>
-    ethers.BigNumber.from(x)
+    BigInt(x)
   ),
   circuitIds: [''],
-  queryHash: ethers.BigNumber.from(
+  queryHash: BigInt(
     '1496222740463292783938163206931059379817846775593932664024082849882751356658'
   ),
   claimPathNotExists: 0,
@@ -44,7 +44,7 @@ describe('ERC 20 test', function () {
     const contractsMTP = await deployValidatorContracts(
       'VerifierMTPWrapper',
       'CredentialAtomicQueryMTPV2Validator',
-      state.address
+      await state.getAddress()
     );
     mtp = contractsMTP.validator;
 
@@ -58,8 +58,8 @@ describe('ERC 20 test', function () {
       'ZKP'
     ));
 
-    await universalVerifier.addWhitelistedValidator(sig.address);
-    await universalVerifier.addWhitelistedValidator(mtp.address);
+    await universalVerifier.addWhitelistedValidator(await sig.getAddress());
+    await universalVerifier.addWhitelistedValidator(await mtp.getAddress());
 
     await setZKPRequests();
   });
@@ -88,7 +88,7 @@ describe('ERC 20 test', function () {
           metadata: 'metadata',
           validator: validatorAddress,
           data: packV2ValidatorParams(query),
-          controller: signer.address,
+          controller: await signer.getAddress(),
           isDisabled: false
         }
       );
@@ -97,11 +97,11 @@ describe('ERC 20 test', function () {
     const query2 = Object.assign({}, query);
     query2.circuitIds = ['credentialAtomicQuerySigV2OnChain'];
     query2.skipClaimRevocationCheck = false;
-    await setRequest(0, query2, sig.address);
+    await setRequest(0, query2, await sig.getAddress());
 
     query2.circuitIds = ['credentialAtomicQueryMTPV2OnChain'];
     query2.skipClaimRevocationCheck = true;
-    await setRequest(1, query2, mtp.address);
+    await setRequest(1, query2, await mtp.getAddress());
   }
 
   async function erc20VerifierFlow(
@@ -154,8 +154,8 @@ describe('ERC 20 test', function () {
     const balanceBefore = await erc20LinkedUniversalVerifier.balanceOf(account);
     await erc20LinkedUniversalVerifier.mint(account);
     const balanceAfter = await erc20LinkedUniversalVerifier.balanceOf(account);
-    expect(balanceAfter.sub(balanceBefore)).to.be.equal(
-      ethers.BigNumber.from('5000000000000000000')
+    expect(balanceAfter - balanceBefore).to.be.equal(
+      BigInt('5000000000000000000')
     );
 
     // if proof is provided second time, address is not receiving airdrop tokens, but no revert

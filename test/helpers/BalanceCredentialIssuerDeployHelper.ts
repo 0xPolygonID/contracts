@@ -35,15 +35,20 @@ export class BalanceCredentialIssuerDeployHelper {
     this.log('======== Balance credential issuer: deploy started ========');
 
     const cb = await deployClaimBuilder(true);
-    const il = await deployIdentityLib(smtLib.address, poseidon3.address, poseidon4.address, true);
+    const il = await deployIdentityLib(
+      await smtLib.getAddress(),
+      await poseidon3.getAddress(),
+      await poseidon4.getAddress(),
+      true
+    );
 
     const balanceCredentialIssuerFactory = await ethers.getContractFactory(
       'BalanceCredentialIssuer',
       {
         libraries: {
-          ClaimBuilder: cb.address,
-          IdentityLib: il.address,
-          PoseidonUnit4L: poseidon4.address
+          ClaimBuilder: await cb.getAddress(),
+          IdentityLib: await il.getAddress(),
+          PoseidonUnit4L: await poseidon4.getAddress()
         }
       }
     );
@@ -54,9 +59,9 @@ export class BalanceCredentialIssuerDeployHelper {
         unsafeAllow: ['external-library-linking', 'struct-definition', 'state-variable-assignment']
       }
     );
-    await balanceCredentialIssuer.deployed();
+    await balanceCredentialIssuer.waitForDeployment();
     this.log(
-      `BalanceCredentialIssuer contract deployed to address ${balanceCredentialIssuer.address} from ${owner.address}`
+      `BalanceCredentialIssuer contract deployed to address ${await balanceCredentialIssuer.getAddress()} from ${await owner.getAddress()}`
     );
 
     this.log('======== Balance credential issuer: deploy completed ========');

@@ -13,24 +13,24 @@ async function main() {
   const VerifierMTPWrapper = await ethers.getContractFactory(verifierContractWrapperName);
   const verifierWrapper = await VerifierMTPWrapper.deploy();
 
-  await verifierWrapper.deployed();
-  console.log(verifierContractWrapperName, ' deployed to:', verifierWrapper.address);
+  await verifierWrapper.waitForDeployment()
+  console.log(verifierContractWrapperName, ' deployed to:', await verifierWrapper.getAddress());
 
   const CredentialAtomicQueryValidator = await ethers.getContractFactory(validatorContractName);
 
   const CredentialAtomicQueryValidatorProxy = await upgrades.deployProxy(
     CredentialAtomicQueryValidator,
-    [verifierWrapper.address, stateAddress] // current state address on mumbai
+    [await verifierWrapper.getAddress(), stateAddress] // current state address on mumbai
   );
 
-  await CredentialAtomicQueryValidatorProxy.deployed();
-  console.log(validatorContractName, ' deployed to:', CredentialAtomicQueryValidatorProxy.address);
+  await CredentialAtomicQueryValidatorProxy.waitForDeployment();
+  console.log(validatorContractName, ' deployed to:', await CredentialAtomicQueryValidatorProxy.getAddress());
 
   const outputJson = {
     verifierContractWrapperName,
     validatorContractName,
-    validator: CredentialAtomicQueryValidatorProxy.address,
-    verifier: verifierWrapper.address,
+    validator: await CredentialAtomicQueryValidatorProxy.getAddress(),
+    verifier: await verifierWrapper.getAddress(),
     network: process.env.HARDHAT_NETWORK
   };
   fs.writeFileSync(pathOutputJson, JSON.stringify(outputJson, null, 1));
