@@ -39,7 +39,7 @@ describe('Next tests reproduce identity life cycle', function () {
       expect(await identity.getIsOldStateGenesis()).to.be.equal(true);
     });
 
-    it.only("validate identity's id", async function () {
+    it("validate identity's id", async function () {
       const id = await identity.getId();
 
       console.log('Address', await identity.getAddress());
