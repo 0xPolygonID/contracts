@@ -13,7 +13,7 @@ async function main() {
   const VerifierMTPWrapper = await ethers.getContractFactory(verifierContractWrapperName);
   const verifierWrapper = await VerifierMTPWrapper.deploy();
 
-  await verifierWrapper.waitForDeployment()
+  await verifierWrapper.waitForDeployment();
   console.log(verifierContractWrapperName, ' deployed to:', await verifierWrapper.getAddress());
 
   const CredentialAtomicQueryValidator = await ethers.getContractFactory(validatorContractName);
@@ -24,7 +24,11 @@ async function main() {
   );
 
   await CredentialAtomicQueryValidatorProxy.waitForDeployment();
-  console.log(validatorContractName, ' deployed to:', await CredentialAtomicQueryValidatorProxy.getAddress());
+  console.log(
+    validatorContractName,
+    ' deployed to:',
+    await CredentialAtomicQueryValidatorProxy.getAddress()
+  );
 
   const outputJson = {
     verifierContractWrapperName,

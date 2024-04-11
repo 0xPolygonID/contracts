@@ -58,8 +58,6 @@ async function main() {
   //
   // const chainId = 137;
 
-
-
   // current sig validator address on polygon amoy
   const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
   const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
@@ -67,7 +65,6 @@ async function main() {
   const network = 'polygon-amoy';
 
   const chainId = 80002;
-
 
   const query = {
     schema: schema,
@@ -127,7 +124,9 @@ async function main() {
   try {
     // sig request set
     const txSig = await erc20instance.setZKPRequest(requestIdSig, {
-      metadata: JSON.stringify(invokeRequestMetadata, (_, v) => typeof v === 'bigint' ? v.toString() : v),
+      metadata: JSON.stringify(invokeRequestMetadata, (_, v) =>
+        typeof v === 'bigint' ? v.toString() : v
+      ),
       validator: validatorAddressSig,
       data: packV2ValidatorParams(query)
     });
@@ -139,7 +138,9 @@ async function main() {
     invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
     invokeRequestMetadata.body.scope[0].id = requestIdMtp;
     const txMtp = await erc20instance.setZKPRequest(requestIdMtp, {
-      metadata: JSON.stringify(invokeRequestMetadata, (_, v) => typeof v === 'bigint' ? v.toString() : v),
+      metadata: JSON.stringify(invokeRequestMetadata, (_, v) =>
+        typeof v === 'bigint' ? v.toString() : v
+      ),
       validator: validatorAddressMTP,
       data: packV2ValidatorParams(query)
     });

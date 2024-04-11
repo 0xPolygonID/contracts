@@ -77,10 +77,13 @@ export class StateDeployHelper {
       StateFactory,
       [await verifier.getAddress(), defaultIdType, await owner.getAddress()],
       {
-      unsafeAllowLinkedLibraries: true
-    });
+        unsafeAllowLinkedLibraries: true
+      }
+    );
     await state.waitForDeployment();
-    this.log(`State contract deployed to address ${await state.getAddress()} from ${await owner.getAddress()}`);
+    this.log(
+      `State contract deployed to address ${await state.getAddress()} from ${await owner.getAddress()}`
+    );
 
     this.log('======== State: deploy completed ========');
 

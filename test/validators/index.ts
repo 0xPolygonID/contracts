@@ -75,9 +75,7 @@ describe('ERC 20 test', function () {
       ),
       operator: BigInt(1),
       slotIndex: BigInt(0),
-      value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) =>
-        BigInt(x)
-      ),
+      value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) => BigInt(x)),
       circuitIds: [validator],
       queryHash: BigInt(
         '1496222740463292783938163206931059379817846775593932664024082849882751356658'

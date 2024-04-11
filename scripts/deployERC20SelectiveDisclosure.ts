@@ -57,7 +57,6 @@ async function main() {
 
   const network = 'polygon-amoy';
 
-
   const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);
 
   if (!networkFlag) {
@@ -144,12 +143,15 @@ async function main() {
   };
 
   try {
-
-    const x = JSON.stringify(invokeRequestMetadata, (_, v) => typeof v === 'bigint' ? v.toString() : v);
+    const x = JSON.stringify(invokeRequestMetadata, (_, v) =>
+      typeof v === 'bigint' ? v.toString() : v
+    );
 
     // v3 request set
     const txV3 = await erc20instance.setZKPRequest(requestIdV3, {
-      metadata: JSON.stringify(invokeRequestMetadata, (_, v) => typeof v === 'bigint' ? v.toString() : v),
+      metadata: JSON.stringify(invokeRequestMetadata, (_, v) =>
+        typeof v === 'bigint' ? v.toString() : v
+      ),
       validator: validatorAddressV3,
       data: packV3ValidatorParams(query)
     });

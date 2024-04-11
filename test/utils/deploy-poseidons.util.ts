@@ -48,9 +48,7 @@ export async function deployPoseidons(
 
 export async function deployPoseidonFacade(): Promise<Contract> {
   const poseidonContracts = await deployPoseidons(
-    (
-      await ethers.getSigners()
-    )[0],
+    (await ethers.getSigners())[0],
     new Array(6).fill(6).map((_, i) => i + 1)
   );
 

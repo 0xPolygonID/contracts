@@ -6,7 +6,12 @@ import {
   prepareInputs,
   publishState
 } from '../utils/deploy-utils';
-import { packV2ValidatorParams, packV3ValidatorParams, unpackV2ValidatorParams, unpackV3ValidatorParams } from '../utils/pack-utils';
+import {
+  packV2ValidatorParams,
+  packV3ValidatorParams,
+  unpackV2ValidatorParams,
+  unpackV3ValidatorParams
+} from '../utils/pack-utils';
 
 const tenYears = 315360000;
 describe('ERC 20 Selective Disclosure (V3) test', function () {
@@ -21,9 +26,7 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
     validator = contractValidator.validator;
   });
 
-  async function erc20SDVerifierFlow(
-    callBack: (q, t, r) => Promise<void>,
-  ): Promise<void> {
+  async function erc20SDVerifierFlow(callBack: (q, t, r) => Promise<void>): Promise<void> {
     const token: any = await deployERC20ZKPVerifierToken(
       'zkpVerifierSD',
       'ZKP-SD',
@@ -34,11 +37,12 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     await publishState(state, require('./common-data/issuer_genesis_state.json'));
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    await publishState(state, require('./common-data/issuer_from_genesis_state_to_first_auth_disabled_transition_v3.json'));
-
-    const { inputs, pi_a, pi_b, pi_c } = prepareInputs(
-        require('./common-data/valid_sig_v3.json')
+    await publishState(
+      state,
+      require('./common-data/issuer_from_genesis_state_to_first_auth_disabled_transition_v3.json')
     );
+
+    const { inputs, pi_a, pi_b, pi_c } = prepareInputs(require('./common-data/valid_sig_v3.json'));
 
     const account = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     expect(token.transfer).not.to.be.undefined;
@@ -65,9 +69,7 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
       ),
       operator: BigInt(1),
       slotIndex: BigInt(0),
-      value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) =>
-        BigInt(x)
-      ),
+      value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) => BigInt(x)),
       circuitIds: ['credentialAtomicQueryV3OnChain-beta.1'],
       queryHash: BigInt(
         '19185468473610285815446195195707572856383167010831244369191309337886545428382'
@@ -75,8 +77,8 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
       metadata: 'test medatada',
       skipClaimRevocationCheck: false,
       groupID: 1,
-      nullifierSessionID: "0",
-      verifierID: "21929109382993718606847853573861987353620810345503358891473103689157378049",
+      nullifierSessionID: '0',
+      verifierID: '21929109382993718606847853573861987353620810345503358891473103689157378049',
       proofType: 1
     };
 
@@ -129,5 +131,4 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
       });
     });
   });
-
 });

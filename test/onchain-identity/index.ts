@@ -39,17 +39,22 @@ describe('Next tests reproduce identity life cycle', function () {
       expect(await identity.getIsOldStateGenesis()).to.be.equal(true);
     });
 
-    it("validate identity's id", async function () {
+    it.only("validate identity's id", async function () {
       const id = await identity.getId();
 
-      console.log("Address", await identity.getAddress());
-      console.log("id: ", BigInt(id).toString(16));
+      console.log('Address', await identity.getAddress());
+      console.log('id: ', BigInt(id).toString(16));
 
       expect(id).to.be.equal(
         16318200065989903207865860093614592605747279308745685922538039864771744258n
       );
     });
   });
+
+  // Address 0x1CE7886A3074bDE3C580Fd55b673E81517D368E4
+  // id:  b40e468d31715e873b655fd80c5e3bd74306a88e71c000000000000001202
+
+  // expected: 93C5BAE3728FC605AF22632F905BB4B223ED817C5A8000000000000001202
 
   describe('validate initial identity', function () {
     let initialClaimTreeRoot, initialRevocationTreeRoot, initialRootOfRootsTreeRoot: any;

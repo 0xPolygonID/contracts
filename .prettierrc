@@ -1,1 +1,6 @@
-"@iden3/eslint-config/prettier"
+{
+    "semi": true,
+    "trailingComma": "none",
+    "singleQuote": true,
+    "printWidth": 100
+}

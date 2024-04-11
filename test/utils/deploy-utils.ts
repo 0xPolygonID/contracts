@@ -36,7 +36,10 @@ export async function deployValidatorContracts(
   const validatorContractVerifierWrapper = await ValidatorContractVerifierWrapper.deploy();
 
   await validatorContractVerifierWrapper.waitForDeployment();
-  console.log('Validator Verifier Wrapper deployed to:', await validatorContractVerifierWrapper.getAddress());
+  console.log(
+    'Validator Verifier Wrapper deployed to:',
+    await validatorContractVerifierWrapper.getAddress()
+  );
 
   const ValidatorContract = await ethers.getContractFactory(validatorContractName);
 
@@ -209,7 +212,10 @@ export async function deployERC20LinkedUniversalVerifier(
     name,
     symbol
   );
-  console.log('ERC20LinkedUniversalVerifier deployed to:', await erc20LinkedUniversalVerifier.getAddress());
+  console.log(
+    'ERC20LinkedUniversalVerifier deployed to:',
+    await erc20LinkedUniversalVerifier.getAddress()
+  );
   return {
     universalVerifier,
     erc20LinkedUniversalVerifier
@@ -233,7 +239,10 @@ export async function deployERC721LinkedUniversalVerifier(
     name,
     symbol
   );
-  console.log('ERC721LinkedUniversalVerifier deployed to:', await erc721LinkedUniversalVerifier.getAddress());
+  console.log(
+    'ERC721LinkedUniversalVerifier deployed to:',
+    await erc721LinkedUniversalVerifier.getAddress()
+  );
   return {
     universalVerifier,
     erc721LinkedUniversalVerifier

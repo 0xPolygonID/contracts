@@ -24,7 +24,11 @@ async function main() {
   );
 
   await CredentialAtomicQueryValidatorProxy.waitForDeployment();
-  console.log(validatorContractName, ' deployed to:', await CredentialAtomicQueryValidatorProxy.getAddress());
+  console.log(
+    validatorContractName,
+    ' deployed to:',
+    await CredentialAtomicQueryValidatorProxy.getAddress()
+  );
 
   const outputJson = {
     verifierContractWrapperName,

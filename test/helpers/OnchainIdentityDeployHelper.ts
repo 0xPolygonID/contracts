@@ -52,7 +52,9 @@ export class OnchainIdentityDeployHelper {
       unsafeAllowLinkedLibraries: true
     });
     await Identity.waitForDeployment();
-    this.log(`Identity contract deployed to address ${await Identity.getAddress()} from ${await owner.getAddress()}`);
+    this.log(
+      `Identity contract deployed to address ${await Identity.getAddress()} from ${await owner.getAddress()}`
+    );
 
     this.log('======== Identity: deploy completed ========');
 

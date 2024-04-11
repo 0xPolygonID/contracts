@@ -30,7 +30,6 @@ async function main() {
   //
   // const erc20verifierAddress = '0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03'; //with sig    validatorc
 
-
   // sig:validator:    // current sig validator address on amoy
   const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
 
@@ -38,7 +37,6 @@ async function main() {
   const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
 
   const erc20verifierAddress = '0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880'; //with sig    validatorc
-
 
   const owner = (await ethers.getSigners())[0];
 
