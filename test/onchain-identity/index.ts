@@ -19,7 +19,7 @@ describe('Next tests reproduce identity life cycle', function () {
 
     await network.provider.send('hardhat_setNonce', [
       '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-      '0xffffffff0000'
+      '0xffffffff0001'
     ]);
 
     const stDeployHelper = await StateDeployHelper.initialize([signer]);
@@ -42,19 +42,15 @@ describe('Next tests reproduce identity life cycle', function () {
     it("validate identity's id", async function () {
       const id = await identity.getId();
 
-      console.log('Address', await identity.getAddress());
-      console.log('id: ', BigInt(id).toString(16));
+      // console.log('Identity address:', await identity.getAddress());
+      // console.log('Identity id:', BigInt(id).toString(16));
 
       expect(id).to.be.equal(
         16318200065989903207865860093614592605747279308745685922538039864771744258n
+        // 93C5BAE3728FC605AF22632F905BB4B223ED817C5A8000000000000001202
       );
     });
   });
-
-  // Address 0x1CE7886A3074bDE3C580Fd55b673E81517D368E4
-  // id:  b40e468d31715e873b655fd80c5e3bd74306a88e71c000000000000001202
-
-  // expected: 93C5BAE3728FC605AF22632F905BB4B223ED817C5A8000000000000001202
 
   describe('validate initial identity', function () {
     let initialClaimTreeRoot, initialRevocationTreeRoot, initialRootOfRootsTreeRoot: any;
