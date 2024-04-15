@@ -10,8 +10,8 @@ export async function deploySpongePoseidon(poseidon6ContractAddress: string): Pr
   });
 
   const spongePoseidon = await SpongePoseidonFactory.deploy();
-  await spongePoseidon.deployed();
-  console.log('SpongePoseidon deployed to:', spongePoseidon.address);
+  await spongePoseidon.waitForDeployment();
+  console.log('SpongePoseidon deployed to:', await spongePoseidon.getAddress());
   return spongePoseidon;
 }
 
@@ -27,7 +27,7 @@ export async function deployValidatorContracts(
   if (!stateAddress) {
     const stateDeployHelper = await StateDeployHelper.initialize();
     const { state } = await stateDeployHelper.deployState();
-    stateAddress = state.address;
+    stateAddress = await state.getAddress();
   }
 
   const ValidatorContractVerifierWrapper = await ethers.getContractFactory(
@@ -35,18 +35,21 @@ export async function deployValidatorContracts(
   );
   const validatorContractVerifierWrapper = await ValidatorContractVerifierWrapper.deploy();
 
-  await validatorContractVerifierWrapper.deployed();
-  console.log('Validator Verifier Wrapper deployed to:', validatorContractVerifierWrapper.address);
+  await validatorContractVerifierWrapper.waitForDeployment();
+  console.log(
+    'Validator Verifier Wrapper deployed to:',
+    await validatorContractVerifierWrapper.getAddress()
+  );
 
   const ValidatorContract = await ethers.getContractFactory(validatorContractName);
 
   const validatorContractProxy = await upgrades.deployProxy(ValidatorContract, [
-    validatorContractVerifierWrapper.address,
+    await validatorContractVerifierWrapper.getAddress(),
     stateAddress
   ]);
 
-  await validatorContractProxy.deployed();
-  console.log(`${validatorContractName} deployed to: ${validatorContractProxy.address}`);
+  await validatorContractProxy.waitForDeployment();
+  console.log(`${validatorContractName} deployed to: ${await validatorContractProxy.getAddress()}`);
   const signers = await ethers.getSigners();
 
   const state = await ethers.getContractAt('State', stateAddress, signers[0]);
@@ -66,7 +69,7 @@ export async function deployERC20ZKPVerifierToken(
 }> {
   const ERC20Verifier = await ethers.getContractFactory(contractName);
   const erc20Verifier = await upgrades.deployProxy(ERC20Verifier, [name, symbol]);
-  console.log(contractName + ' deployed to:', erc20Verifier.address);
+  console.log(contractName + ' deployed to:', await erc20Verifier.getAddress());
   return erc20Verifier;
 }
 
@@ -95,10 +98,10 @@ export function prepareInputs(json: any): VerificationInfo {
 
 export function toBigNumber({ inputs, pi_a, pi_b, pi_c }: VerificationInfo) {
   return {
-    inputs: inputs.map((input) => ethers.BigNumber.from(input)),
-    pi_a: pi_a.map((input) => ethers.BigNumber.from(input)),
-    pi_b: pi_b.map((arr) => arr.map((input) => ethers.BigNumber.from(input))),
-    pi_c: pi_c.map((input) => ethers.BigNumber.from(input))
+    inputs: inputs.map((input) => BigInt(input)),
+    pi_a: pi_a.map((input) => BigInt(input)),
+    pi_b: pi_b.map((arr) => arr.map((input) => BigInt(input))),
+    pi_c: pi_c.map((input) => BigInt(input))
   };
 }
 
@@ -151,8 +154,8 @@ export function toJson(data) {
 export async function deployClaimBuilder(enableLogging = false): Promise<Contract> {
   const ClaimBuilder = await ethers.getContractFactory('ClaimBuilder');
   const cb = await ClaimBuilder.deploy();
-  await cb.deployed();
-  enableLogging && console.log(`ClaimBuilder deployed to: ${cb.address}`);
+  await cb.waitForDeployment();
+  enableLogging && console.log(`ClaimBuilder deployed to: ${await cb.getAddress()}`);
 
   return cb;
 }
@@ -171,8 +174,8 @@ export async function deployIdentityLib(
     }
   });
   const il = await Identity.deploy();
-  await il.deployed();
-  enableLogging && console.log(`IdentityLib deployed to: ${il.address}`);
+  await il.waitForDeployment();
+  enableLogging && console.log(`IdentityLib deployed to: ${await il.getAddress()}`);
 
   return il;
 }
@@ -184,11 +187,11 @@ export async function deployClaimBuilderWrapper(enableLogging = false): Promise<
 
   const ClaimBuilderWrapper = await ethers.getContractFactory('ClaimBuilderWrapper', {
     libraries: {
-      ClaimBuilder: cb.address
+      ClaimBuilder: await cb.getAddress()
     }
   });
   const claimBuilderWrapper = await ClaimBuilderWrapper.deploy();
-  enableLogging && console.log('ClaimBuilder deployed to:', claimBuilderWrapper.address);
+  enableLogging && console.log('ClaimBuilder deployed to:', await claimBuilderWrapper.getAddress());
   return claimBuilderWrapper;
 }
 
@@ -205,11 +208,14 @@ export async function deployERC20LinkedUniversalVerifier(
     'ERC20LinkedUniversalVerifier'
   );
   const erc20LinkedUniversalVerifier = await ERC20LinkedUniversalVerifier.deploy(
-    universalVerifier.address,
+    await universalVerifier.getAddress(),
     name,
     symbol
   );
-  console.log('ERC20LinkedUniversalVerifier deployed to:', erc20LinkedUniversalVerifier.address);
+  console.log(
+    'ERC20LinkedUniversalVerifier deployed to:',
+    await erc20LinkedUniversalVerifier.getAddress()
+  );
   return {
     universalVerifier,
     erc20LinkedUniversalVerifier
@@ -229,11 +235,14 @@ export async function deployERC721LinkedUniversalVerifier(
     'ERC721LinkedUniversalVerifier'
   );
   const erc721LinkedUniversalVerifier = await ERC721LinkedUniversalVerifier.deploy(
-    universalVerifier.address,
+    await universalVerifier.getAddress(),
     name,
     symbol
   );
-  console.log('ERC721LinkedUniversalVerifier deployed to:', erc721LinkedUniversalVerifier.address);
+  console.log(
+    'ERC721LinkedUniversalVerifier deployed to:',
+    await erc721LinkedUniversalVerifier.getAddress()
+  );
   return {
     universalVerifier,
     erc721LinkedUniversalVerifier

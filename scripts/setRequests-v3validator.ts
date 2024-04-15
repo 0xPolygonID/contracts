@@ -47,7 +47,7 @@ async function main() {
 
   const ERC20Verifier = await ethers.getContractFactory('ERC20SelectiveDisclosureVerifier');
   const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address on mumbai
-  console.log(erc20Verifier, ' attached to:', erc20Verifier.address);
+  console.log(erc20Verifier, ' attached to:', await erc20Verifier.getAddress());
 
   // set default query
   const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.1';
@@ -97,7 +97,7 @@ async function main() {
   }
   const [blockchain, networkId] = networkFlag.split(':');
 
-  const verifierId = buildVerifierId(erc20Verifier.address, {
+  const verifierId = buildVerifierId(await erc20Verifier.getAddress(), {
     blockchain,
     networkId,
     method: DidMethod.PolygonId

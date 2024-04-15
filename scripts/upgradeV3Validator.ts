@@ -14,7 +14,7 @@ async function main() {
     validatorContractAddress,
     validatorContractName
   );
-  console.log(validatorContractName, 'validator upgraded on ', v.validator.address);
+  console.log(validatorContractName, 'validator upgraded on ', await v.validator.getAddress());
 }
 
 main()

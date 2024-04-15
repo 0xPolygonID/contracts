@@ -19,14 +19,14 @@ describe('Next tests reproduce identity life cycle', function () {
 
     await network.provider.send('hardhat_setNonce', [
       '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-      '0xffffffff0000'
+      '0xffffffff0001'
     ]);
 
     const stDeployHelper = await StateDeployHelper.initialize([signer]);
     const deployHelper = await OnchainIdentityDeployHelper.initialize([signer]);
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -42,13 +42,13 @@ describe('Next tests reproduce identity life cycle', function () {
     it("validate identity's id", async function () {
       const id = await identity.getId();
 
-      console.log(identity.address);
+      // console.log('Identity address:', await identity.getAddress());
+      // console.log('Identity id:', BigInt(id).toString(16));
 
       expect(id).to.be.equal(
         16318200065989903207865860093614592605747279308745685922538039864771744258n
+        // 93C5BAE3728FC605AF22632F905BB4B223ED817C5A8000000000000001202
       );
-
-      console.log(BigInt(id).toString(16));
     });
   });
 
@@ -233,7 +233,7 @@ describe('Claims tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -287,7 +287,7 @@ describe('Revocation tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -341,7 +341,7 @@ describe('Root of roots tree proofs', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -406,7 +406,7 @@ describe('Compare historical roots with latest roots from tree', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -456,7 +456,7 @@ describe('Compare historical roots with latest roots from tree', () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -537,7 +537,7 @@ describe("Genesis state doens't have history of states", () => {
     const deployHelper = await OnchainIdentityDeployHelper.initialize();
     const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
-      stContracts.state.address,
+      await stContracts.state.getAddress(),
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4
@@ -552,7 +552,7 @@ describe("Genesis state doens't have history of states", () => {
         await identity.getRootsByState(latestState);
         expect.fail('The transaction should have thrown an error');
       } catch (err: any) {
-        expect(err.reason).to.be.equal("Roots for this state doesn't exist");
+        expect(err.message).to.include("Roots for this state doesn't exist");
       }
     });
   });

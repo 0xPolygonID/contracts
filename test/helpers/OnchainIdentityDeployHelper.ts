@@ -35,20 +35,26 @@ export class OnchainIdentityDeployHelper {
     this.log('======== Identity: deploy started ========');
 
     const cb = await deployClaimBuilder();
-    const il = await deployIdentityLib(smtLib.address, poseidon3.address, poseidon4.address);
+    const il = await deployIdentityLib(
+      await smtLib.getAddress(),
+      await poseidon3.getAddress(),
+      await poseidon4.getAddress()
+    );
 
     this.log('deploying Identity...');
     const IdentityFactory = await ethers.getContractFactory('IdentityExample', {
       libraries: {
-        ClaimBuilder: cb.address,
-        IdentityLib: il.address
+        ClaimBuilder: await cb.getAddress(),
+        IdentityLib: await il.getAddress()
       }
     });
     const Identity = await upgrades.deployProxy(IdentityFactory, [stateAddress], {
       unsafeAllowLinkedLibraries: true
     });
-    await Identity.deployed();
-    this.log(`Identity contract deployed to address ${Identity.address} from ${owner.address}`);
+    await Identity.waitForDeployment();
+    this.log(
+      `Identity contract deployed to address ${await Identity.getAddress()} from ${await owner.getAddress()}`
+    );
 
     this.log('======== Identity: deploy completed ========');
 
