@@ -26,12 +26,12 @@ const config: HardhatUserConfig = {
     ]
   },
   networks: {
-    main: {
-      chainId: 137,
-      url: `${process.env.MAIN_RPC_URL}`,
-      accounts: [`0x${process.env.MAIN_PRIVATE_KEY}`],
-      gasPrice: 200000000000
-    },
+    // main: {
+    //   chainId: 137,
+    //   url: `${process.env.MAIN_RPC_URL}`,
+    //   accounts: [`0x${process.env.MAIN_PRIVATE_KEY}`],
+    //   gasPrice: 200000000000
+    // },
     amoy: {
       chainId: 80002,
       url: `${process.env.AMOY_RPC_URL}`,
