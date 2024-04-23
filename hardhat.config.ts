@@ -1,7 +1,10 @@
-import { HardhatUserConfig, task } from 'hardhat/config';
+import dotenv from 'dotenv';
+import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 import '@openzeppelin/hardhat-upgrades';
 import '@nomicfoundation/hardhat-verify';
+
+dotenv.config();
 
 const DEFAULT_MNEMONIC = 'test test test test test test test test test test test junk';
 
@@ -23,22 +26,17 @@ const config: HardhatUserConfig = {
     ]
   },
   networks: {
-    // main: {
-    //   chainId: 137,
-    //   url: `${process.env.MAIN_RPC_URL}`,
-    //   accounts: [`0x${process.env.MAIN_PRIVATE_KEY}`],
-    //   gasPrice: 200000000000
-    // },
-    // mumbai: {
-    //   chainId: 80001,
-    //   url: `${process.env.MUMBAI_RPC_URL}`,
-    //   accounts: [`0x${process.env.MUMBAI_PRIVATE_KEY}`]
-    // },
-    // amoy: {
-    //   chainId: 80002,
-    //   url: `${process.env.AMOY_RPC_URL}`,
-    //   accounts: [`0x${process.env.AMOY_PRIVATE_KEY}`]
-    // },
+    main: {
+      chainId: 137,
+      url: `${process.env.MAIN_RPC_URL}`,
+      accounts: [`0x${process.env.MAIN_PRIVATE_KEY}`],
+      gasPrice: 200000000000
+    },
+    amoy: {
+      chainId: 80002,
+      url: `${process.env.AMOY_RPC_URL}`,
+      accounts: [`0x${process.env.AMOY_PRIVATE_KEY}`]
+    },
     localhost: {
       url: 'http://127.0.0.1:8545',
       accounts: {
@@ -48,6 +46,20 @@ const config: HardhatUserConfig = {
         count: 20
       }
     }
+  },
+  etherscan: {
+    apiKey: process.env.OKLINK_API_KEY,
+    customChains: [
+      {
+        network: 'amoy',
+        chainId: 80002,
+        urls: {
+          apiURL:
+            'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/AMOY_TESTNET',
+          browserURL: 'https://www.oklink.com/amoy'
+        }
+      }
+    ]
   },
   gasReporter: {
     currency: 'USD',
