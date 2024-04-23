@@ -87,8 +87,6 @@ describe('ERC721 test', function () {
           metadata: 'metadata',
           validator: validatorAddress,
           data: packV2ValidatorParams(query),
-          controller: await signer.getAddress(),
-          isDisabled: false
         }
       );
     }
