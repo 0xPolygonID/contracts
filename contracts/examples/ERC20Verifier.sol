@@ -4,9 +4,9 @@ pragma solidity 0.8.20;
 import {ERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
-import {ZKPVerifier} from '@iden3/contracts/verifiers/ZKPVerifier.sol';
+import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
 
-contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
+contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 1;
     uint64 public constant TRANSFER_REQUEST_ID_MTP_VALIDATOR = 2;
 
@@ -28,10 +28,9 @@ contract ERC20Verifier is ERC20Upgradeable, ZKPVerifier {
     }
 
     modifier beforeTransfer(address to) {
-        ZKPVerifier.ZKPVerifierStorage storage $ = _getZKPVerifierStorage();
         require(
-            $.proofs[to][TRANSFER_REQUEST_ID_SIG_VALIDATOR] ||
-                $.proofs[to][TRANSFER_REQUEST_ID_MTP_VALIDATOR],
+            isProofSubmitted(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR) ||
+                isProofSubmitted(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR),
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;

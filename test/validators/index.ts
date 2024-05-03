@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
 import {
   deployERC20ZKPVerifierToken,
   deployValidatorContracts,
