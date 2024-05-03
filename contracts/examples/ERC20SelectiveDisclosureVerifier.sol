@@ -21,7 +21,11 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
     bytes32 private constant ERC20SelectiveDisclosureVerifierStorageLocation =
         0xb76e10afcb000a9a2532ea819d260b0a3c0ddb1d54ee499ab0643718cbae8700;
 
-    function _getERC20SelectiveDisclosureVerifierStorage() private pure returns (ERC20SelectiveDisclosureVerifierStorage storage $) {
+    function _getERC20SelectiveDisclosureVerifierStorage()
+        private
+        pure
+        returns (ERC20SelectiveDisclosureVerifierStorage storage $)
+    {
         assembly {
             $.slot := ERC20SelectiveDisclosureVerifierStorageLocation
         }
@@ -37,7 +41,8 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
     }
 
     function initialize(string memory name, string memory symbol) public initializer {
-        ERC20SelectiveDisclosureVerifierStorage storage $ = _getERC20SelectiveDisclosureVerifierStorage();
+        ERC20SelectiveDisclosureVerifierStorage
+            storage $ = _getERC20SelectiveDisclosureVerifierStorage();
         super.__ERC20_init(name, symbol);
         super.__ZKPVerifier_init(_msgSender());
         $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
@@ -61,7 +66,8 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
         uint256[] memory inputs,
         ICircuitValidator validator
     ) internal override {
-        ERC20SelectiveDisclosureVerifierStorage storage $ = _getERC20SelectiveDisclosureVerifierStorage();
+        ERC20SelectiveDisclosureVerifierStorage
+            storage $ = _getERC20SelectiveDisclosureVerifierStorage();
         if (requestId == TRANSFER_REQUEST_ID_V3_VALIDATOR) {
             // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
             uint256 id = inputs[1];
@@ -83,7 +89,8 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, ZKPVerifier {
     }
 
     function getOperatorOutput() public view returns (uint256) {
-        ERC20SelectiveDisclosureVerifierStorage storage $ = _getERC20SelectiveDisclosureVerifierStorage();
+        ERC20SelectiveDisclosureVerifierStorage
+            storage $ = _getERC20SelectiveDisclosureVerifierStorage();
         uint256 id = $.addressToId[_msgSender()];
         require(id != 0, 'sender id is not found');
         return $._idToOperatorOutput[id];

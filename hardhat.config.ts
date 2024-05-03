@@ -32,11 +32,11 @@ const config: HardhatUserConfig = {
     //   accounts: [`0x${process.env.MAIN_PRIVATE_KEY}`],
     //   gasPrice: 200000000000
     // },
-    amoy: {
-      chainId: 80002,
-      url: `${process.env.AMOY_RPC_URL}`,
-      accounts: [`0x${process.env.AMOY_PRIVATE_KEY}`]
-    },
+    // amoy: {
+    //   chainId: 80002,
+    //   url: `${process.env.AMOY_RPC_URL}`,
+    //   accounts: [`0x${process.env.AMOY_PRIVATE_KEY}`]
+    // },
     localhost: {
       url: 'http://127.0.0.1:8545',
       accounts: {

@@ -33,7 +33,11 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
     bytes32 private constant BalanceCredentialIssuerStorageLocation =
         0xb775a0063b8bb6b7d39c4f74d1ce330eaeeb81ff68db2df91398ea2d7dc23900;
 
-    function _getBalanceCredentialIssuerStorage() private pure returns (BalanceCredentialIssuerStorage storage $) {
+    function _getBalanceCredentialIssuerStorage()
+        private
+        pure
+        returns (BalanceCredentialIssuerStorage storage $)
+    {
         assembly {
             $.slot := BalanceCredentialIssuerStorageLocation
         }
