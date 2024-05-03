@@ -99,7 +99,7 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
 
     // submit response for non-existing request
     await expect(token.submitZKPResponse(1, inputs, pi_a, pi_b, pi_c)).to.be.revertedWith(
-      'validator is not set for this request id'
+      "request id doesn't exist"
     );
 
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
