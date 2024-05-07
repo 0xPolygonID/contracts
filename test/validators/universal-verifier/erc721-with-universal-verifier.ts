@@ -58,8 +58,8 @@ describe('ERC721 test', function () {
       'ZKP'
     ));
 
-    await universalVerifier.addWhitelistedValidator(await sig.getAddress());
-    await universalVerifier.addWhitelistedValidator(await mtp.getAddress());
+    await universalVerifier.approveValidator(await sig.getAddress());
+    await universalVerifier.approveValidator(await mtp.getAddress());
 
     await setZKPRequests();
   });
