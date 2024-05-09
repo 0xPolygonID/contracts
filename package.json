@@ -67,6 +67,7 @@
     "upgrade:amoy:sigv2": "npx hardhat run scripts/upgradeSigValidator.ts --network amoy",
     "upgrade:amoy:mtpv2": "npx hardhat run scripts/upgradeMTPValidator.ts --network amoy",
     "upgrade:amoy:v3": "npx hardhat run scripts/upgradeV3Validator.ts --network amoy",
+    "deploy:pay-example": "npx hardhat run scripts/deployPayExample.ts --network amoy",
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "lint:contracts": "npx solhint contracts/**/*.sol",
     "lint:contracts:format": "npx prettier --write contracts/**/*.sol"
