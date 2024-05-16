@@ -3,6 +3,7 @@ pragma solidity 0.8.20;
 contract PayExample {
     struct Payment {
         string issuerIdHash;
+        uint256 value;
     }
 
     address payable public owner;
@@ -17,10 +18,19 @@ contract PayExample {
         owner = payable(msg.sender);
     }
 
-    function pay(string calldata sessionIdHash, string calldata issuerIdHash) public payable {
-        require(msg.value == 1000000000000000);
-        Payment memory p = Payment(issuerIdHash);
-        Payments[sessionIdHash] = p;
+    function pay(string calldata sessionIdHash, string memory issuerIdHash) public payable {
+        Payment memory existedPayment = Payments[sessionIdHash];
+        if (existedPayment.value > 0) {
+            require(
+                keccak256(abi.encodePacked(existedPayment.issuerIdHash)) == keccak256(abi.encodePacked(issuerIdHash)),
+                'issuer id hash should be the same for same sessions'
+            );
+            existedPayment.value = existedPayment.value + msg.value;
+            Payments[sessionIdHash] = existedPayment;
+            return;
+        }
+       
+        Payments[sessionIdHash] = Payment(issuerIdHash, msg.value);
     }
 
     function withdraw(uint amount) public onlyOwner returns(bool) {
