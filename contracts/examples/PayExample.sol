@@ -10,7 +10,7 @@ contract PayExample {
     mapping (string => Payment) public Payments;
 
     modifier onlyOwner() {
-        require (msg.sender != owner);
+        require (msg.sender == owner, 'only owner');
         _;
     }
     
@@ -34,7 +34,7 @@ contract PayExample {
     }
 
     function withdraw(uint amount) public onlyOwner returns(bool) {
-        require(amount < address(this).balance);
+        require(amount <= address(this).balance);
         owner.transfer(amount);
         return true;
     }

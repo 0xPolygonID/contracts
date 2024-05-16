@@ -35,5 +35,12 @@ describe('Payment example', function () {
     const balanceContract = await payment.getBalanceContract();
     const balance = BigInt(balanceContract).toString();
     expect(balance).to.be.eq('2200');
+
+    await payment.withdraw(2200);
+    const balanceAfterWithdrawRes = await payment.getBalanceContract();
+    const balanceAfterWithdraw = BigInt(balanceAfterWithdrawRes).toString();
+    expect(balanceAfterWithdraw).to.be.eq('0');
+
+
   });
 });
