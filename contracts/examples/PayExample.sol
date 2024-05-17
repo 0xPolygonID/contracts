@@ -1,42 +1,32 @@
+import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
+
 pragma solidity 0.8.20;
 
-contract PayExample {
-    struct Payment {
-        string issuerIdHash;
-        uint256 value;
+contract PayExample is Ownable {
+    /**
+     * @dev mapping of (issuerId + schemaHash) => value
+     */
+    mapping (uint256 => uint256) private ValueToPay;
+
+    event Payment(uint256 indexed issuerId, string paymentId, uint256 schemaHash);
+
+    constructor() Ownable(_msgSender()) { }
+
+    function setPaymentValue(uint256 issuerId, uint256 schemaHash, uint256 value) public onlyOwner {
+        ValueToPay[issuerId + schemaHash] = value;
     }
 
-    address payable public owner;
-    mapping (string => Payment) public Payments;
-
-    modifier onlyOwner() {
-        require (msg.sender == owner, 'only owner');
-        _;
-    }
-    
-    constructor() {
-        owner = payable(msg.sender);
+    function pay(string calldata paymentId, uint256 issuerId, uint256 schemaHash) public payable {
+        uint256 requiredValue = ValueToPay[issuerId + schemaHash];
+        require(requiredValue != 0, "Payment value not found for this issuer and schema");
+        require(requiredValue == msg.value, "Invalid value");
+        emit Payment(issuerId, paymentId, schemaHash);
     }
 
-    function pay(string calldata sessionIdHash, string memory issuerIdHash) public payable {
-        Payment memory existedPayment = Payments[sessionIdHash];
-        if (existedPayment.value > 0) {
-            require(
-                keccak256(abi.encodePacked(existedPayment.issuerIdHash)) == keccak256(abi.encodePacked(issuerIdHash)),
-                'issuer id hash should be the same for same sessions'
-            );
-            existedPayment.value = existedPayment.value + msg.value;
-            Payments[sessionIdHash] = existedPayment;
-            return;
-        }
-       
-        Payments[sessionIdHash] = Payment(issuerIdHash, msg.value);
-    }
-
-    function withdraw(uint amount) public onlyOwner returns(bool) {
+    function withdraw(uint amount) public onlyOwner {
         require(amount <= address(this).balance);
-        owner.transfer(amount);
-        return true;
+        (bool sent,) = owner().call{ value:  amount }("");
+        require(sent, "Failed to withdraw");
     }
 
     function getBalanceContract() public view returns(uint){
