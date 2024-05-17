@@ -6,18 +6,18 @@ contract PayExample is Ownable {
     /**
      * @dev mapping of (issuerId + schemaHash) => value
      */
-    mapping (uint256 => uint256) private ValueToPay;
+    mapping (bytes32 => uint256) private ValueToPay;
 
     event Payment(uint256 indexed issuerId, string paymentId, uint256 schemaHash);
 
     constructor() Ownable(_msgSender()) { }
 
     function setPaymentValue(uint256 issuerId, uint256 schemaHash, uint256 value) public onlyOwner {
-        ValueToPay[issuerId + schemaHash] = value;
+        ValueToPay[keccak256(abi.encode(issuerId, schemaHash))] = value;
     }
 
     function pay(string calldata paymentId, uint256 issuerId, uint256 schemaHash) public payable {
-        uint256 requiredValue = ValueToPay[issuerId + schemaHash];
+        uint256 requiredValue = ValueToPay[keccak256(abi.encode(issuerId, schemaHash))];
         require(requiredValue != 0, "Payment value not found for this issuer and schema");
         require(requiredValue == msg.value, "Invalid value");
         emit Payment(issuerId, paymentId, schemaHash);
@@ -29,7 +29,7 @@ contract PayExample is Ownable {
         require(sent, "Failed to withdraw");
     }
 
-    function getBalanceContract() public view returns(uint){
+    function getContractBalance() public view returns(uint){
         return address(this).balance;
     }
 }
