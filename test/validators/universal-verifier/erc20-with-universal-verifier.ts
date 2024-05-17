@@ -58,8 +58,8 @@ describe('ERC 20 test', function () {
       'ZKP'
     ));
 
-    await universalVerifier.approveValidator(await sig.getAddress());
-    await universalVerifier.approveValidator(await mtp.getAddress());
+    await universalVerifier.addValidatorToWhitelist(await sig.getAddress());
+    await universalVerifier.addValidatorToWhitelist(await mtp.getAddress());
 
     await setZKPRequests();
   });
