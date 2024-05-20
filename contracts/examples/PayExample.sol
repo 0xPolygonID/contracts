@@ -6,28 +6,28 @@ contract PayExample is Ownable {
     /**
      * @dev mapping of keccak256(abi.encode(issuerId, schemaHash)) => value
      */
-    mapping (bytes32 => uint256) private ValueToPay;
+    mapping (bytes32 => uint256) private valueToPay;
 
      /**
      * @dev mapping of keccak256(abi.encode(issuerId, paymentId)) => bool
      */
-    mapping (bytes32 => bool) private Payments;
+    mapping (bytes32 => bool) private payments;
 
     event Payment(uint256 indexed issuerId, string paymentId, uint256 schemaHash);
 
     constructor() Ownable(_msgSender()) { }
 
     function setPaymentValue(uint256 issuerId, uint256 schemaHash, uint256 value) public onlyOwner {
-        ValueToPay[keccak256(abi.encode(issuerId, schemaHash))] = value;
+        valueToPay[keccak256(abi.encode(issuerId, schemaHash))] = value;
     }
 
     function pay(string calldata paymentId, uint256 issuerId, uint256 schemaHash) public payable {
-        uint256 requiredValue = ValueToPay[keccak256(abi.encode(issuerId, schemaHash))];
+        uint256 requiredValue = valueToPay[keccak256(abi.encode(issuerId, schemaHash))];
         bytes32 payment = keccak256(abi.encode(issuerId, paymentId));
-        require(!Payments[payment], "Payment already done");
+        require(!payments[payment], "Payment already done");
         require(requiredValue != 0, "Payment value not found for this issuer and schema");
         require(requiredValue == msg.value, "Invalid value");
-        Payments[payment] = true;
+        payments[payment] = true;
         emit Payment(issuerId, paymentId, schemaHash);
     }
 
