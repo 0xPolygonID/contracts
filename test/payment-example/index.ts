@@ -2,18 +2,24 @@ import { Hex } from '@iden3/js-crypto';
 import { DID, SchemaHash } from '@iden3/js-iden3-core';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
+import { PayExample, PayExample__factory } from '../../typechain-types';
 
 describe('Payment example', function () {
-  let payment: any;
-  const issuerId1 = DID.idFromDID(DID.parse('did:polygonid:polygon:amoy:2qQ68JkRcf3ymy9wtzKyY3Dajst9c6cHCDZyx7NrTz'));
-  const issuerId2 = DID.idFromDID(DID.parse('did:polygonid:polygon:amoy:2qZ1qniEoXvAPCqm7GwUSQWsRYFip124ddXU3fTg61'));
+  let payment: PayExample;
+  const issuerId1 = DID.idFromDID(
+    DID.parse('did:polygonid:polygon:amoy:2qQ68JkRcf3ymy9wtzKyY3Dajst9c6cHCDZyx7NrTz')
+  );
+  const issuerId2 = DID.idFromDID(
+    DID.parse('did:polygonid:polygon:amoy:2qZ1qniEoXvAPCqm7GwUSQWsRYFip124ddXU3fTg61')
+  );
   const schemaHash1 = new SchemaHash(Hex.decodeString('ce6bb12c96bfd1544c02c289c6b4b987'));
   const schemaHash2 = new SchemaHash(Hex.decodeString('ce6bb12c96bfd1544c02c289c6b4b988'));
   const schemaHash3 = new SchemaHash(Hex.decodeString('ce6bb12c96bfd1544c02c289c6b4b998'));
 
   beforeEach(async () => {
-    const payExample = await ethers.getContractFactory('PayExample');
-    payment = await payExample.deploy();
+    const signers = await ethers.getSigners();
+    const owner = signers[0];
+    payment = await new PayExample__factory(owner).deploy();
 
     await payment.setPaymentValue(issuerId1.bigInt(), schemaHash1.bigInt(), 10000);
     await payment.setPaymentValue(issuerId1.bigInt(), schemaHash2.bigInt(), 20000);
@@ -44,9 +50,7 @@ describe('Payment example', function () {
       payment.pay('payment-id-1', issuerId2.bigInt(), schemaHash2.bigInt(), {
         value: 10000
       })
-    ).to.be.revertedWith(
-      'Payment value not found for this issuer and schema'
-    );
+    ).to.be.revertedWith('Payment value not found for this issuer and schema');
   });
 
   it('Pay with invalid value', async () => {
@@ -54,9 +58,7 @@ describe('Payment example', function () {
       payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash2.bigInt(), {
         value: 10000
       })
-    ).to.be.revertedWith(
-      'Invalid value'
-    );
+    ).to.be.revertedWith('Invalid value');
   });
 
   it('Check events', async () => {
