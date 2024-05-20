@@ -44,12 +44,12 @@ describe('Payment example', function () {
     const isPayment3Done = await payment.isPaymentDone('payment-id-3', issuerId1.bigInt());
     expect(isPayment3Done).to.be.eq(false);
 
-    const balanceContract = await payment.getContractBalance();
+    const balanceContract = await ethers.provider.getBalance(payment.getAddress());
     const balance = BigInt(balanceContract).toString();
     expect(balance).to.be.eq('30000');
 
-    await payment.withdraw(30000);
-    const balanceAfterWithdrawRes = await payment.getContractBalance();
+    await payment.withdraw();
+    const balanceAfterWithdrawRes = await ethers.provider.getBalance(payment.getAddress());
     const balanceAfterWithdraw = BigInt(balanceAfterWithdrawRes);
     expect(balanceAfterWithdraw).to.be.eq(BigInt(0));
   });
@@ -83,21 +83,26 @@ describe('Payment example', function () {
   });
 
   it('Check events', async () => {
-    await payment.pay('payment-id-1', issuerId2.bigInt(), schemaHash3.bigInt(), {
+    const tx1 = await payment.pay('payment-id-1', issuerId2.bigInt(), schemaHash3.bigInt(), {
       value: 30000
     });
-    await payment.pay('payment-id-1-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
+    const tx2 = await payment.pay('payment-id-1-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
       value: 10000
     });
-    await payment.pay('payment-id-2', issuerId2.bigInt(), schemaHash3.bigInt(), {
+    const tx3 = await payment.pay('payment-id-2', issuerId2.bigInt(), schemaHash3.bigInt(), {
       value: 30000
     });
 
-    const filter = payment.filters.Payment();
-    const payments = await payment.queryFilter(filter);
-    const secondPaymentArgs = payments[1].args;
-    expect(secondPaymentArgs[0]).to.be.eq(issuerId1.bigInt());
-    expect(secondPaymentArgs[1]).to.be.eq('payment-id-1-1');
-    expect(secondPaymentArgs[2]).to.be.eq(schemaHash1.bigInt());
+    await expect(tx1)
+      .to.emit(payment, 'Payment')
+      .withArgs(issuerId2.bigInt(), 'payment-id-1', schemaHash3.bigInt());
+
+    await expect(tx2)
+      .to.emit(payment, 'Payment')
+      .withArgs(issuerId1.bigInt(), 'payment-id-1-1', schemaHash1.bigInt());
+
+    await expect(tx3)
+      .to.emit(payment, 'Payment')
+      .withArgs(issuerId2.bigInt(), 'payment-id-2', schemaHash3.bigInt());
   });
 });

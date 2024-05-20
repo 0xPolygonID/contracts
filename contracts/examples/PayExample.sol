@@ -4,14 +4,14 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PayExample is Ownable {
     /**
-     * @dev mapping of keccak256(abi.encode(issuerId, schemaHash)) => value
+     * @dev mapping of paymentValueId - keccak256(abi.encode(issuerId, schemaHash)) => value
      */
-    mapping (bytes32 => uint256) private valueToPay;
+    mapping (bytes32 paymentValueId => uint256 value) private valueToPay;
 
      /**
-     * @dev mapping of keccak256(abi.encode(issuerId, paymentId)) => bool
+     * @dev mapping of paymentRequest - keccak256(abi.encode(issuerId, paymentId)) => bool
      */
-    mapping (bytes32 => bool) public payments;
+    mapping (bytes32 paymentRequest => bool isPaid) public payments;
 
     event Payment(uint256 indexed issuerId, string indexed paymentId, uint256 schemaHash);
 
@@ -24,11 +24,11 @@ contract PayExample is Ownable {
     }
 
     function pay(string calldata paymentId, uint256 issuerId, uint256 schemaHash) public payable {
-        uint256 requiredValue = valueToPay[keccak256(abi.encode(issuerId, schemaHash))];
         bytes32 payment = keccak256(abi.encode(issuerId, paymentId));
         if (payments[payment]) {
             revert PaymentError("Payment already done");
         }
+        uint256 requiredValue = valueToPay[keccak256(abi.encode(issuerId, schemaHash))];
         if (requiredValue == 0) {
             revert PaymentError("Payment value not found for this issuer and schema");
         }
@@ -43,13 +43,9 @@ contract PayExample is Ownable {
         return payments[keccak256(abi.encode(issuerId, paymentId))];
     }
 
-    function withdraw(uint amount) public onlyOwner {
-        require(amount <= address(this).balance);
-        (bool sent,) = owner().call{ value:  amount }("");
+    function withdraw() public onlyOwner {
+        (bool sent,) = owner().call{ value:  address(this).balance }("");
         require(sent, "Failed to withdraw");
     }
-
-    function getContractBalance() public view returns(uint){
-        return address(this).balance;
-    }
+   
 }
