@@ -9,9 +9,9 @@ contract PayExample is Ownable {
     mapping (bytes32 paymentValueId => uint256 value) private valueToPay;
 
      /**
-     * @dev mapping of paymentRequest - keccak256(abi.encode(issuerId, paymentId)) => bool
+     * @dev mapping of paymentRequestId - keccak256(abi.encode(issuerId, paymentId)) => bool
      */
-    mapping (bytes32 paymentRequest => bool isPaid) public payments;
+    mapping (bytes32 paymentRequestId => bool isPaid) public payments;
 
     event Payment(uint256 indexed issuerId, string indexed paymentId, uint256 schemaHash);
 
