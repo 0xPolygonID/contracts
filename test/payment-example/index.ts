@@ -44,14 +44,12 @@ describe('Payment example', function () {
     const isPayment3Done = await payment.isPaymentDone('payment-id-3', issuerId1.bigInt());
     expect(isPayment3Done).to.be.eq(false);
 
-    const balanceContract = await ethers.provider.getBalance(payment.getAddress());
-    const balance = BigInt(balanceContract).toString();
-    expect(balance).to.be.eq('30000');
+    const balance = await ethers.provider.getBalance(payment.getAddress());
+    expect(balance).to.be.eq(30000);
 
     await payment.withdraw();
-    const balanceAfterWithdrawRes = await ethers.provider.getBalance(payment.getAddress());
-    const balanceAfterWithdraw = BigInt(balanceAfterWithdrawRes);
-    expect(balanceAfterWithdraw).to.be.eq(BigInt(0));
+    const balanceAfterWithdraw = await ethers.provider.getBalance(payment.getAddress());
+    expect(balanceAfterWithdraw).to.be.eq(0);
 
     await expect(payment.withdraw()).to.be.revertedWithCustomError(payment, 'WithdrawError');
   });
@@ -67,7 +65,7 @@ describe('Payment example', function () {
   it('Pay twice', async () => {
     await payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
       value: 10000
-    })
+    });
 
     await expect(
       payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
