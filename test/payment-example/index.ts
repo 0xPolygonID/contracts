@@ -31,9 +31,18 @@ describe('Payment example', function () {
       value: 10000
     });
 
+    const isPayment1Done = await payment.isPaymentDone('payment-id-1', issuerId1.bigInt());
+    expect(isPayment1Done).to.be.eq(true);
+
     await payment.pay('payment-id-2', issuerId1.bigInt(), schemaHash2.bigInt(), {
       value: 20000
     });
+
+    const isPayment2Done = await payment.isPaymentDone('payment-id-2', issuerId1.bigInt());
+    expect(isPayment2Done).to.be.eq(true);
+
+    const isPayment3Done = await payment.isPaymentDone('payment-id-3', issuerId1.bigInt());
+    expect(isPayment3Done).to.be.eq(false);
 
     const balanceContract = await payment.getContractBalance();
     const balance = BigInt(balanceContract).toString();

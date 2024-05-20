@@ -11,9 +11,9 @@ contract PayExample is Ownable {
      /**
      * @dev mapping of keccak256(abi.encode(issuerId, paymentId)) => bool
      */
-    mapping (bytes32 => bool) private payments;
+    mapping (bytes32 => bool) public payments;
 
-    event Payment(uint256 indexed issuerId, string paymentId, uint256 schemaHash);
+    event Payment(uint256 indexed issuerId, string indexed paymentId, uint256 schemaHash);
 
     error PaymentError(string message);
 
@@ -37,6 +37,10 @@ contract PayExample is Ownable {
         }
         payments[payment] = true;
         emit Payment(issuerId, paymentId, schemaHash);
+    }
+
+    function isPaymentDone(string calldata paymentId, uint256 issuerId) public view returns (bool) {
+        return payments[keccak256(abi.encode(issuerId, paymentId))];
     }
 
     function withdraw(uint amount) public onlyOwner {
