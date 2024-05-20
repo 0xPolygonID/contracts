@@ -4,7 +4,7 @@ pragma solidity 0.8.20;
 
 contract PayExample is Ownable {
     /**
-     * @dev mapping of (issuerId + schemaHash) => value
+     * @dev mapping of keccak256(abi.encode(issuerId, schemaHash) => value
      */
     mapping (bytes32 => uint256) private ValueToPay;
 
