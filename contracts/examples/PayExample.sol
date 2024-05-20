@@ -48,9 +48,11 @@ contract PayExample is Ownable {
         if (address(this).balance == 0) {
             revert WithdrawError("There is no balance to witdraw");
         }
-        
+
         (bool sent,) = owner().call{ value: address(this).balance }("");
-        require(sent, "Failed to withdraw");
+        if (!sent) {
+            revert WithdrawError("Failed to withdraw");
+        }
     }
    
 }
