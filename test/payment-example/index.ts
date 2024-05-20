@@ -53,6 +53,18 @@ describe('Payment example', function () {
     ).to.be.revertedWith('Payment value not found for this issuer and schema');
   });
 
+  it('Pay twice', async () => {
+    await payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
+      value: 10000
+    })
+
+    await expect(
+      payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
+        value: 10000
+      })
+    ).to.be.revertedWith('Payment already done');;
+  });
+
   it('Pay with invalid value', async () => {
     await expect(
       payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash2.bigInt(), {
