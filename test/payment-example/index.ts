@@ -52,6 +52,8 @@ describe('Payment example', function () {
     const balanceAfterWithdrawRes = await ethers.provider.getBalance(payment.getAddress());
     const balanceAfterWithdraw = BigInt(balanceAfterWithdrawRes);
     expect(balanceAfterWithdraw).to.be.eq(BigInt(0));
+
+    await expect(payment.withdraw()).to.be.revertedWithCustomError(payment, 'WithdrawError');
   });
 
   it('Payment value not found', async () => {

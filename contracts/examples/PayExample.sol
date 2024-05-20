@@ -16,6 +16,7 @@ contract PayExample is Ownable {
     event Payment(uint256 indexed issuerId, string indexed paymentId, uint256 schemaHash);
 
     error PaymentError(string message);
+    error WithdrawError(string message);
 
     constructor() Ownable(_msgSender()) { }
 
@@ -44,7 +45,11 @@ contract PayExample is Ownable {
     }
 
     function withdraw() public onlyOwner {
-        (bool sent,) = owner().call{ value:  address(this).balance }("");
+        if (address(this).balance == 0) {
+            revert WithdrawError("There is no balance to witdraw");
+        }
+        
+        (bool sent,) = owner().call{ value: address(this).balance }("");
         require(sent, "Failed to withdraw");
     }
    
