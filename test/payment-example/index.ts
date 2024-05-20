@@ -50,7 +50,7 @@ describe('Payment example', function () {
       payment.pay('payment-id-1', issuerId2.bigInt(), schemaHash2.bigInt(), {
         value: 10000
       })
-    ).to.be.revertedWith('Payment value not found for this issuer and schema');
+    ).to.be.revertedWithCustomError(payment, 'PaymentError');
   });
 
   it('Pay twice', async () => {
@@ -62,7 +62,7 @@ describe('Payment example', function () {
       payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
         value: 10000
       })
-    ).to.be.revertedWith('Payment already done');;
+    ).to.be.revertedWithCustomError(payment, 'PaymentError');
   });
 
   it('Pay with invalid value', async () => {
@@ -70,7 +70,7 @@ describe('Payment example', function () {
       payment.pay('payment-id-1', issuerId1.bigInt(), schemaHash2.bigInt(), {
         value: 10000
       })
-    ).to.be.revertedWith('Invalid value');
+    ).to.be.revertedWithCustomError(payment, 'PaymentError');
   });
 
   it('Check events', async () => {
