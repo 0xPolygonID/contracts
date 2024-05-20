@@ -2,7 +2,7 @@
 pragma solidity 0.8.20;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract PayExample is Ownable {
+contract VCPayment is Ownable {
     /**
      * @dev mapping of paymentValueId - keccak256(abi.encode(issuerId, schemaHash)) => value
      */

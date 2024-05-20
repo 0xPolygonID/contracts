@@ -79,7 +79,7 @@ async function main() {
   const typeName = 'AnimaProofOfIdentity';
   const valueWei = ethers.parseUnits(valueInEther, 'ether');
 
-  const paymentFactory = await ethers.getContractFactory('PayExample');
+  const paymentFactory = await ethers.getContractFactory('VCPayment');
   const payment = await paymentFactory.attach(contractAddress);
 
   const issuerId = DID.idFromDID(DID.parse(issuerDID));

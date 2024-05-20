@@ -2,10 +2,10 @@ import { Hex } from '@iden3/js-crypto';
 import { DID, SchemaHash } from '@iden3/js-iden3-core';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
-import { PayExample, PayExample__factory } from '../../typechain-types';
+import { VCPayment, VCPayment__factory } from '../../typechain-types';
 
 describe('Payment example', function () {
-  let payment: PayExample;
+  let payment: VCPayment;
   const issuerId1 = DID.idFromDID(
     DID.parse('did:polygonid:polygon:amoy:2qQ68JkRcf3ymy9wtzKyY3Dajst9c6cHCDZyx7NrTz')
   );
@@ -19,7 +19,7 @@ describe('Payment example', function () {
   beforeEach(async () => {
     const signers = await ethers.getSigners();
     const owner = signers[0];
-    payment = await new PayExample__factory(owner).deploy();
+    payment = await new VCPayment__factory(owner).deploy();
 
     await payment.setPaymentValue(issuerId1.bigInt(), schemaHash1.bigInt(), 10000);
     await payment.setPaymentValue(issuerId1.bigInt(), schemaHash2.bigInt(), 20000);

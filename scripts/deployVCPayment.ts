@@ -1,9 +1,9 @@
 import { ethers } from 'hardhat';
 
 async function main() {
-  const contractName = 'PayExample';
-  const payExample = await ethers.getContractFactory(contractName);
-  const contract = await payExample.deploy();
+  const contractName = 'VCPayment';
+  const VCPayment = await ethers.getContractFactory(contractName);
+  const contract = await VCPayment.deploy();
   console.log(contractName, ' deployed to:', await contract.getAddress());
 }
 
