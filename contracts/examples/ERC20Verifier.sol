@@ -39,7 +39,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
     function initialize(string memory name, string memory symbol) public initializer {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
         super.__ERC20_init(name, symbol);
-        super.__ZKPVerifier_init(_msgSender());
+        super.__EmbeddedZKPVerifier_init(_msgSender());
         $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 

@@ -43,7 +43,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
         ERC20SelectiveDisclosureVerifierStorage
             storage $ = _getERC20SelectiveDisclosureVerifierStorage();
         super.__ERC20_init(name, symbol);
-        super.__ZKPVerifier_init(_msgSender());
+        super.__EmbeddedZKPVerifier_init(_msgSender());
         $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 

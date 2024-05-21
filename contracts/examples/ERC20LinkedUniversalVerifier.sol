@@ -17,8 +17,8 @@ contract ERC20LinkedUniversalVerifier is ERC20 {
 
     modifier beforeTokenTransfer(address to) {
         require(
-            verifier.getProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isProved ||
-                verifier.getProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isProved,
+            verifier.getProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isVerified ||
+                verifier.getProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isVerified,
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;

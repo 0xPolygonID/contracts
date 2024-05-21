@@ -146,7 +146,7 @@ describe('ERC 20 test', function () {
 
     await universalVerifier.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
     const proofStatus = await universalVerifier.getProofStatus(account, requestId);
-    expect(proofStatus.isProved).to.be.true; // check proof is assigned
+    expect(proofStatus.isVerified).to.be.true; // check proof is assigned
 
     // check that tokens were minted
     const balanceBefore = await erc20LinkedUniversalVerifier.balanceOf(account);
