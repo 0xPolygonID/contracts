@@ -59,12 +59,20 @@ async function main() {
   // const chainId = 137;
 
   // current sig validator address on polygon amoy
-  const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
-  const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
+  // const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
+  // const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
+  //
+  // const network = 'polygon-amoy';
+  //
+  // const chainId = 80002;
 
-  const network = 'polygon-amoy';
 
-  const chainId = 80002;
+  const validatorAddressSig = '0xA3e2D4a4621b4960bA1fc03C62936A9A670842F5';
+  const validatorAddressMTP = '0x3d3763eC0a50CE1AdF83d0b5D99FBE0e3fEB43fb';
+
+  const network = 'linea-sepolia';
+
+  const chainId = 59141;
 
   const query = {
     schema: schema,

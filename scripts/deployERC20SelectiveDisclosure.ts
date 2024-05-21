@@ -1,7 +1,7 @@
 import { ethers, upgrades } from 'hardhat';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
 import { calculateQueryHashV3, buildVerifierId, coreSchemaFromStr } from '../test/utils/utils';
-import { ChainIds, DID, DidMethod } from '@iden3/js-iden3-core';
+import { ChainIds, DID, DidMethod , registerDidMethodNetwork} from '@iden3/js-iden3-core';
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -51,11 +51,26 @@ async function main() {
 
   // current v3 validator address on amoy
 
-  const validatorAddressV3 = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';
+  // const validatorAddressV3 = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';
+  //
+  // const chainId = 80002;
+  //
+  // const network = 'polygon-amoy';
 
-  const chainId = 80002;
+  registerDidMethodNetwork({
+    method: DidMethod.PolygonId,
+    blockchain: "linea",
+    chainId: 59141,
+    network: "sepolia",
+    networkFlag: 0b0100_0000 | 0b0000_1000,
+  });
 
-  const network = 'polygon-amoy';
+  const validatorAddressV3 = '0xba0EB888B1CDD41523d541E0d06246460f0D32a8';
+
+  const network = 'linea-sepolia';
+
+  const chainId = 59141;
+
 
   const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);
 

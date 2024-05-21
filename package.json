@@ -68,6 +68,14 @@
     "upgrade:amoy:mtpv2": "npx hardhat run scripts/upgradeMTPValidator.ts --network amoy",
     "upgrade:amoy:v3": "npx hardhat run scripts/upgradeV3Validator.ts --network amoy",
     "format": "prettier --write scripts/*.ts test/**/*.ts",
+    "deploy:linea_sepolia:sig": "npx hardhat run scripts/deploySigV2Validator.ts --network linea_sepolia",
+    "deploy:linea_sepolia:mtp": "npx hardhat run scripts/deployMTPV2Validator.ts --network linea_sepolia",
+    "deploy:linea_sepolia:v3": "npx hardhat run scripts/deployV3Validator.ts --network linea_sepolia",
+    "setrequests:linea_sepolia:v2": "npx hardhat run scripts/setRequests-v2validator.ts --network linea_sepolia",
+    "setrequests:linea_sepolia:v3": "npx hardhat run scripts/setRequests-v3validator.ts --network linea_sepolia",
+
+    "deploy:linea_sepolia:erc20": "npx hardhat run scripts/deployERC20.ts --network linea_sepolia",
+    "deploy:linea_sepolia:erc20:v3": "npx hardhat run scripts/deployERC20SelectiveDisclosure.ts --network linea_sepolia",
     "lint:contracts": "npx solhint contracts/**/*.sol",
     "lint:contracts:format": "npx prettier --write contracts/**/*.sol"
   }

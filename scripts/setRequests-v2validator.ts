@@ -31,12 +31,21 @@ async function main() {
   // const erc20verifierAddress = '0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03'; //with sig    validatorc
 
   // sig:validator:    // current sig validator address on amoy
-  const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
+  // const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
 
   // mtp:validator:    // current mtp validator address on amoy
-  const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
+  // const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
 
-  const erc20verifierAddress = '0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880'; //with sig    validatorc
+  // const erc20verifierAddress = '0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880'; //with sig    validatorc
+
+
+  // sig:validator:    // current sig validator address on sepolia
+  const validatorAddressSig = '0xA3e2D4a4621b4960bA1fc03C62936A9A670842F5';
+
+  // mtp:validator:    // current mtp validator address on sepolia
+  const validatorAddressMTP = '0x3d3763eC0a50CE1AdF83d0b5D99FBE0e3fEB43fb';
+
+  const erc20verifierAddress = '0xD13BF1853346a97Fc62a7F7decE8dd83e444d66D'; //with sig    validatorc
 
   const owner = (await ethers.getSigners())[0];
 
@@ -64,6 +73,7 @@ async function main() {
   const claimPathDoesntExist = 0;
   const requestIdModifier = 1;
 
+  const chainId = 59141;
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
 
   // init these values for non-merklized credential use case
@@ -276,7 +286,7 @@ async function main() {
           transaction_data: {
             contract_address: erc20verifierAddress,
             method_id: 'b68967e2',
-            chain_id: 80001,
+            chain_id: chainId,
             network: 'polygon-mumbai'
           },
           scope: [
