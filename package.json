@@ -71,6 +71,9 @@
     "upgrade:amoy:v3": "npx hardhat run scripts/upgradeV3Validator.ts --network amoy",
     "deploy:vc-payment": "npx hardhat run scripts/deployVCPayment.ts --network amoy",
     "payment:set-payment-value": "npx hardhat run scripts/setPaymentValue.ts --network amoy",
+    "deploy:vc-payment:linea_sepolia": "npx hardhat run scripts/deployVCPayment.ts --network linea_sepolia",
+    "payment:set-payment-value:linea_sepolia": "npx hardhat run scripts/setPaymentValue.ts --network linea_sepolia",
+
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "deploy:linea_sepolia:sig": "npx hardhat run scripts/deploySigV2Validator.ts --network linea_sepolia",
     "deploy:linea_sepolia:mtp": "npx hardhat run scripts/deployMTPV2Validator.ts --network linea_sepolia",

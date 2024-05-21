@@ -1,6 +1,6 @@
-import { DID } from '@iden3/js-iden3-core';
+import {DID, DidMethod, registerDidMethodNetwork} from '@iden3/js-iden3-core';
 import { ethers } from 'hardhat';
-import { byteEncoder, calculateCoreSchemaHash } from '@0xpolygonid/js-sdk';
+import { byteEncoder, calculateCoreSchemaHash, core } from '@0xpolygonid/js-sdk';
 import { Path } from '@iden3/js-jsonld-merklization';
 
 const ldContextJSON = `{
@@ -73,14 +73,22 @@ const ldContextJSON = `{
     ]
 }`;
 async function main() {
-  const contractAddress = '0x69f9c99D9C35A4d8aFE840b113AeE07969FBA4D8';
-  const issuerDID = 'did:polygonid:polygon:amoy:2qYYQVy4BBAR45gf8cktZZmptMr3SGuTbDdgJP4zbV';
+  const contractAddress = '0xbb9d5335b2a6f7FacE5e5E22A4A893bBBeb61447';
+  const issuerDID = 'did:polygonid:linea:sepolia:32232vGknSaJxsoQ2tjdAapw1V5X367FZxzPF95eJU';
   const valueInEther = '0.001';
   const typeName = 'AnimaProofOfIdentity';
   const valueWei = ethers.parseUnits(valueInEther, 'ether');
 
   const paymentFactory = await ethers.getContractFactory('VCPayment');
   const payment = await paymentFactory.attach(contractAddress);
+
+  core.registerDidMethodNetwork({
+    method: DidMethod.PolygonId,
+    blockchain: "linea",
+    chainId: 59141,
+    network: "sepolia",
+    networkFlag: 0b0100_0000 | 0b0000_1000,
+  });
 
   const issuerId = DID.idFromDID(DID.parse(issuerDID));
 
