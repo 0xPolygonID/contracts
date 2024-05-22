@@ -36,6 +36,7 @@
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
     "test:gas": "REPORT_GAS=true npx hardhat test",
+    "deploy:erc20linkeduniversalverifier": "npx hardhat run scripts/deployERC20LinkedUniversalVerifier.ts",
     "deploy:mumbai:erc20": "npx hardhat run scripts/deployERC20.ts --network mumbai",
     "deploy:mumbai:sig": "npx hardhat run scripts/deploySigV2Validator.ts --network mumbai",
     "deploy:mumbai:mtp": "npx hardhat run scripts/deployMTPV2Validator.ts --network mumbai",
