@@ -1,7 +1,11 @@
 import { ethers } from 'hardhat';
 
+const universalVerifierAddress = '<you universal verifier address here>';
+
 async function main() {
-  const universalVerifierAddress = '<you universal verifier address here>';
+  if (!ethers.isAddress(universalVerifierAddress)) {
+    throw new Error('Please set universal verifier address');
+  }
   const verifierName = 'ERC20LinkedUniversalVerifier';
   const verifierSymbol = 'zkERC20';
 
