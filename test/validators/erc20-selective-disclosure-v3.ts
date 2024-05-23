@@ -108,7 +108,7 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
     );
 
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
-    expect(await token.isProofSubmitted(account, requestId)).to.be.true; // check proof is assigned
+    expect(await token.isProofVerified(account, requestId)).to.be.true; // check proof is assigned
 
     // check that tokens were minted
 

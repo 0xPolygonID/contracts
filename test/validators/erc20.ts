@@ -121,7 +121,7 @@ describe('ERC 20 test', function () {
     );
 
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
-    expect(await token.isProofSubmitted(account, requestId)).to.be.true; // check proof is assigned
+    expect(await token.isProofVerified(account, requestId)).to.be.true; // check proof is assigned
 
     // check that tokens were minted
     expect(await token.balanceOf(account)).to.equal(BigInt('5000000000000000000'));

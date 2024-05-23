@@ -33,7 +33,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
 
     modifier beforeTransfer(address to) {
         require(
-            isProofSubmitted(to, TRANSFER_REQUEST_ID_V3_VALIDATOR),
+            isProofVerified(to, TRANSFER_REQUEST_ID_V3_VALIDATOR),
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;

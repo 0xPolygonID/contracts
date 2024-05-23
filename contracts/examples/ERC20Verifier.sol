@@ -29,8 +29,8 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
 
     modifier beforeTransfer(address to) {
         require(
-            isProofSubmitted(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR) ||
-                isProofSubmitted(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR),
+            isProofVerified(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR) ||
+                isProofVerified(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR),
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;
