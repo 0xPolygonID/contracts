@@ -18,7 +18,6 @@ contract ZKPVerifyModule is AbstractModule {
     address txSender,
     uint256 /*value*/
   ) public override {
-    require(msg.sender == 0x3C443B9f0c8ed3A3270De7A4815487BA3223C2Fa, "invalid sender");
     (uint64 requestId, uint256[] memory inputs, uint256[2] memory a, uint256[2][2] memory b, uint256[2] memory c) = 
         abi.decode(validationPayload, (uint64, uint256[], uint256[2], uint256[2][2], uint256[2]));
 
