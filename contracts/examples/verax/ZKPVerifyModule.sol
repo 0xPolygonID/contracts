@@ -4,15 +4,12 @@ pragma solidity 0.8.20;
 import { AttestationPayload } from "./types/Structs.sol";
 import { AbstractModule } from "./abstracts/AbstractModule.sol";
 import { IZKPVerifier } from '@iden3/contracts/interfaces/IZKPVerifier.sol';
-import { IVerifier } from '@iden3/contracts/interfaces/IVerifier.sol';
 
 contract ZKPVerifyModule is AbstractModule {
   IZKPVerifier public zkpVerifier;
-  IVerifier public verifier;
 
   constructor(address _zkpVerifier) {
     zkpVerifier = IZKPVerifier(_zkpVerifier);
-    verifier = IVerifier(0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb);
   }
 
   function run(
@@ -33,9 +30,8 @@ contract ZKPVerifyModule is AbstractModule {
     require(attestationSubject == inputs[0], "attestation subject doesn't match to user id input");
 
     require(attestationRequestId == inputs[7], "request Id doesn't match");
-    // require(attestationNullifierSessionID == inputs[4], "nullifier doesn't match");
+    require(attestationNullifierSessionID == inputs[4], "nullifier doesn't match");
     zkpVerifier.submitZKPResponse(requestId, inputs, a, b, c);
-    // require(verifier.verify(a, b, c, inputs), "Proof is not valid");
   }
 
 }

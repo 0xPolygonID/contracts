@@ -23,12 +23,12 @@ export const privateKey: `0x${string}` = `0x${process.env.SEPOLIA_PRIVATE_KEY}`;
 // schema id - 0x59a0acecb3a782c9035cb1d0e8d5661f6848ebcb4d44c212c891d0fbc06c081e - "(uint64 requestId, uint256 nullifierSessionID)"
 async function main() {
   const veraxSdk = new VeraxSdk(VeraxSdk.DEFAULT_LINEA_SEPOLIA, publicAddress, privateKey);
-  const schemaString = "(uint64 requestId)";
+  const schemaString = "(uint64 requestId, uint256 nullifierSessionID)";
 
-  const schemaTx = await veraxSdk.schema.create("Verification schema", 
-    "Verification schema", "", schemaString, true);
+  // const schemaTx = await veraxSdk.schema.create("Verification schema", 
+  //   "Verification schema", "", schemaString, true);
 
-  console.log(schemaTx);
+  // console.log(schemaTx);
 
   const schemaId = await veraxSdk.schema.getIdFromSchemaString(schemaString);
   console.log(schemaId);

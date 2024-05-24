@@ -1,14 +1,13 @@
-import { VeraxSdk, Conf } from "@verax-attestation-registry/verax-sdk";
-import { lineaSepolia } from "viem/chains";
+import { Id } from "@iden3/js-iden3-core";
+import { VeraxSdk } from "@verax-attestation-registry/verax-sdk";
 
 const publicAddress: `0x${string}`= `0x${process.env.SEPOLIA_PUB_ADDRESS}`;
 const privateKey: `0x${string}` = `0x${process.env.SEPOLIA_PRIVATE_KEY}`;
 
-// 0x7E8fdD0803BcC1A41cE432AdD07CA6C4E5F92eE2 - empty portal address
 async function main() {
   const veraxSdk = new VeraxSdk(VeraxSdk.DEFAULT_LINEA_SEPOLIA, publicAddress, privateKey);
-  const attestationId = '0x000000000000000000000000000000000000000000000000000000000000005f';
-  const attestation = await veraxSdk.attestation.getAttestation(attestationId) as {attestationData:  `0x${string}`}; 
+  const attestationId = '0x00000000000000000000000000000000000000000000000000000000000000a0';
+  const attestation = await veraxSdk.attestation.getAttestation(attestationId) as {attestationData:  `0x${string}`, subject: `0x${string}`}; 
 
   console.log(attestation);
 
@@ -18,6 +17,12 @@ async function main() {
       attestation.attestationData as `0x${string}`
     );
   console.log(decoded);
+
+  const decodedSubj = veraxSdk.utils.decode('uint256',
+    attestation.subject)[0] as string;
+  
+  const userId = Id.fromBigInt(BigInt(decodedSubj));
+  console.log(userId.bigInt());
 }
 
 main()
