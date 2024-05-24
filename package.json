@@ -29,7 +29,8 @@
     "solhint-plugin-prettier": "^0.1.0",
     "solidity-bytes-utils": "^0.8.0",
     "typescript": "^5.4.4",
-    "web3": "^4.7.0"
+    "web3": "^4.7.0",
+    "@verax-attestation-registry/verax-sdk": "^1.6.0"
   },
   "scripts": {
     "node": "npx hardhat node",
