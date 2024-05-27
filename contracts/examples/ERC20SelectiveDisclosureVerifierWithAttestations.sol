@@ -52,19 +52,18 @@ contract ERC20SelectiveDisclosureVerifierWithAttestations is ERC20Upgradeable, Z
         _;
     }
 
-    function initialize(string memory name, string memory symbol, address portalAddress, bytes32 schemaId) public initializer {
+    function initialize(string memory name, string memory symbol) public initializer {
         ERC20SelectiveDisclosureVerifierStorage storage $ = _getERC20SelectiveDisclosureVerifierStorage();
         super.__ERC20_init(name, symbol);
         super.__ZKPVerifier_init(_msgSender());
         $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
-        $.attestationPortalContract = IPortal(portalAddress);
-        $.schemaId = schemaId;
+       
     }
 
-
-     function attester() public returns(address) {
-        IPortal a = IPortal(0x7E8fdD0803BcC1A41cE432AdD07CA6C4E5F92eE2);
-        return a.getAttester();
+    function setPortalInfo(address portalAddress, bytes32 schemaId) public onlyOwner {
+        ERC20SelectiveDisclosureVerifierStorage storage $ = _getERC20SelectiveDisclosureVerifierStorage();
+        $.attestationPortalContract = IPortal(portalAddress);
+        $.schemaId = schemaId;
     }
 
     function _beforeProofSubmit(
@@ -80,16 +79,20 @@ contract ERC20SelectiveDisclosureVerifierWithAttestations is ERC20Upgradeable, Z
         require(_msgSender() == addr, 'address in proof is not a sender address');
     }
 
-
-    function _attest(uint256 userId, uint64 requestId, uint256 nullifier) public {
+    function _attest(uint256 userId, uint64 requestId, uint256 nullifier) internal {
         ERC20SelectiveDisclosureVerifierStorage storage $ = _getERC20SelectiveDisclosureVerifierStorage();
+        if ($.attestationPortalContract == IPortal(address(0))) {
+            return;
+        }
         AttestationPayload memory payload = AttestationPayload(
             bytes32($.schemaId),
             uint64(block.timestamp + 7 days),
             abi.encode(userId),
             abi.encode(requestId, nullifier)
         );
-        bytes[] memory validationPayload = new bytes[](0);
+        bytes memory validationData = abi.encode(uint256(0));
+        bytes[] memory validationPayload = new bytes[](1);
+        validationPayload[0] = validationData;
         try $.attestationPortalContract.attest(payload, validationPayload) {
             emit AttestOk("attestation done");
         } catch  {
@@ -143,4 +146,5 @@ contract ERC20SelectiveDisclosureVerifierWithAttestations is ERC20Upgradeable, Z
     function getTokenAmountForAirdropPerId() public view returns (uint256) {
         return _getERC20SelectiveDisclosureVerifierStorage().TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
     }
+
 }

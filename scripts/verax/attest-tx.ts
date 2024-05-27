@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
 
 async function main() {
-  const portalAddr = '0x7E8fdD0803BcC1A41cE432AdD07CA6C4E5F92eE2';
+  const portalAddr = '0x780d6cEA92B8BA2a76939bEc4f00771dBC4D79C3';
   const portal = await ethers.getContractAt('IPortal', portalAddr);
 
   const abiCoder = ethers.AbiCoder.defaultAbiCoder();
@@ -15,12 +15,13 @@ async function main() {
     ['100', '123']
   );
 
+  console.log(encodetData);
   await portal.attest({
         schemaId: '0x59a0acecb3a782c9035cb1d0e8d5661f6848ebcb4d44c212c891d0fbc06c081e', 
         expirationDate: 1747986521,
         subject: encodetSubject,
         attestationData: encodetData
-    }, []);
+    }, ['0x00']);
 
     const attestationRegistryAddress = await portal.attestationRegistry();
     console.log(attestationRegistryAddress);

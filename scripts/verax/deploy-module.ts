@@ -4,12 +4,12 @@ import { VeraxSdk } from "@verax-attestation-registry/verax-sdk";
 // 0xefDEC213B52ed164723DfD9723AC80F73d66fB80 - test array module
 // 0x4F9AAA2E849fcAC816cf78827E61dAfe9051283E - ZKPVerifyModule
 async function main() {
-  const ERC20SelectiveDisclosureVerifier = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';
+  // const ERC20SelectiveDisclosureVerifier = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';
 
-  const ZKPVerifyModuleFactory = await ethers.getContractFactory("ZKPVerifyModule");
-  const ZKPVerifyModule = await ZKPVerifyModuleFactory.deploy(ERC20SelectiveDisclosureVerifier);
+  const ZKPVerifyModuleFactory = await ethers.getContractFactory("VerifierModule");
+  const ZKPVerifyModule = await ZKPVerifyModuleFactory.deploy();
   await ZKPVerifyModule.waitForDeployment();
-  console.log("ZKPVerifyModule deployed to:", await ZKPVerifyModule.getAddress());
+  console.log("VerifierModule deployed to:", await ZKPVerifyModule.getAddress());
 
   // register module
   const publicAddress: `0x${string}`= `0x${process.env.SEPOLIA_PUB_ADDRESS}`;
@@ -17,9 +17,9 @@ async function main() {
   const veraxSdk = new VeraxSdk(VeraxSdk.DEFAULT_LINEA_SEPOLIA, publicAddress, privateKey);
 
   const tx = await veraxSdk.module.register(
-    "ZKPVerifyModule",
-    "This Module is used as an example of ZKPVerifyModule",
-    await ZKPVerifyModule.getAddress(),
+    "VerifierModule",
+    "This Module is used as an example of VerifierModule",
+    (await ZKPVerifyModule.getAddress()) as `0x${string}`,
     true
   );
 
