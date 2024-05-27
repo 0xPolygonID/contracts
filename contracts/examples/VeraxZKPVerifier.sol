@@ -2,7 +2,7 @@
 pragma solidity 0.8.20;
 
 import {Attestation, AttestationPayload} from './verax/types/Structs.sol';
-import {ZKPVerifierBase} from './VerifierBase.sol';
+import {ZKPVerifierBase} from '@iden3/contracts/verifiers/ZKPVerifierBase.sol';
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
 
 interface IPortal {
