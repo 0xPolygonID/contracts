@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
-import { packV3ValidatorParams } from '../test/utils/pack-utils';
+import { packV3ValidatorParams } from '../../test/utils/pack-utils';
 import { ChainIds, DID, DidMethod, registerDidMethodNetwork } from '@iden3/js-iden3-core';
-import { buildVerifierId, calculateQueryHashV3, coreSchemaFromStr } from '../test/utils/utils';
+import { buildVerifierId, calculateQueryHashV3, coreSchemaFromStr } from '../../test/utils/utils';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal

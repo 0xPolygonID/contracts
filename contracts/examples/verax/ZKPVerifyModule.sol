@@ -8,6 +8,8 @@ import { IZKPVerifier } from '@iden3/contracts/interfaces/IZKPVerifier.sol';
 contract ZKPVerifyModule is AbstractModule {
   IZKPVerifier public zkpVerifier;
 
+  mapping (uint256 nullifierSessionID => bool) isNullifierAttested;
+
   constructor(address _zkpVerifier) {
     zkpVerifier = IZKPVerifier(_zkpVerifier);
   }
@@ -32,6 +34,8 @@ contract ZKPVerifyModule is AbstractModule {
   ) public override {
     (uint64 requestId, uint256[] memory inputs, uint256[2] memory a, uint256[2][2] memory b, uint256[2] memory c) = 
         abi.decode(validationPayload, (uint64, uint256[], uint256[2], uint256[2][2], uint256[2]));
+
+    require(!isNullifierAttested[inputs[7]], "attestation for nullifier already provided");
     
     IZKPVerifier.ZKPRequest memory request = zkpVerifier.getZKPRequest(uint64(inputs[7]));
     request.validator.verify(
