@@ -1,13 +1,16 @@
 import { ethers } from 'hardhat';
 
 async function main() {
-  const erc20verifierAddress = '0x87932cB2A245e729e285CA118fFcbA9d55dd8b54';
+  const veraxVerifierAddress = '0x04669EFfB55D3Ed7EEeC10b6E8227405AEA9B33a';
 
-  const ERC20Verifier = await ethers.getContractFactory('ERC20SelectiveDisclosureVerifierWithAttestations');
-  const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress);
-  console.log(erc20Verifier, ' attached to:', await erc20Verifier.getAddress());
+  const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
+  const verax = await veraxVerifierFactory.attach(veraxVerifierAddress);
+  console.log(verax, ' attached to:', await verax.getAddress());
 
-  const tx = await erc20Verifier.setPortalInfo('0xbDCAa137758fa3106b42b22872102A2605Cd64F0', '0x59a0acecb3a782c9035cb1d0e8d5661f6848ebcb4d44c212c891d0fbc06c081e');
+  const tx = await verax.setPortalInfo(
+    '0x0a5Fd0b1694F0A9926FAbf0b3f2f7226BB0793E9',
+    '0x59a0acecb3a782c9035cb1d0e8d5661f6848ebcb4d44c212c891d0fbc06c081e'
+  );
   console.log(tx);
 }
 

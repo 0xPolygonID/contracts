@@ -12,16 +12,8 @@ contract ZKPVerifyModule is AbstractModule {
     zkpVerifier = IZKPVerifier(_zkpVerifier);
   }
 
-  function run(
-    AttestationPayload memory attestationPayload,
-    bytes memory validationPayload,
-    address txSender,
-    uint256 /*value*/
-  ) public override {
-    (uint64 requestId, uint256[] memory inputs, uint256[2] memory a, uint256[2][2] memory b, uint256[2] memory c) = 
-        abi.decode(validationPayload, (uint64, uint256[], uint256[2], uint256[2][2], uint256[2]));
-
-    (uint64 attestationRequestId, uint256 attestationNullifierSessionID) = 
+  function _verifyAttestationPayload(AttestationPayload memory attestationPayload, uint256[] memory inputs) internal {
+     (uint64 attestationRequestId, uint256 attestationNullifierSessionID) = 
       abi.decode(attestationPayload.attestationData, (uint64, uint256));
 
     (uint256 attestationSubject) = 
@@ -30,7 +22,27 @@ contract ZKPVerifyModule is AbstractModule {
 
     require(attestationRequestId == inputs[7], "request Id doesn't match");
     require(attestationNullifierSessionID == inputs[4], "nullifier doesn't match");
-    zkpVerifier.submitZKPResponse(requestId, inputs, a, b, c);
+  }
+
+  function run(
+    AttestationPayload memory attestationPayload,
+    bytes memory validationPayload,
+    address txSender,
+    uint256 /*value*/
+  ) public override {
+    (uint64 requestId, uint256[] memory inputs, uint256[2] memory a, uint256[2][2] memory b, uint256[2] memory c) = 
+        abi.decode(validationPayload, (uint64, uint256[], uint256[2], uint256[2][2], uint256[2]));
+    
+    IZKPVerifier.ZKPRequest memory request = zkpVerifier.getZKPRequest(uint64(inputs[7]));
+    request.validator.verify(
+      inputs,
+      a,
+      b,
+      c,
+      request.data,
+      txSender);
+
+    _verifyAttestationPayload(attestationPayload, inputs);
   }
 
 }
