@@ -35,7 +35,8 @@ contract ZKPVerifyModule is AbstractModule {
     (uint64 requestId, uint256[] memory inputs, uint256[2] memory a, uint256[2][2] memory b, uint256[2] memory c) = 
         abi.decode(validationPayload, (uint64, uint256[], uint256[2], uint256[2][2], uint256[2]));
 
-    require(!isNullifierAttested[inputs[7]], "attestation for nullifier already provided");
+    uint256 nullifierSessionId = inputs[4];
+    require(!isNullifierAttested[nullifierSessionId], "attestation for nullifier already provided");
     
     IZKPVerifier.ZKPRequest memory request = zkpVerifier.getZKPRequest(uint64(inputs[7]));
     request.validator.verify(
@@ -47,6 +48,8 @@ contract ZKPVerifyModule is AbstractModule {
       txSender);
 
     _verifyAttestationPayload(attestationPayload, inputs);
+
+    isNullifierAttested[nullifierSessionId] = true;
   }
 
 }

@@ -36,11 +36,11 @@ export const QueryOperators = {
 
 async function main() {
   const validatorAddressV3 = '0xba0EB888B1CDD41523d541E0d06246460f0D32a8';
-  const erc20verifierAddress = '0x04669EFfB55D3Ed7EEeC10b6E8227405AEA9B33a'; // verax validator
+  const veraxZKPVerifierAddress = '0x60fd74e29e38453CDc04890a6E318735D7657f18'; // verax validator
 
-  const ERC20Verifier = await ethers.getContractFactory('VeraxZKPVerifier');
-  const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address on mumbai
-  console.log(erc20Verifier, ' attached to:', await erc20Verifier.getAddress());
+  const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
+  const veraxVerifier = await veraxVerifierFactory.attach(veraxZKPVerifierAddress); // current mtp validator address on mumbai
+  console.log(veraxVerifier, ' attached to:', await veraxVerifier.getAddress());
 
   // set default query
   const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.1';
@@ -80,7 +80,7 @@ async function main() {
   }
   const [blockchain, networkId] = networkFlag.split(':');
 
-  const verifierId = buildVerifierId(await erc20Verifier.getAddress(), {
+  const verifierId = buildVerifierId(await veraxVerifier.getAddress(), {
     blockchain,
     networkId,
     method: DidMethod.PolygonId
@@ -138,7 +138,7 @@ async function main() {
         body: {
           reason: 'for testing',
           transaction_data: {
-            contract_address: erc20verifierAddress,
+            contract_address: veraxZKPVerifierAddress,
             method_id: 'b68967e2',
             chain_id: chainId,
             network: network
@@ -165,7 +165,7 @@ async function main() {
         }
       };
 
-      const tx = await erc20Verifier.setZKPRequest(query.requestId, {
+      const tx = await veraxVerifier.setZKPRequest(query.requestId, {
         metadata: JSON.stringify(invokeRequestMetadata),
         validator: validatorAddressV3,
         data: packV3ValidatorParams(query)

@@ -5,8 +5,9 @@ const privateKey: `0x${string}` = `0x${process.env.SEPOLIA_PRIVATE_KEY}`;
 
 async function main() {
   const veraxSdk = new VeraxSdk(VeraxSdk.DEFAULT_LINEA_SEPOLIA, publicAddress, privateKey);
+  const moduleAddress = '0xF2a68Cb1ab2AE548943805695af580901A6C7B48';
   const tx = await veraxSdk.portal.deployDefaultPortal(
-    ['0x40a2b25e60C5E5E2DDA123480d80e8E0D3F43255'], "ZKPVerifyModule portal", "This Portal is used as an example for ZKPVerifyModule contract", false, "Iden3", true);
+    [moduleAddress], "ZKPVerifyModule portal", "This Portal is used as an example for ZKPVerifyModule contract", false, "Iden3", true);
 
   console.log(tx);
 }
