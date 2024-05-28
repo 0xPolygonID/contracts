@@ -31,6 +31,7 @@ sequenceDiagram
     ZKPVerifyModule->>ModuleRegistry: valid
     ModuleRegistry->>VeraxPortal: valid
     VeraxPortal->>AttestationRegistry: attest(attestation, attester)
+    Note right of AttestationRegistry: adds new attestation
 ```
 
 
