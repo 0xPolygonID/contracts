@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import fs from 'fs';
 import path from 'path';
 
-const pathOutputJson = path.join(__dirname, './VCPayment-events.csv');
+const pathOutputCSV = path.join(__dirname, './VCPayment-events.csv');
 async function main() {
   const contractAddress = '0x69f9c99D9C35A4d8aFE840b113AeE07969FBA4D8';
   const paymentFactory = await ethers.getContractFactory('VCPayment');
@@ -23,7 +23,7 @@ async function main() {
     csvContent += r.join(",") + "\r\n"; 
   });
 
-  fs.writeFileSync(pathOutputJson, csvContent);
+  fs.writeFileSync(pathOutputCSV, csvContent);
 }
 
 main()
