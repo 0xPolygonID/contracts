@@ -4,11 +4,33 @@ sequenceDiagram
     participant ZKPVerifier
     participant VeraxPortal
     participant ZKPVerifyModule
-    participant ZKPVerifyModule
     Client->>ZKPVerifier: submitZKPResponse(requestId, proof)
     ZKPVerifier->>VeraxPortal: attest(attestation, validationPayload: requestId, proof)
     VeraxPortal->>ZKPVerifyModule: run()
-    Note right of VeraxPortal: Get request data from ZKPVerifier, check proof, check attestation
+    ZKPVerifyModule ->> ZKPVerifier: getZKPRequest(requestId)
+    ZKPVerifier ->> ZKPVerifyModule: returns request
+    Note right of ZKPVerifyModule: validate proof, check attestation
+```
+
+Full path:
+```mermaid
+sequenceDiagram
+    participant Client
+    participant ZKPVerifier
+    participant VeraxPortal
+    participant ModuleRegistry
+    participant ZKPVerifyModule
+    participant AttestationRegistry
+    Client->>ZKPVerifier: submitZKPResponse(requestId, proof)
+    ZKPVerifier->>VeraxPortal: attest(attestation, validationPayload: requestId, proof)
+    VeraxPortal->>ModuleRegistry: runModules()
+    ModuleRegistry->>ZKPVerifyModule: run()
+    ZKPVerifyModule->>ZKPVerifier: getZKPRequest(requestId)
+    ZKPVerifier->>ZKPVerifyModule: returns request
+    Note right of ZKPVerifyModule: validate proof, check attestation
+    ZKPVerifyModule->>ModuleRegistry: valid
+    ModuleRegistry->>VeraxPortal: valid
+    VeraxPortal->>AttestationRegistry: attest(attestation, attester)
 ```
 
 
