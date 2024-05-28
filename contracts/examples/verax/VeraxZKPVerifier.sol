@@ -56,9 +56,9 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
         }
         AttestationPayload memory payload = AttestationPayload(
             bytes32($.schemaId),
-            uint64(block.timestamp + 7 days),
-            abi.encode(inputs[0]),
-            abi.encode(requestId, inputs[4])
+            uint64(inputs[12]), // expiration
+            abi.encode(inputs[0]), // user id
+            abi.encode(requestId, inputs[4]) // requestId, nullifier
         );
         bytes memory validationData = abi.encode(requestId, inputs, a, b, c);
         bytes[] memory validationPayload = new bytes[](1);
