@@ -1,3 +1,18 @@
+```mermaid
+sequenceDiagram
+    participant Client
+    participant ZKPVerifier
+    participant VeraxPortal
+    participant ZKPVerifyModule
+    participant ZKPVerifyModule
+    Client->>ZKPVerifier: submitZKPResponse(requestId, proof)
+    ZKPVerifier->>VeraxPortal: attest(attestation, validationPayload: requestId, proof)
+    VeraxPortal->>ZKPVerifyModule: run()
+    Note right of VeraxPortal: Get request data from ZKPVerifier, check proof, check attestation
+```
+
+
+
 1. npx hardhat run scripts/verax/deployVeraxZKPVerifier.ts --network sepolia
 2. npx hardhat run scripts/verax/setRequests-v3validator-verax.ts --network sepolia (replace `veraxZKPVerifierAddress`)
 3. npx hardhat run scripts/verax/deploy-module.ts --network sepolia (replace `VeraxZKPVerifier`)
