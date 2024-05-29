@@ -93,16 +93,20 @@ describe('Payment example', function () {
       value: 30000
     });
 
+    const block1 = await tx1.getBlock();
+    const block2 = await tx2.getBlock();
+    const block3 = await tx3.getBlock();
+
     await expect(tx1)
       .to.emit(payment, 'Payment')
-      .withArgs(issuerId2.bigInt(), 'payment-id-1', schemaHash3.bigInt());
+      .withArgs(issuerId2.bigInt(), 'payment-id-1', schemaHash3.bigInt(), block1?.timestamp);
 
     await expect(tx2)
       .to.emit(payment, 'Payment')
-      .withArgs(issuerId1.bigInt(), 'payment-id-1-1', schemaHash1.bigInt());
+      .withArgs(issuerId1.bigInt(), 'payment-id-1-1', schemaHash1.bigInt(), block2?.timestamp);
 
     await expect(tx3)
       .to.emit(payment, 'Payment')
-      .withArgs(issuerId2.bigInt(), 'payment-id-2', schemaHash3.bigInt());
+      .withArgs(issuerId2.bigInt(), 'payment-id-2', schemaHash3.bigInt(), block3?.timestamp);
   });
 });

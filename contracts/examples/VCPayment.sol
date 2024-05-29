@@ -13,7 +13,7 @@ contract VCPayment is Ownable {
      */
     mapping (bytes32 paymentRequestId => bool isPaid) public payments;
 
-    event Payment(uint256 indexed issuerId, string indexed paymentId, uint256 schemaHash);
+    event Payment(uint256 indexed issuerId, string paymentId, uint256 indexed schemaHash, uint256 timestamp);
 
     error PaymentError(string message);
     error WithdrawError(string message);
@@ -37,7 +37,7 @@ contract VCPayment is Ownable {
             revert PaymentError("Invalid value");
         }
         payments[payment] = true;
-        emit Payment(issuerId, paymentId, schemaHash);
+        emit Payment(issuerId, paymentId, schemaHash, block.timestamp);
     }
 
     function isPaymentDone(string calldata paymentId, uint256 issuerId) public view returns (bool) {
