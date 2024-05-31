@@ -53,7 +53,10 @@ const config: HardhatUserConfig = {
     }
   },
   etherscan: {
-    apiKey: process.env.OKLINK_API_KEY,
+    apiKey: {
+      'linea-sepolia': process.env.LINEA_API_KEY,
+      'amoy': process.env.AMOY_API_KEY,
+    },
     customChains: [
       {
         network: 'amoy',
@@ -63,7 +66,15 @@ const config: HardhatUserConfig = {
             'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/AMOY_TESTNET',
           browserURL: 'https://www.oklink.com/amoy'
         }
-      }
+      },
+      {
+        network: "linea-sepolia",
+        chainId: 59141,
+        urls: {
+          apiURL: "https://api-sepolia.lineascan.build/api",
+          browserURL: "https://sepolia.lineascan.build",
+        },
+      },
     ]
   },
   gasReporter: {

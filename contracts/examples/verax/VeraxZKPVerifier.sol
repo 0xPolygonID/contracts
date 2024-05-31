@@ -84,6 +84,7 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
         uint256[2][2] calldata b,
         uint256[2] calldata c
     ) public virtual override {
+        super.submitZKPResponse(requestId, inputs, a, b, c);
         _attest(requestId, inputs, a, b ,c);
     }
 
