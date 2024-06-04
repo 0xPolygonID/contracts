@@ -24,9 +24,16 @@ CredentialAtomicQueryV3Validator  deployed to: 0x03e26bf5B8Aa3287a6D229B524f9F44
 
 3. Verax flow:
 
-VeraxZKPVerifier  deployed to: 0xcE2d01c6b65290C3D3AF09324D516aB1976657d9
+VeraxZKPVerifier  deployed to: 0x1571fA0f7CCb065Fc8F27c221C0a4ad4ea8c2A46
 
 request: 
-did:polygonid:linea:sepolia:32232vGknSaK9oC8UysgJy3QquqvYKg8YAgin7W7wo
+did:polygonid:linea:sepolia:32232vGknSaJHfCBffnbzHzYYy6FvHDkK9QL4SFAq6
 200
+nullifierSessionID: 5543
+300
+nullifierSessionID: 300
+301
+nullifierSessionID: 301
+302
+nullifierSessionID: 302
 

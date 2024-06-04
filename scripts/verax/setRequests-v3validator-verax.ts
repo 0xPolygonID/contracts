@@ -36,7 +36,7 @@ export const QueryOperators = {
 
 async function main() {
   const validatorAddressV3 = '0x03e26bf5B8Aa3287a6D229B524f9F444151a44B2';
-  const veraxZKPVerifierAddress = '0xcE2d01c6b65290C3D3AF09324D516aB1976657d9'; // verax validator
+  const veraxZKPVerifierAddress = '0x1571fA0f7CCb065Fc8F27c221C0a4ad4ea8c2A46'; // verax validator
 
   const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
   const veraxVerifier = await veraxVerifierFactory.attach(veraxZKPVerifierAddress); // current mtp validator address on mumbai
