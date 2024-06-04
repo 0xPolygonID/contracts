@@ -44,6 +44,7 @@ const ldContextJSONAnimaProofOfUniqueness = `{
     }
   ]
 }`;
+const typeNameAnimaProofOfUniqueness = 'AnimaProofOfUniqueness';
 
 const ldContextJSONAnimaProofOfIdentity = `{
   "@context": [
@@ -114,14 +115,13 @@ const ldContextJSONAnimaProofOfIdentity = `{
     }
   ]
 }`;
-
-const typeNameAnimaProofOfUniqueness = 'AnimaProofOfUniqueness';
 const typeNameAnimaProofOfIdentity = 'AnimaProofOfIdentity';
+
 const pathToCredentialSubject = 'https://www.w3.org/2018/credentials#credentialSubject';
 
 async function main() {
   const contractAddress = '0x69f9c99D9C35A4d8aFE840b113AeE07969FBA4D8';
-  const issuerDID = 'did:polygonid:linea:sepolia:3295q16DfG237v9AM4QHFSzQuvGLR3ajRogH9erjtY';
+  const issuerDID = 'did:iden3:privado:main:2SfzQwTtMFXV878ZsMFXpjCA13ZDcwADCsTKPXqiRz';
   const valueInEther = '0.001';
   const valueWei = ethers.parseUnits(valueInEther, 'ether');
 
@@ -129,11 +129,11 @@ async function main() {
   const payment = await paymentFactory.attach(contractAddress);
 
   registerDidMethodNetwork({
-    method: DidMethod.PolygonId,
-    blockchain: "linea",
+    method: DidMethod.Iden3,
+    blockchain: "privado",
     chainId: 59141,
-    network: "sepolia",
-    networkFlag: 0b0100_0000 | 0b0000_1000,
+    network: "main",
+    networkFlag: 0b1010_0000 | 0b0000_0001,
   });
 
   const issuerId = DID.idFromDID(DID.parse(issuerDID));
@@ -152,7 +152,6 @@ async function main() {
   // path.prepend([pathToCredentialSubject]);
   // const pathBigInt = await path.mtEntry();
   // console.log('claimPathKey', pathBigInt.toString());
-
   const tx = await payment.setPaymentValue(issuerId.bigInt(), schemaHash.bigInt(), valueWei);
   console.log(tx.hash);
 }
