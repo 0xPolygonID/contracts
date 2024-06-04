@@ -120,7 +120,7 @@ const typeNameAnimaProofOfIdentity = 'AnimaProofOfIdentity';
 const pathToCredentialSubject = 'https://www.w3.org/2018/credentials#credentialSubject';
 
 async function main() {
-  const contractAddress = '0x69f9c99D9C35A4d8aFE840b113AeE07969FBA4D8';
+  const contractAddress = '0x49c8f225b8bAa5913653C6375aF7d5710012b984';
   const issuerDID = 'did:iden3:privado:main:2SfzQwTtMFXV878ZsMFXpjCA13ZDcwADCsTKPXqiRz';
   const valueInEther = '0.001';
   const valueWei = ethers.parseUnits(valueInEther, 'ether');
@@ -131,7 +131,7 @@ async function main() {
   registerDidMethodNetwork({
     method: DidMethod.Iden3,
     blockchain: "privado",
-    chainId: 59141,
+    chainId: 11101,
     network: "main",
     networkFlag: 0b1010_0000 | 0b0000_0001,
   });
