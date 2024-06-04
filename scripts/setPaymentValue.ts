@@ -117,6 +117,7 @@ const ldContextJSONAnimaProofOfIdentity = `{
 
 const typeNameAnimaProofOfUniqueness = 'AnimaProofOfUniqueness';
 const typeNameAnimaProofOfIdentity = 'AnimaProofOfIdentity';
+const pathToCredentialSubject = 'https://www.w3.org/2018/credentials#credentialSubject';
 
 async function main() {
   const contractAddress = '0x69f9c99D9C35A4d8aFE840b113AeE07969FBA4D8';
@@ -146,6 +147,12 @@ async function main() {
   const schemaHash = calculateCoreSchemaHash(byteEncoder.encode(schemaId));
   console.log('schemaHash', schemaHash.bigInt());
   console.log('issuerId', issuerId.bigInt());
+
+  // const path = await Path.getContextPathKey(ldContextJSONAnimaProofOfUniqueness, typeNameAnimaProofOfUniqueness, 'unique');
+  // path.prepend([pathToCredentialSubject]);
+  // const pathBigInt = await path.mtEntry();
+  // console.log('claimPathKey', pathBigInt.toString());
+
   const tx = await payment.setPaymentValue(issuerId.bigInt(), schemaHash.bigInt(), valueWei);
   console.log(tx.hash);
 }
