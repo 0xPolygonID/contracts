@@ -46,68 +46,24 @@ const ldContextJSONAnimaProofOfUniqueness = `{
 }`;
 const typeNameAnimaProofOfUniqueness = 'AnimaProofOfUniqueness';
 
-const ldContextJSONAnimaProofOfIdentity = `{
+const ldContextJSONAnimaProofOfLife = `{
   "@context": [
     {
       "@version": 1.1,
       "@protected": true,
       "id": "@id",
       "type": "@type",
-      "AnimaProofOfIdentity": {
-        "@id": "https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v1.json-ld#AnimaProofOfIdentity",
+      "AnimaProofOfLife": {
+        "@id": "https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pol-v1.json-ld#AnimaProofOfLife",
         "@context": {
           "@version": 1.1,
           "@protected": true,
           "id": "@id",
           "type": "@type",
-          "kyc-vocab": "https://github.com/anima-protocol/claims-polygonid/blob/main/credentials/poi.md#",
+          "kyc-vocab": "https://github.com/anima-protocol/claims-polygonid/blob/main/credentials/pol.md#",
           "xsd": "http://www.w3.org/2001/XMLSchema#",
-          "firstname": {
-            "@id": "kyc-vocab:firstname",
-            "@type": "xsd:string"
-          },
-          "lastname": {
-            "@id": "kyc-vocab:lastname",
-            "@type": "xsd:string"
-          },
-          "date_of_birth_str": {
-            "@id": "kyc-vocab:date_of_birth_str",
-            "@type": "xsd:string"
-          },
-          "date_of_birth": {
-            "@id": "kyc-vocab:date_of_birth",
-            "@type": "xsd:integer"
-          },
-          "nationality": {
-            "@id": "kyc-vocab:nationality",
-            "@type": "xsd:string"
-          },
-          "document_country": {
-            "@id": "kyc-vocab:document_country",
-            "@type": "xsd:string"
-          },
-          "document_type": {
-            "@id": "kyc-vocab:document_type",
-            "@type": "xsd:string"
-          },
-          "document_number": {
-            "@id": "kyc-vocab:document_number",
-            "@type": "xsd:string"
-          },
-          "document_expiration_str": {
-            "@id": "kyc-vocab:document_expiration_str",
-            "@type": "xsd:string"
-          },
-          "document_expiration": {
-            "@id": "kyc-vocab:document_expiration",
-            "@type": "xsd:integer"
-          },
-          "kyc_validated": {
-            "@id": "kyc-vocab:kyc_validated",
-            "@type": "xsd:boolean"
-          },
-          "kyc_aml_validated": {
-            "@id": "kyc-vocab:kyc_aml_validated",
+          "human": {
+            "@id": "kyc-vocab:human",
             "@type": "xsd:boolean"
           }
         }
@@ -115,7 +71,7 @@ const ldContextJSONAnimaProofOfIdentity = `{
     }
   ]
 }`;
-const typeNameAnimaProofOfIdentity = 'AnimaProofOfIdentity';
+const typeNameAnimaProofOfLife= 'AnimaProofOfLife';
 
 const pathToCredentialSubject = 'https://www.w3.org/2018/credentials#credentialSubject';
 
@@ -139,8 +95,8 @@ async function main() {
   const issuerId = DID.idFromDID(DID.parse(issuerDID));
 
   const schemaId: string = await Path.getTypeIDFromContext(
-    ldContextJSONAnimaProofOfIdentity,
-    typeNameAnimaProofOfIdentity
+    ldContextJSONAnimaProofOfLife,
+    typeNameAnimaProofOfLife
   );
 
   console.log('schemaId', schemaId);
@@ -148,10 +104,10 @@ async function main() {
   console.log('schemaHash', schemaHash.bigInt());
   console.log('issuerId', issuerId.bigInt());
 
-  // const path = await Path.getContextPathKey(ldContextJSONAnimaProofOfUniqueness, typeNameAnimaProofOfUniqueness, 'unique');
-  // path.prepend([pathToCredentialSubject]);
-  // const pathBigInt = await path.mtEntry();
-  // console.log('claimPathKey', pathBigInt.toString());
+  const path = await Path.getContextPathKey(ldContextJSONAnimaProofOfLife, typeNameAnimaProofOfLife, 'human');
+  path.prepend([pathToCredentialSubject]);
+  const pathBigInt = await path.mtEntry();
+  console.log('claimPathKey', pathBigInt.toString());
   const tx = await payment.setPaymentValue(issuerId.bigInt(), schemaHash.bigInt(), valueWei);
   console.log(tx.hash);
 }
