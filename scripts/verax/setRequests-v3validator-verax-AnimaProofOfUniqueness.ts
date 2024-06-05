@@ -2,6 +2,8 @@ import { ethers } from 'hardhat';
 import { packV3ValidatorParams } from '../../test/utils/pack-utils';
 import { ChainIds, DID, DidMethod, registerDidMethodNetwork } from '@iden3/js-iden3-core';
 import { buildVerifierId, calculateQueryHashV3, coreSchemaFromStr } from '../../test/utils/utils';
+import { Merklizer } from '@iden3/js-jsonld-merklization';
+
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal
@@ -36,7 +38,7 @@ export const QueryOperators = {
 
 async function main() {
   const validatorAddressV3 = '0x03e26bf5B8Aa3287a6D229B524f9F444151a44B2';
-  const veraxZKPVerifierAddress = '0x1571fA0f7CCb065Fc8F27c221C0a4ad4ea8c2A46'; // verax validator
+  const veraxZKPVerifierAddress = '0xb9FB57344f28b82BfBAbDd52609fdACc1BB5F604'; // verax validator
 
   const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
   const veraxVerifier = await veraxVerifierFactory.attach(veraxZKPVerifierAddress); // current mtp validator address on mumbai
@@ -55,7 +57,7 @@ async function main() {
     'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pou-v1.json-ld';
   const schema = '154254168293843647812290076058923399205';
   const schemaClaimPathKey =
-    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+    '12108295158402738095426831653137229485035232473156116723769892077296285974307';
   const slotIndex = 0;
   const merklized = 1;
   const groupID = 0;
@@ -85,13 +87,14 @@ async function main() {
     method: DidMethod.PolygonId
   });
   console.log(verifierId.bigInt());
+  const value = [true];
   const uniqueQuery = [
     {
-      requestId: 2001,
+      requestId: 2004,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
-      value: true,
+      value: [await Merklizer.hashValue('http://www.w3.org/2001/XMLSchema#boolean', value[0])],
       slotIndex,
       queryHash,
       circuitIds,
@@ -152,8 +155,8 @@ async function main() {
                   unique: {
                     [operatorKey]:
                       query.operator === Operators.IN || query.operator === Operators.NIN
-                        ? query.value
-                        : query.value[0]
+                        ? value
+                        : value[0]
                   }
                 },
                 type: type
