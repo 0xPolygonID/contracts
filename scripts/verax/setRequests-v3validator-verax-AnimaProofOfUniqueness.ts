@@ -90,7 +90,7 @@ async function main() {
   const value = [true];
   const uniqueQuery = [
     {
-      requestId: 2002,
+      requestId: 2003,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -101,7 +101,7 @@ async function main() {
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 0,
+      nullifierSessionID: 6345123,
       groupID,
       proofType: 0
     }
