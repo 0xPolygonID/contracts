@@ -2,6 +2,7 @@ import { ethers } from 'hardhat';
 import { packV3ValidatorParams } from '../../test/utils/pack-utils';
 import { ChainIds, DID, DidMethod, registerDidMethodNetwork } from '@iden3/js-iden3-core';
 import { buildVerifierId, calculateQueryHashV3, coreSchemaFromStr } from '../../test/utils/utils';
+import { Merklizer } from '@iden3/js-jsonld-merklization';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal
@@ -52,7 +53,7 @@ async function main() {
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
   const schemaUrl =
-    'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v1.json-ld';
+    'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pol-v1.json-ld';
   const schema = '124850561539049671310487367157968055340';
   const schemaClaimPathKey =
     '20376033832371109177683048456014525905119173674985843915445634726167450989630';
@@ -85,13 +86,15 @@ async function main() {
     method: DidMethod.PolygonId
   });
   console.log(verifierId.bigInt());
+  const value = [true];
+
   const dateOfBirthQuery = [
     {
-      requestId: 2002,
+      requestId: 3001,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
-      operator: Operators.LT,
-      value: [20020101],
+      operator: Operators.EQ,
+      value: [await Merklizer.hashValue('http://www.w3.org/2001/XMLSchema#boolean', value[0])],
       slotIndex,
       queryHash,
       circuitIds,
@@ -152,8 +155,8 @@ async function main() {
                   date_of_birth: {
                     [operatorKey]:
                       query.operator === Operators.IN || query.operator === Operators.NIN
-                        ? query.value
-                        : query.value[0]
+                        ? value
+                        : value[0]
                   }
                 },
                 type: type
