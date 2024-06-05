@@ -46,7 +46,7 @@ async function main() {
   // set default query
   const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.1';
 
-  const type = 'AnimaProofOfIdentity';
+  const type = 'AnimaProofOfLife';
 
   const queryHash = '';
   const circuitIds = [circuitIdV3];
@@ -54,9 +54,9 @@ async function main() {
   const allowedIssuers = [];
   const schemaUrl =
     'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pol-v1.json-ld';
-  const schema = '124850561539049671310487367157968055340';
+  const schema = '210527560731691333146408988058384574850';
   const schemaClaimPathKey =
-    '20376033832371109177683048456014525905119173674985843915445634726167450989630';
+    '13751106843739971482657571607497906795066562763243795313411556194188082993570';
   const slotIndex = 0;
   const merklized = 1;
   const groupID = 0;
@@ -90,7 +90,7 @@ async function main() {
 
   const dateOfBirthQuery = [
     {
-      requestId: 3001,
+      requestId: 3002,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -101,7 +101,7 @@ async function main() {
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 0,
+      nullifierSessionID: 775432423,
       groupID,
       proofType: 0
     }
