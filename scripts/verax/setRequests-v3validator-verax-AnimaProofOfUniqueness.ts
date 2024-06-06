@@ -52,7 +52,7 @@ async function main() {
   const queryHash = '';
   const circuitIds = [circuitIdV3];
   const skipClaimRevocationCheck = false;
-  const allowedIssuers = [];
+  const allowedIssuers = ['did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v'];
   const schemaUrl =
     'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pou-v1.json-ld';
   const schema = '154254168293843647812290076058923399205';
@@ -90,7 +90,7 @@ async function main() {
   const value = [true];
   const uniqueQuery = [
     {
-      requestId: 2004,
+      requestId: 2005,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -101,7 +101,7 @@ async function main() {
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 2004,
+      nullifierSessionID: 2005,
       groupID,
       proofType: 0
     }
@@ -149,7 +149,7 @@ async function main() {
               id: query.requestId,
               circuitId: circuitIdV3,
               query: {
-                allowedIssuers: ['*'],
+                allowedIssuers: !allowedIssuers.length ? ['*'] : allowedIssuers,
                 context: schemaUrl,
                 credentialSubject: {
                   unique: {

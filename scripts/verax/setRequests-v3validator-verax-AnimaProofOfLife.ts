@@ -51,7 +51,7 @@ async function main() {
   const queryHash = '';
   const circuitIds = [circuitIdV3];
   const skipClaimRevocationCheck = false;
-  const allowedIssuers = [];
+  const allowedIssuers = ['did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v'];
   const schemaUrl =
     'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pol-v1.json-ld';
   const schema = '210527560731691333146408988058384574850';
@@ -90,7 +90,7 @@ async function main() {
 
   const dateOfBirthQuery = [
     {
-      requestId: 3003,
+      requestId: 3005,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -101,7 +101,7 @@ async function main() {
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 3003,
+      nullifierSessionID: 3005,
       groupID,
       proofType: 0
     }
@@ -149,7 +149,7 @@ async function main() {
               id: query.requestId,
               circuitId: circuitIdV3,
               query: {
-                allowedIssuers: ['*'],
+                allowedIssuers: !allowedIssuers.length ? ['*'] : allowedIssuers,
                 context: schemaUrl,
                 credentialSubject: {
                   date_of_birth: {
