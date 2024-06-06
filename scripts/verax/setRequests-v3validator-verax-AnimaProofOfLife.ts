@@ -66,7 +66,7 @@ async function main() {
   const network = 'linea-sepolia';
 
   registerDidMethodNetwork({
-    method: DidMethod.PolygonId,
+    method: DidMethod.Iden3,
     blockchain: 'linea',
     chainId: 59141,
     network: 'sepolia',
@@ -83,14 +83,14 @@ async function main() {
   const verifierId = buildVerifierId(await veraxVerifier.getAddress(), {
     blockchain,
     networkId,
-    method: DidMethod.PolygonId
+    method: DidMethod.Iden3
   });
   console.log(verifierId.bigInt());
   const value = [true];
 
   const dateOfBirthQuery = [
     {
-      requestId: 3002,
+      requestId: 3003,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -101,7 +101,7 @@ async function main() {
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 775432423,
+      nullifierSessionID: 3003,
       groupID,
       proofType: 0
     }
