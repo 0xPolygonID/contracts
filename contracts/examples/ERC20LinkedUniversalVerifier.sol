@@ -12,6 +12,8 @@ contract ERC20LinkedUniversalVerifier is ERC20 {
     uint64 public constant TRANSFER_REQUEST_ID_MTP_VALIDATOR = 1;
 
     UniversalVerifier public verifier;
+    mapping(uint256 => address) public idToAddress;
+    mapping(address => uint256) public addressToId;
 
     uint256 public TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
 
@@ -33,7 +35,14 @@ contract ERC20LinkedUniversalVerifier is ERC20 {
     }
 
     function mint(address to) public {
-        _mint(to, TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
+        uint256 id = verifier.getProofStorageField(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR, "userID");
+        id = id == 0 ? verifier.getProofStorageField(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR, "userID") : id;
+
+        if (idToAddress[id] == address(0) && addressToId[to] == 0) {
+            idToAddress[id] = to;
+            addressToId[to] = id;
+            _mint(to, TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
+        }
     }
 
     function _update(
