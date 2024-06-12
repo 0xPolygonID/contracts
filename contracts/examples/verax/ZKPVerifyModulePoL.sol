@@ -4,6 +4,7 @@ pragma solidity 0.8.20;
 import { AttestationPayload } from "./types/Structs.sol";
 import { AbstractModule } from "./abstracts/AbstractModule.sol";
 import { IZKPVerifier } from '@iden3/contracts/interfaces/IZKPVerifier.sol';
+import { ICircuitValidator } from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 
 contract ZKPVerifyModulePoL is AbstractModule {
   IZKPVerifier public zkpVerifier;
@@ -14,16 +15,12 @@ contract ZKPVerifyModulePoL is AbstractModule {
     zkpVerifier = IZKPVerifier(_zkpVerifier);
   }
 
-  function _verifyAttestationPayload(AttestationPayload memory attestationPayload, uint256[] memory inputs) internal {
-     (uint64 attestationRequestId, uint256 attestationNullifierSessionID) = 
+  function _verifyAttestationPayload(AttestationPayload memory attestationPayload, uint256[] memory inputs, ICircuitValidator validator) internal view {
+    (uint64 attestationRequestId, uint256 attestationNullifierSessionID) = 
       abi.decode(attestationPayload.attestationData, (uint64, uint256));
 
-    // (uint256 attestationSubject) = 
-    //   abi.decode(attestationPayload.subject, (uint256));
-    // require(attestationSubject == inputs[0], "attestation subject doesn't match to user id input");
-
-    require(attestationRequestId == inputs[7], "request Id doesn't match");
-    require(attestationNullifierSessionID == inputs[4], "nullifier doesn't match");
+    require(attestationRequestId == inputs[validator.inputIndexOf('requestID')], "request Id doesn't match");
+    require(attestationNullifierSessionID == inputs[validator.inputIndexOf('nullifier')], "nullifier doesn't match");
   }
 
   function run(
@@ -35,11 +32,9 @@ contract ZKPVerifyModulePoL is AbstractModule {
     (uint64 requestId, uint256[] memory inputs, uint256[2] memory a, uint256[2][2] memory b, uint256[2] memory c) = 
         abi.decode(validationPayload, (uint64, uint256[], uint256[2], uint256[2][2], uint256[2]));
 
-    uint256 nullifierSessionId = inputs[4];
-    require(!isNullifierAttested[nullifierSessionId], "attestation for nullifier already provided");
-    
-    IZKPVerifier.ZKPRequest memory request = zkpVerifier.getZKPRequest(uint64(inputs[7]));
-    request.validator.verify(
+    IZKPVerifier.ZKPRequest memory request = zkpVerifier.getZKPRequest(requestId);
+    ICircuitValidator validator = request.validator;
+    validator.verify(
       inputs,
       a,
       b,
@@ -47,7 +42,10 @@ contract ZKPVerifyModulePoL is AbstractModule {
       request.data,
       txSender);
 
-    _verifyAttestationPayload(attestationPayload, inputs);
+    uint256 nullifierSessionId = inputs[validator.inputIndexOf('nullifier')];
+    require(!isNullifierAttested[nullifierSessionId], "attestation for nullifier already provided");
+
+    _verifyAttestationPayload(attestationPayload, inputs, validator);
 
     isNullifierAttested[nullifierSessionId] = true;
   }

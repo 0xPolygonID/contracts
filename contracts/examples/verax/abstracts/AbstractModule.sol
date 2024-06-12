@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// copied from https://github.com/Consensys/linea-attestation-registry/blob/dev/contracts/src/abstracts/AbstractModule.sol
 pragma solidity 0.8.20;
 
 import { AttestationPayload } from "../types/Structs.sol";
