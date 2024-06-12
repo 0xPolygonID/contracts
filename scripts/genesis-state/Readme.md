@@ -1,45 +1,43 @@
-1. npx hardhat run scripts/genesis-state/deployGenesiState.ts --network sepolia 
-https://sepolia.lineascan.build/address/0xf941A245136A1Ada6557284F87C3d91711BB020D#code
-
+1. npx hardhat run scripts/genesis-state/deployReadonlyState.ts --network sepolia 
+https://sepolia.lineascan.build/address/0x0C0576A734c34E15aBb7bCfC5669ABD2052a44DB#code - implementation
 {
- "state": "0x9c905B15D6EAd043cfce50Bb93eeF36279153d03", 
- // 0xf941A245136A1Ada6557284F87C3d91711BB020D - implementation
- "verifier": "0xECc5C3c591Fee9150F6f3FC96AEEf02fe7E27a51",
- "stateLib": "0x723bA76845aC96955657b3c8d76292cBc72B5f0A",
- "smtLib": "0xc3Af1587389691373f5dAbE27109c938576607e6",
- "poseidon1": "0x3262eeEcbcA5C29650C385D6DB0c0146Bc7c0273",
- "poseidon2": "0x03F534D2d2874B195b6D289c8aD5B73eba33BDf5",
- "poseidon3": "0x15cb0E1b7018D3c461A3715FAB9beB8C4c93B228",
+ "state": "0xD8869a439a07Edcc990F8f21E638702ee9273293",
+ "verifier": "0xf418D0aecF3153cbAabD6d7EE25F72003283104e",
+ "stateLib": "0x2966196793c38AB1ED07a07671006A36E254F3AC",
+ "smtLib": "0x05FB9f1410D380Ab98203F807267617BA3f3372d",
+ "poseidon1": "0x78B3fd7173D7a4Bf98210c447bD4b8F0928F5943",
+ "poseidon2": "0xB2CF3724D501F1584E429f3B3E1f3b11bfc2A150",
+ "poseidon3": "0x2dbDe11085987AD9279E08574dbbE5a00657655b",
  "network": "sepolia"
 }
 
 2. npx hardhat run scripts/genesis-state/deployIdentityTreeStorage.ts --network sepolia 
-IdentityTreeStore deployed to: 0x483340bf249D3bFeF5333e7AE0058B0D2931A711
+IdentityTreeStore deployed to: 0x0727E37edE02f37bf789C7b71a4A90806267726f
 
-3.  npx hardhat run scripts/deployV3Validator.ts --network sepolia
+3. npx hardhat run scripts/deployV3Validator.ts --network sepolia
 
-VerifierV3Wrapper  deployed to: 0x312e0DE00B35CF1cE948F722F8A2f16c465A942b
-CredentialAtomicQueryV3Validator  deployed to: 0x03e26bf5B8Aa3287a6D229B524f9F444151a44B2 
-(look into "no-transition" state contract - 0x9c905B15D6EAd043cfce50Bb93eeF36279153d03)
+VerifierV3Wrapper  deployed to: 0xeb34EDF18b3208aFF08E1426Da822f0cAF73d5f3
+CredentialAtomicQueryV3Validator  deployed to: 0x266fe15bE3a1969496967aE44F0bAc3EFb7ca6f5
+(look into "no-transition" state contract - 0xD8869a439a07Edcc990F8f21E638702ee9273293)
 
 3. Verax flow:
 
-VeraxZKPVerifier  deployed to: 0x975218461843300C46683e2F16B5FA781E7ef97f
+VeraxZKPVerifier  deployed to: 0x91a3a28B401adDeBcb5Cd0b1364474fF6255F00b
 
 
 POL:
 npx hardhat run scripts/verax/setRequests-v3validator-verax-AnimaProofOfLife.ts --network sepolia 
 
 *
-did:iden3:linea:sepolia:28itzVLBHnMJWgJypKwVSjmZgkTHhxppbfk1s6EU1c
-575757
+did:iden3:linea:sepolia:28itzVLBHnMJV8sdjyffcAtWCx8HZ7btdKXxs7fJ6v
+11000001
 
-did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7 - issuer 
-did:iden3:linea:sepolia:28itzVLBHnMJWgJypKwVSjmZgkTHhxppbfk1s6EU1c - verifier
-100001 - requestId/nullifier
+did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7 - issuer
+did:iden3:linea:sepolia:28itzVLBHnMJV8sdjyffcAtWCx8HZ7btdKXxs7fJ6v - verifier
+100001
 
-ZKPVerifyModulePoL  deployed to: 0xBe08e0B599ccCBc59214ee651fc1805ef96349d9
-ZKPVerifyModulePoL portal 0xe4Dd9A4FE93cd486e7A2b5a83461896eF5c4F01F
+ZKPVerifyModulePoL  deployed to: 0x39e8a6af9D5d1D36c4E5BC2f1F43902a6F9A7C54
+ZKPVerifyModulePoL portal 0xE72bcb4f7065DB683BC16BEf9A01C059309DFe4a
 
 npx hardhat run scripts/verax/setPortalInfo-AnimaProofOfLife.ts --network sepolia
 
@@ -47,14 +45,16 @@ POU:
 npx hardhat run scripts/verax/setRequests-v3validator-verax-AnimaProofOfUniqueness.ts --network sepolia
 
 *
-did:iden3:linea:sepolia:28itzVLBHnMJWgJypKwVSjmZgkTHhxppbfk1s6EU1c
-454545454
+did:iden3:linea:sepolia:28itzVLBHnMJV8sdjyffcAtWCx8HZ7btdKXxs7fJ6v
+2200002
 
-did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7 - issuer 
-did:iden3:linea:sepolia:28itzVLBHnMJWgJypKwVSjmZgkTHhxppbfk1s6EU1c - verifier
-100002 - requestId/nullifier
 
-ZKPVerifyModulePoU  deployed to: 0x4CB60066E9db643F244a04216BDEBC103D76A595
-ZKPVerifyModulePoU portal : 0x52dEA76F098a5897757F49f639f93A39fC435AE2
+did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7 - issuer
+did:iden3:linea:sepolia:28itzVLBHnMJV8sdjyffcAtWCx8HZ7btdKXxs7fJ6v - verifier
+100002
+
+
+ZKPVerifyModulePoU  deployed to: 0x2AFe076aFf86551eCAd5e48c2fb0E7F7324E04f3
+ZKPVerifyModulePoU portal : 0x5FfDa857bF7c63A70ac1ABAE67a3368f0eE7dC27
 
 npx hardhat run scripts/verax/setPortalInfo-AnimaProofOfUniqueness.ts --network sepolia

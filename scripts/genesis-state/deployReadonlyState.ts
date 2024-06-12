@@ -2,7 +2,7 @@ import { StateDeployHelper } from '../../test/helpers/StateDeployHelper';
 import fs from "fs";
 import path from "path";
 
-const pathOutputJson = path.join(__dirname, "./deploy_genesis_state_output.json");
+const pathOutputJson = path.join(__dirname, "./deploy_readonly_state_output.json");
 
 async function main() {
   const deployHelper = await StateDeployHelper.initialize(null, true);

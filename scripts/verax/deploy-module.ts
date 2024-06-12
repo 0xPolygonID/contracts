@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { VeraxSdk } from "@verax-attestation-registry/verax-sdk";
 
 async function main() {
-  const VeraxZKPVerifier = '0x975218461843300C46683e2F16B5FA781E7ef97f';
+  const VeraxZKPVerifier = '0x91a3a28B401adDeBcb5Cd0b1364474fF6255F00b';
 
   const moduleName = 'ZKPVerifyModulePoU';
   const ZKPVerifyModuleFactory = await ethers.getContractFactory(moduleName);

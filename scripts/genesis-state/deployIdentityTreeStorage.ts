@@ -4,7 +4,7 @@ async function main() {
   const deployHelper = await StateDeployHelper.initialize(null, true);
 
   const { identityTreeStore} =
-    await deployHelper.deployIdentityTreeStore('0x9c905B15D6EAd043cfce50Bb93eeF36279153d03');
+    await deployHelper.deployIdentityTreeStore('0xD8869a439a07Edcc990F8f21E638702ee9273293');
 
   }
 

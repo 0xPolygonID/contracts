@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
 
 async function main() {
-  const veraxVerifierAddress = '0x975218461843300C46683e2F16B5FA781E7ef97f';
+  const veraxVerifierAddress = '0x91a3a28B401adDeBcb5Cd0b1364474fF6255F00b';
 
   const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
   const verax = await veraxVerifierFactory.attach(veraxVerifierAddress);
@@ -11,7 +11,7 @@ async function main() {
   const schemaId = '0x2bc6511034614a23bcbdfaa8055005b5ff2e416032dad968313a1caa980538e6';
   const schemaType = 0; // PoU
 
-  const portalAddress = '0x52dEA76F098a5897757F49f639f93A39fC435AE2';
+  const portalAddress = '0x5FfDa857bF7c63A70ac1ABAE67a3368f0eE7dC27';
   const tx = await verax.setPortalInfo(
     requestId,
     portalAddress,
