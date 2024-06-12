@@ -38,7 +38,7 @@ export const QueryOperators = {
 
 async function main() {
   const validatorAddressV3 = '0x03e26bf5B8Aa3287a6D229B524f9F444151a44B2';
-  const veraxZKPVerifierAddress = '0x1571fA0f7CCb065Fc8F27c221C0a4ad4ea8c2A46'; // verax validator
+  const veraxZKPVerifierAddress = '0x975218461843300C46683e2F16B5FA781E7ef97f'; // verax validator
 
   const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
   const veraxVerifier = await veraxVerifierFactory.attach(veraxZKPVerifierAddress); // current mtp validator address on mumbai
@@ -52,12 +52,12 @@ async function main() {
   const queryHash = '';
   const circuitIds = [circuitIdV3];
   const skipClaimRevocationCheck = false;
-  const allowedIssuers = ['did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v'];
+  const allowedIssuers = []; // 'did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v'
   const schemaUrl =
     'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pou-v1.json-ld';
   const schema = '154254168293843647812290076058923399205';
   const schemaClaimPathKey =
-    '12108295158402738095426831653137229485035232473156116723769892077296285974307';
+    '9835688698410935663542366129505429686563883986990826014707760188814087828145';
   const slotIndex = 0;
   const merklized = 1;
   const groupID = 0;
@@ -87,21 +87,21 @@ async function main() {
     method: DidMethod.Iden3
   });
   console.log(verifierId.bigInt());
-  const value = [true];
+  // const value = [true];
   const uniqueQuery = [
     {
-      requestId: 2005,
+      requestId: 454545454,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
-      operator: Operators.EQ,
-      value: [await Merklizer.hashValue('http://www.w3.org/2001/XMLSchema#boolean', value[0])],
+      operator: Operators.SD,
+      value: [], // await Merklizer.hashValue('http://www.w3.org/2001/XMLSchema#boolean', value[0])
       slotIndex,
       queryHash,
       circuitIds,
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 2005,
+      nullifierSessionID: 454545454,
       groupID,
       proofType: 0
     }
@@ -152,11 +152,11 @@ async function main() {
                 allowedIssuers: !allowedIssuers.length ? ['*'] : allowedIssuers,
                 context: schemaUrl,
                 credentialSubject: {
-                  unique: {
-                    [operatorKey]:
-                      query.operator === Operators.IN || query.operator === Operators.NIN
-                        ? value
-                        : value[0]
+                  reputation_level: {
+                    // [operatorKey]:
+                    //   query.operator === Operators.IN || query.operator === Operators.NIN
+                    //     ? value
+                    //     : value[0]
                   }
                 },
                 type: type

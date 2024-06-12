@@ -7,11 +7,11 @@ async function main() {
   const verax = await veraxVerifierFactory.attach(veraxVerifierAddress);
   console.log(verax, ' attached to:', await verax.getAddress());
 
-  const requestId = 575757;
-  const schemaId = '0x59a0acecb3a782c9035cb1d0e8d5661f6848ebcb4d44c212c891d0fbc06c081e';
-  const schemaType = 1; // PoL
+  const requestId = 454545454;
+  const schemaId = '0x2bc6511034614a23bcbdfaa8055005b5ff2e416032dad968313a1caa980538e6';
+  const schemaType = 0; // PoU
 
-  const portalAddress = '0xe4Dd9A4FE93cd486e7A2b5a83461896eF5c4F01F';
+  const portalAddress = '0x52dEA76F098a5897757F49f639f93A39fC435AE2';
   const tx = await verax.setPortalInfo(
     requestId,
     portalAddress,

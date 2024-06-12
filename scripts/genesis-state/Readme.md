@@ -27,6 +27,7 @@ CredentialAtomicQueryV3Validator  deployed to: 0x03e26bf5B8Aa3287a6D229B524f9F44
 VeraxZKPVerifier  deployed to: 0x975218461843300C46683e2F16B5FA781E7ef97f
 
 
+POL:
 npx hardhat run scripts/verax/setRequests-v3validator-verax-AnimaProofOfLife.ts --network sepolia 
 
 *
@@ -35,3 +36,15 @@ did:iden3:linea:sepolia:28itzVLBHnMJWgJypKwVSjmZgkTHhxppbfk1s6EU1c
 
 ZKPVerifyModulePoL  deployed to: 0xBe08e0B599ccCBc59214ee651fc1805ef96349d9
 ZKPVerifyModulePoL portal 0xe4Dd9A4FE93cd486e7A2b5a83461896eF5c4F01F
+
+
+POU:
+npx hardhat run scripts/verax/setRequests-v3validator-verax-AnimaProofOfUniqueness.ts --network sepolia
+
+*
+did:iden3:linea:sepolia:28itzVLBHnMJWgJypKwVSjmZgkTHhxppbfk1s6EU1c
+454545454
+
+
+ZKPVerifyModulePoU  deployed to: 0x4CB60066E9db643F244a04216BDEBC103D76A595
+ZKPVerifyModulePoU portal : 0x52dEA76F098a5897757F49f639f93A39fC435AE2
