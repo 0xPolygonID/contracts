@@ -224,7 +224,7 @@ contract ReadonlyState is Ownable2StepUpgradeable, IState {
      * @param state A state.
      * @return The state info.
      */
-    function getStateInfoByIdAndState( // works with 0 root
+    function getStateInfoByIdAndState(
         uint256 id,
         uint256 state
     ) external view returns (IState.StateInfo memory) {
@@ -247,7 +247,7 @@ contract ReadonlyState is Ownable2StepUpgradeable, IState {
      * @param root GIST root
      * @return The GIST inclusion or non-inclusion proof for the identity
      */
-    function getGISTProofByRoot(  // works with 0 root
+    function getGISTProofByRoot(
         uint256 id,
         uint256 root
     ) external view returns (IState.GistProof memory) {
