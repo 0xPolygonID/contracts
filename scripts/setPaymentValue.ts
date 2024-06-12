@@ -77,7 +77,7 @@ const pathToCredentialSubject = 'https://www.w3.org/2018/credentials#credentialS
 
 async function main() {
   const contractAddress = '0x49c8f225b8bAa5913653C6375aF7d5710012b984';
-  const issuerDID = 'did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v';
+  const issuerDID = 'did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7';
   const valueInEther = '0.001';
   const valueWei = ethers.parseUnits(valueInEther, 'ether');
 
@@ -87,7 +87,7 @@ async function main() {
   registerDidMethodNetwork({
     method: DidMethod.Iden3,
     blockchain: "privado",
-    chainId: 11101,
+    chainId: 21000,
     network: "main",
     networkFlag: 0b1010_0000 | 0b0000_0001,
   });
