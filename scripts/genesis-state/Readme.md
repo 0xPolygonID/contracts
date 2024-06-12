@@ -24,16 +24,14 @@ CredentialAtomicQueryV3Validator  deployed to: 0x03e26bf5B8Aa3287a6D229B524f9F44
 
 3. Verax flow:
 
-VeraxZKPVerifier  deployed to: 0x1571fA0f7CCb065Fc8F27c221C0a4ad4ea8c2A46
+VeraxZKPVerifier  deployed to: 0x975218461843300C46683e2F16B5FA781E7ef97f
 
-request: 
-did:polygonid:linea:sepolia:32232vGknSaJHfCBffnbzHzYYy6FvHDkK9QL4SFAq6
-200
-nullifierSessionID: 5543
-300
-nullifierSessionID: 300
-301
-nullifierSessionID: 301
-302
-nullifierSessionID: 302
 
+npx hardhat run scripts/verax/setRequests-v3validator-verax-AnimaProofOfLife.ts --network sepolia 
+
+*
+did:iden3:linea:sepolia:28itzVLBHnMJWgJypKwVSjmZgkTHhxppbfk1s6EU1c
+575757
+
+ZKPVerifyModulePoL  deployed to: 0xBe08e0B599ccCBc59214ee651fc1805ef96349d9
+ZKPVerifyModulePoL portal 0xe4Dd9A4FE93cd486e7A2b5a83461896eF5c4F01F

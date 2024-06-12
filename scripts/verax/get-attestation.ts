@@ -6,7 +6,7 @@ const privateKey: `0x${string}` = `0x${process.env.SEPOLIA_PRIVATE_KEY}`;
 
 async function main() {
   const veraxSdk = new VeraxSdk(VeraxSdk.DEFAULT_LINEA_SEPOLIA, publicAddress, privateKey);
-  const attestationId = '0x0000000000000000000000000000000000000000000000000000000000000107';
+  const attestationId = '0x000000000000000000000000000000000000000000000000000000000000012b';
   const attestation = await veraxSdk.attestation.getAttestation(attestationId) as {attestationData:  `0x${string}`, subject: `0x${string}`}; 
 
   console.log(attestation);
@@ -17,12 +17,7 @@ async function main() {
       attestation.attestationData as `0x${string}`
     );
   console.log(decoded);
-
-  const decodedSubj = veraxSdk.utils.decode('uint256',
-    attestation.subject)[0] as string;
-  
-  const userId = Id.fromBigInt(BigInt(decodedSubj));
-  console.log(userId.bigInt());
+  console.log('sender', attestation.subject);
 }
 
 main()

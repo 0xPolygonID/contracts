@@ -19,10 +19,17 @@ interface AttestationRegistry {
 contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
     event AttestError(string message);
     event AttestOk(string message);
-    /// @custom:storage-location erc7201:polygonid.storage.ERC20SelectiveDisclosureVerifier
-    struct VeraxZKPVerifierStorage {
+
+    enum AttestationSchemaType { PoU, PoL }
+
+    struct PortalInfo {
         IPortal attestationPortalContract;
         bytes32 schemaId;
+        AttestationSchemaType schemaType;
+    }
+    /// @custom:storage-location erc7201:polygonid.storage.ERC20SelectiveDisclosureVerifier
+    struct VeraxZKPVerifierStorage {
+        mapping (uint64 requestId => PortalInfo portalInfo) portalInfoForReq;
     }
 
     // keccak256(abi.encode(uint256(keccak256("polygonid.storage.ERC20SelectiveDisclosureVerifier")) - 1)) & ~bytes32(uint256(0xff))
@@ -39,10 +46,9 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
          __Ownable_init(_msgSender());
     }
 
-    function setPortalInfo(address portalAddress, bytes32 schemaId) public onlyOwner {
+    function setPortalInfo(uint64 requestId, address portalAddress, bytes32 schemaId, AttestationSchemaType schemaType) public onlyOwner {
         VeraxZKPVerifierStorage storage $ = _getVeraxZKPVerifierStorage();
-        $.attestationPortalContract = IPortal(portalAddress);
-        $.schemaId = schemaId;
+        $.portalInfoForReq[requestId] = PortalInfo(IPortal(portalAddress), schemaId, schemaType);
     }
 
     function _attest( uint64 requestId,
@@ -51,19 +57,27 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
         uint256[2][2] calldata b,
         uint256[2] calldata c) internal {
         VeraxZKPVerifierStorage storage $ = _getVeraxZKPVerifierStorage();
-        if ($.attestationPortalContract == IPortal(address(0))) {
-            return;
+        PortalInfo memory portalInfo = $.portalInfoForReq[requestId];
+        if (portalInfo.attestationPortalContract == IPortal(address(0))) {
+            revert("Attestation portal not found for request");
+        }
+        bytes memory attestationPayload;
+
+        if (portalInfo.schemaType == AttestationSchemaType.PoL) {
+            attestationPayload = abi.encode(requestId, inputs[4]);  // requestId, nullifier
+        } else {
+             attestationPayload = abi.encode(requestId, inputs[4], inputs[5]); // requestId, nullifier, operator output
         }
         AttestationPayload memory payload = AttestationPayload(
-            bytes32($.schemaId),
+            bytes32(portalInfo.schemaId),
             uint64(inputs[12]), // expiration
-            abi.encode(inputs[0]), // user id
-            abi.encode(requestId, inputs[4]) // requestId, nullifier
+            abi.encode(msg.sender), // message sender
+            attestationPayload 
         );
         bytes memory validationData = abi.encode(requestId, inputs, a, b, c);
         bytes[] memory validationPayload = new bytes[](1);
         validationPayload[0] = validationData;
-        try $.attestationPortalContract.attest(payload, validationPayload) {
+        try portalInfo.attestationPortalContract.attest(payload, validationPayload) {
             emit AttestOk("attestation done");
         } catch  {
             emit AttestError("attestation error");

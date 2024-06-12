@@ -20,13 +20,15 @@ import { VeraxSdk } from "@verax-attestation-registry/verax-sdk";
 export const publicAddress: `0x${string}`= `0x${process.env.SEPOLIA_PUB_ADDRESS}`;
 export const privateKey: `0x${string}` = `0x${process.env.SEPOLIA_PRIVATE_KEY}`;
 
-// schema id - 0x59a0acecb3a782c9035cb1d0e8d5661f6848ebcb4d44c212c891d0fbc06c081e - "(uint64 requestId, uint256 nullifierSessionID)"
+// schema ids: 
+// 0x59a0acecb3a782c9035cb1d0e8d5661f6848ebcb4d44c212c891d0fbc06c081e - "(uint64 requestId, uint256 nullifierSessionID)"
+// 0x2bc6511034614a23bcbdfaa8055005b5ff2e416032dad968313a1caa980538e6 - "(uint64 requestId, uint256 nullifierSessionID, uint256 reputationLevel)"
 async function main() {
   const veraxSdk = new VeraxSdk(VeraxSdk.DEFAULT_LINEA_SEPOLIA, publicAddress, privateKey);
-  const schemaString = "(uint64 requestId, uint256 nullifierSessionID)";
+  const schemaString = "(uint64 requestId, uint256 nullifierSessionID, uint256 reputationLevel)";
 
-  // const schemaTx = await veraxSdk.schema.create("Verification schema", 
-  //   "Verification schema", "", schemaString, true);
+  // const schemaTx = await veraxSdk.schema.create("Verification schema with reputation level", 
+  //   "Verification schema with reputation level", "", schemaString, true);
 
   // console.log(schemaTx);
 

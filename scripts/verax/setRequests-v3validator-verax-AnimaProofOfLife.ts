@@ -37,7 +37,7 @@ export const QueryOperators = {
 
 async function main() {
   const validatorAddressV3 = '0x03e26bf5B8Aa3287a6D229B524f9F444151a44B2';
-  const veraxZKPVerifierAddress = '0x1571fA0f7CCb065Fc8F27c221C0a4ad4ea8c2A46'; // verax validator
+  const veraxZKPVerifierAddress = '0x975218461843300C46683e2F16B5FA781E7ef97f'; // verax validator
 
   const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
   const veraxVerifier = await veraxVerifierFactory.attach(veraxZKPVerifierAddress); // current mtp validator address on mumbai
@@ -51,7 +51,7 @@ async function main() {
   const queryHash = '';
   const circuitIds = [circuitIdV3];
   const skipClaimRevocationCheck = false;
-  const allowedIssuers = ['did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v'];
+  const allowedIssuers = []; // 'did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v'
   const schemaUrl =
     'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pol-v1.json-ld';
   const schema = '210527560731691333146408988058384574850';
@@ -88,9 +88,9 @@ async function main() {
   console.log(verifierId.bigInt());
   const value = [true];
 
-  const dateOfBirthQuery = [
+  const polQuery = [
     {
-      requestId: 3005,
+      requestId: 575757,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -101,7 +101,7 @@ async function main() {
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 3005,
+      nullifierSessionID: 575757,
       groupID,
       proofType: 0
     }
@@ -109,8 +109,8 @@ async function main() {
   console.log(DID.parseFromId(verifierId).string());
 
   try {
-    for (let i = 0; i < dateOfBirthQuery.length; i++) {
-      const query = dateOfBirthQuery[i];
+    for (let i = 0; i < polQuery.length; i++) {
+      const query = polQuery[i];
       console.log(query.requestId);
 
       const operatorKey =
@@ -152,7 +152,7 @@ async function main() {
                 allowedIssuers: !allowedIssuers.length ? ['*'] : allowedIssuers,
                 context: schemaUrl,
                 credentialSubject: {
-                  date_of_birth: {
+                  human: {
                     [operatorKey]:
                       query.operator === Operators.IN || query.operator === Operators.NIN
                         ? value

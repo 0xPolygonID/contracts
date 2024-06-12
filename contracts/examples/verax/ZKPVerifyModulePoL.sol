@@ -5,7 +5,7 @@ import { AttestationPayload } from "./types/Structs.sol";
 import { AbstractModule } from "./abstracts/AbstractModule.sol";
 import { IZKPVerifier } from '@iden3/contracts/interfaces/IZKPVerifier.sol';
 
-contract ZKPVerifyModule is AbstractModule {
+contract ZKPVerifyModulePoL is AbstractModule {
   IZKPVerifier public zkpVerifier;
 
   mapping (uint256 nullifierSessionID => bool) isNullifierAttested;
@@ -18,9 +18,9 @@ contract ZKPVerifyModule is AbstractModule {
      (uint64 attestationRequestId, uint256 attestationNullifierSessionID) = 
       abi.decode(attestationPayload.attestationData, (uint64, uint256));
 
-    (uint256 attestationSubject) = 
-      abi.decode(attestationPayload.subject, (uint256));
-    require(attestationSubject == inputs[0], "attestation subject doesn't match to user id input");
+    // (uint256 attestationSubject) = 
+    //   abi.decode(attestationPayload.subject, (uint256));
+    // require(attestationSubject == inputs[0], "attestation subject doesn't match to user id input");
 
     require(attestationRequestId == inputs[7], "request Id doesn't match");
     require(attestationNullifierSessionID == inputs[4], "nullifier doesn't match");
