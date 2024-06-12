@@ -10,11 +10,11 @@ import {StateLib} from "@iden3/contracts/lib/StateLib.sol";
 import {GenesisUtils} from "@iden3/contracts/lib/GenesisUtils.sol";
 
 /// @title Set and get states for each identity
-contract GenesisState is Ownable2StepUpgradeable, IState {
+contract ReadonlyState is Ownable2StepUpgradeable, IState {
     /**
      * @dev Version of contract
      */
-    string public constant VERSION = "2.4.0-only-genesis";
+    string public constant VERSION = "2.4.1-readonly";
 
     // This empty reserved space is put in place to allow future versions
     // of the State contract to inherit from other contracts without a risk of
@@ -381,7 +381,7 @@ contract GenesisState is Ownable2StepUpgradeable, IState {
         uint256 newState,
         bool isOldStateGenesis
     ) internal {
-        revert("only genesis states are allowed for this contract");
+        revert("readonly contract: state transition is prohibited");
 
         require(id != 0, "ID should not be zero");
         require(newState != 0, "New state should not be zero");
