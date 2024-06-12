@@ -7,7 +7,7 @@ async function main() {
   const verax = await veraxVerifierFactory.attach(veraxVerifierAddress);
   console.log(verax, ' attached to:', await verax.getAddress());
 
-  const requestId = 454545454;
+  const requestId = 100002;
   const schemaId = '0x2bc6511034614a23bcbdfaa8055005b5ff2e416032dad968313a1caa980538e6';
   const schemaType = 0; // PoU
 

@@ -51,7 +51,7 @@ async function main() {
   const queryHash = '';
   const circuitIds = [circuitIdV3];
   const skipClaimRevocationCheck = false;
-  const allowedIssuers = []; // 'did:iden3:privado:main:2SiLQjkvTkTsuc4ZPEckmDFM9JohBeyaPahX6Gwg7v'
+  const allowedIssuers = ['did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7'];
   const schemaUrl =
     'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/pol-v1.json-ld';
   const schema = '210527560731691333146408988058384574850';
@@ -90,7 +90,7 @@ async function main() {
 
   const polQuery = [
     {
-      requestId: 575757,
+      requestId: 100001,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -101,7 +101,7 @@ async function main() {
       allowedIssuers,
       skipClaimRevocationCheck,
       verifierID: verifierId.bigInt(),
-      nullifierSessionID: 575757,
+      nullifierSessionID: 100001,
       groupID,
       proofType: 0
     }
