@@ -4,6 +4,7 @@ pragma solidity 0.8.20;
 import {Attestation, AttestationPayload} from './types/Structs.sol';
 import {ZKPVerifierBase} from '@iden3/contracts/verifiers/ZKPVerifierBase.sol';
 import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
+import {IZKPVerifier} from '@iden3/contracts/interfaces/IZKPVerifier.sol';
 
 interface IPortal {
     function attest(AttestationPayload memory attestationPayload, bytes[] memory validationPayloads) external payable;
@@ -27,14 +28,14 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
         bytes32 schemaId;
         AttestationSchemaType schemaType;
     }
-    /// @custom:storage-location erc7201:polygonid.storage.ERC20SelectiveDisclosureVerifier
+    /// @custom:storage-location erc7201:polygonid.storage.VeraxZKPVerifier
     struct VeraxZKPVerifierStorage {
         mapping (uint64 requestId => PortalInfo portalInfo) portalInfoForReq;
     }
 
-    // keccak256(abi.encode(uint256(keccak256("polygonid.storage.ERC20SelectiveDisclosureVerifier")) - 1)) & ~bytes32(uint256(0xff))
+    // keccak256(abi.encode(uint256(keccak256("polygonid.storage.VeraxZKPVerifier")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant VeraxZKPVerifierStorageLocation =
-        0xb76e10afcb000a9a2532ea819d260b0a3c0ddb1d54ee499ab0643718cbae8700;
+        0xf2a0fb5adce57cdd20ffa282dfdeffa5cf790754d88eeeedb507a130ec7f2900;
 
     function _getVeraxZKPVerifierStorage() private pure returns (VeraxZKPVerifierStorage storage $) {
         assembly {
@@ -51,7 +52,7 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
         $.portalInfoForReq[requestId] = PortalInfo(IPortal(portalAddress), schemaId, schemaType);
     }
 
-    function _attest( uint64 requestId,
+    function _attest(uint64 requestId,
         uint256[] calldata inputs,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
@@ -63,14 +64,16 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
         }
         bytes memory attestationPayload;
 
+        IZKPVerifier.ZKPRequest memory request = getZKPRequest(requestId);
+
         if (portalInfo.schemaType == AttestationSchemaType.PoL) {
-            attestationPayload = abi.encode(requestId, inputs[4]);  // requestId, nullifier
+            attestationPayload = abi.encode(requestId, inputs[request.validator.inputIndexOf('nullifier')]);
         } else {
-             attestationPayload = abi.encode(requestId, inputs[4], inputs[5]); // requestId, nullifier, operator output
+             attestationPayload = abi.encode(requestId, inputs[request.validator.inputIndexOf('nullifier')], inputs[request.validator.inputIndexOf('operatorOutput')]);
         }
         AttestationPayload memory payload = AttestationPayload(
             bytes32(portalInfo.schemaId),
-            uint64(inputs[12]), // expiration
+            uint64(inputs[request.validator.inputIndexOf('timestamp')]), // expiration
             abi.encode(msg.sender), // message sender
             attestationPayload 
         );
