@@ -1,4 +1,4 @@
-import { ethers, upgrades } from 'hardhat';
+import { ethers, run, upgrades } from 'hardhat';
 
 async function main() {
   const contractName = 'VeraxZKPVerifier';
@@ -7,6 +7,11 @@ async function main() {
 
   await erc20instance.waitForDeployment();
   console.log(contractName, ' deployed to:', await erc20instance.getAddress());
+
+  await run("verify:verify", {
+    address: await erc20instance.getAddress(),
+    constructorArguments: [],
+  });
 }
 
 main()

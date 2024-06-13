@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import { ethers, run } from 'hardhat';
 import { VeraxSdk } from "@verax-attestation-registry/verax-sdk";
 
 async function main() {
@@ -9,6 +9,11 @@ async function main() {
   const ZKPVerifyModule = await ZKPVerifyModuleFactory.deploy(VeraxZKPVerifier);
   await ZKPVerifyModule.waitForDeployment();
   console.log(moduleName, " deployed to:", await ZKPVerifyModule.getAddress());
+
+  await run("verify:verify", {
+    address: await ZKPVerifyModule.getAddress(),
+    constructorArguments: [],
+  });
 
   // register module
   const publicAddress: `0x${string}`= `0x${process.env.SEPOLIA_PUB_ADDRESS}`;

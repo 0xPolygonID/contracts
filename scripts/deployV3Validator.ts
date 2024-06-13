@@ -1,4 +1,4 @@
-import { ethers, upgrades } from 'hardhat';
+import { ethers, run, upgrades } from 'hardhat';
 import fs from 'fs';
 import path from 'path';
 const pathOutputJson = path.join(__dirname, './deploy_validator_output.json');
@@ -17,6 +17,11 @@ async function main() {
   await verifierWrapper.waitForDeployment();
   console.log(verifierContractWrapperName, ' deployed to:', await verifierWrapper.getAddress());
 
+  await run("verify:verify", {
+    address: await verifierWrapper.getAddress(),
+    constructorArguments: [],
+  });
+
   const CredentialAtomicQueryValidator = await ethers.getContractFactory(validatorContractName);
 
   const CredentialAtomicQueryValidatorProxy = await upgrades.deployProxy(
@@ -30,6 +35,11 @@ async function main() {
     ' deployed to:',
     await CredentialAtomicQueryValidatorProxy.getAddress()
   );
+
+  await run("verify:verify", {
+    address: await CredentialAtomicQueryValidatorProxy.getAddress(),
+    constructorArguments: [],
+  });
 
   const outputJson = {
     verifierContractWrapperName,
