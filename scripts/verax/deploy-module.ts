@@ -4,7 +4,7 @@ import { VeraxSdk } from "@verax-attestation-registry/verax-sdk";
 async function main() {
   const VeraxZKPVerifier = '0x91a3a28B401adDeBcb5Cd0b1364474fF6255F00b';
 
-  const moduleName = 'ZKPVerifyModulePoU';
+  const moduleName = 'ZKPVerifyModulePoL';
   const ZKPVerifyModuleFactory = await ethers.getContractFactory(moduleName);
   const ZKPVerifyModule = await ZKPVerifyModuleFactory.deploy(VeraxZKPVerifier);
   await ZKPVerifyModule.waitForDeployment();
@@ -12,7 +12,7 @@ async function main() {
 
   await run("verify:verify", {
     address: await ZKPVerifyModule.getAddress(),
-    constructorArguments: [],
+    constructorArguments: [VeraxZKPVerifier],
   });
 
   // register module

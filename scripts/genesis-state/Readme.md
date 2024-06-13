@@ -36,6 +36,14 @@ did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7 - issuer
 did:iden3:linea:sepolia:28itzVLBHnMJV8sdjyffcAtWCx8HZ7btdKXxs7fJ6v - verifier
 100001
 
+w/o uniquness
+ZKPVerifyModulePoL  deployed to: 0x559Dd0eB3148f77349deae0aEAaEC4f3eD9e36E9
+portal: 0x57e8e6491093A9032e7d0e8Af52d49D40F89d5ca
+
+did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7 - issuer
+did:iden3:linea:sepolia:28itzVLBHnMJV8sdjyffcAtWCx8HZ7btdKXxs7fJ6v - verifier
+8575753243
+
 ZKPVerifyModulePoL  deployed to: 0x39e8a6af9D5d1D36c4E5BC2f1F43902a6F9A7C54
 ZKPVerifyModulePoL portal 0xE72bcb4f7065DB683BC16BEf9A01C059309DFe4a
 
