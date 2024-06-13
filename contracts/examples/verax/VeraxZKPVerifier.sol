@@ -18,8 +18,7 @@ interface AttestationRegistry {
 }
 
 contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
-    event AttestError(string message);
-    event AttestOk(string message);
+    event AttestOk(string message, address indexed sender);
 
     enum AttestationSchemaType { PoU, PoL }
 
@@ -80,12 +79,9 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
         bytes memory validationData = abi.encode(requestId, inputs, a, b, c);
         bytes[] memory validationPayload = new bytes[](1);
         validationPayload[0] = validationData;
-        try portalInfo.attestationPortalContract.attest(payload, validationPayload) {
-            emit AttestOk("attestation done");
-        } catch  {
-            emit AttestError("attestation error");
-            require(false, "attestation err");
-        }
+        portalInfo.attestationPortalContract.attest(payload, validationPayload) ;
+        emit AttestOk("attestation done", msg.sender);
+      
     }
 
     /// @dev Submits a ZKP response and updates proof status

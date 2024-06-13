@@ -43,7 +43,7 @@ contract ZKPVerifyModulePoU is AbstractModule {
       if (prevAttestationData.sender != txSender) {
         revert("sender of the previous attestation for this nullifier doesn't match");
       }
-      if (prevAttestationData.reputationLevel >= inputs[5]) {
+      if (prevAttestationData.reputationLevel >= inputs[request.validator.inputIndexOf('operatorOutput')]) {
         revert("reputation level not increased");
       }
     }
