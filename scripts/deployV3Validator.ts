@@ -7,7 +7,7 @@ async function main() {
   // const stateAddress = '0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D'; // current iden3 state smart contract on main
   // const stateAddress = '0x134b1be34911e39a8397ec6289782989729807a4'; // current iden3 state smart contract on mumbai
   // const stateAddress = '0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124'; // current iden3 state smart contract on amoy testnet
-  const stateAddress = '0xD8869a439a07Edcc990F8f21E638702ee9273293'; // curren iden3 readonly only state smart contract on linea sepolia
+  const stateAddress = '0x742673Fc2108d526fc3494d3780141552B660cAB'; // curren iden3 readonly only state smart contract on linea sepolia
 
   const verifierContractWrapperName = 'VerifierV3Wrapper';
   const validatorContractName = 'CredentialAtomicQueryV3Validator';

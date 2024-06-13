@@ -59,6 +59,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
+      'linea': process.env.LINEA_API_KEY,
       'linea-sepolia': process.env.LINEA_API_KEY,
       'amoy': process.env.AMOY_API_KEY,
     },
@@ -78,6 +79,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api-sepolia.lineascan.build/api",
           browserURL: "https://sepolia.lineascan.build",
+        },
+      },
+      {
+        network: "linea",
+        chainId: 59144,
+        urls: {
+          apiURL: "https://api.lineascan.build/api",
+          browserURL: "https://lineascan.build",
         },
       },
     ]

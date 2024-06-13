@@ -36,8 +36,12 @@ export const QueryOperators = {
 };
 
 async function main() {
-  const validatorAddressV3 = '0x266fe15bE3a1969496967aE44F0bAc3EFb7ca6f5';
-  const veraxZKPVerifierAddress = '0x91a3a28B401adDeBcb5Cd0b1364474fF6255F00b'; // verax validator
+  const validatorAddressV3 = '0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b';
+  const veraxZKPVerifierAddress = '0x07D5A8d32A3B42536c3019fD10F62A893aCc9021'; // verax validator
+
+  // const validatorAddressV3 = '0x266fe15bE3a1969496967aE44F0bAc3EFb7ca6f5'; sepolia
+  // const veraxZKPVerifierAddress = '0x91a3a28B401adDeBcb5Cd0b1364474fF6255F00b'; // verax validator sepolia
+
 
   const veraxVerifierFactory = await ethers.getContractFactory('VeraxZKPVerifier');
   const veraxVerifier = await veraxVerifierFactory.attach(veraxZKPVerifierAddress); // current mtp validator address on mumbai
@@ -61,16 +65,16 @@ async function main() {
   const merklized = 1;
   const groupID = 0;
 
-  const chainId = 59141;
+  const chainId = 59144;
 
-  const network = 'linea-sepolia';
+  const network = 'linea-main';
 
   registerDidMethodNetwork({
     method: DidMethod.Iden3,
     blockchain: 'linea',
-    chainId: 59141,
-    network: 'sepolia',
-    networkFlag: 0b0100_0000 | 0b0000_1000
+    chainId: chainId,
+    network: 'main',
+    networkFlag: 0b0100_0000 | 0b0000_1001
   });
 
   const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);

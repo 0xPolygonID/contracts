@@ -1,7 +1,7 @@
 {
  "verifierContractWrapperName": "VerifierV3Wrapper",
  "validatorContractName": "CredentialAtomicQueryV3Validator",
- "validator": "0x266fe15bE3a1969496967aE44F0bAc3EFb7ca6f5",
- "verifier": "0xeb34EDF18b3208aFF08E1426Da822f0cAF73d5f3",
- "network": "sepolia"
+ "validator": "0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b",
+ "verifier": "0x4BE489Fd4Bd13C6b48Dd70f1523D8275b4Aa69be",
+ "network": "linea"
 }
