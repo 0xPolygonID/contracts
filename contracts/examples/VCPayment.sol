@@ -46,7 +46,7 @@ contract VCPayment is Ownable {
 
     function withdraw() public onlyOwner {
         if (address(this).balance == 0) {
-            revert WithdrawError("There is no balance to witdraw");
+            revert WithdrawError("There is no balance to withdraw");
         }
 
         (bool sent,) = owner().call{ value: address(this).balance }("");

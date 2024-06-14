@@ -76,9 +76,9 @@ const typeNameAnimaProofOfLife= 'AnimaProofOfLife';
 const pathToCredentialSubject = 'https://www.w3.org/2018/credentials#credentialSubject';
 
 async function main() {
-  const contractAddress = '0x49c8f225b8bAa5913653C6375aF7d5710012b984';
+  const contractAddress = '0xE993B91d8FDeCb4bF87A4AD724b2e8284fc05820';
   const issuerDID = 'did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7';
-  const valueInEther = '0.001';
+  const valueInEther = '0.0003';
   const valueWei = ethers.parseUnits(valueInEther, 'ether');
 
   const paymentFactory = await ethers.getContractFactory('VCPayment');
@@ -95,8 +95,8 @@ async function main() {
   const issuerId = DID.idFromDID(DID.parse(issuerDID));
 
   const schemaId: string = await Path.getTypeIDFromContext(
-    ldContextJSONAnimaProofOfLife,
-    typeNameAnimaProofOfLife
+    ldContextJSONAnimaProofOfUniqueness,
+    typeNameAnimaProofOfUniqueness
   );
 
   console.log('schemaId', schemaId);
