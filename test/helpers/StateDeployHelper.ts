@@ -1,4 +1,4 @@
-import { ethers, upgrades, network } from 'hardhat';
+import { ethers, upgrades, network, run } from 'hardhat';
 import { Contract } from 'ethers';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { deployPoseidons } from '../utils/deploy-poseidons.util';
@@ -25,7 +25,7 @@ export class StateDeployHelper {
     return new StateDeployHelper(sgrs, enableLogging);
   }
 
-  async deployState(verifierContractName = 'VerifierStateTransition'): Promise<{
+  async deployState(verifierContractName = 'VerifierStateTransition', stateContractName = 'State'): Promise<{
     state: Contract;
     verifier: Contract;
     stateLib: Contract;
@@ -62,7 +62,7 @@ export class StateDeployHelper {
     const stateLib = await this.deployStateLib();
 
     this.log('deploying state...');
-    const StateFactory = await ethers.getContractFactory('State', {
+    const StateFactory = await ethers.getContractFactory(stateContractName, {
       libraries: {
         StateLib: await stateLib.getAddress(),
         SmtLib: await smtLib.getAddress(),
@@ -85,6 +85,11 @@ export class StateDeployHelper {
       `State contract deployed to address ${await state.getAddress()} from ${await owner.getAddress()}`
     );
 
+    await run("verify:verify", {
+      address: await state.getAddress(),
+      constructorArguments: [],
+    });
+
     this.log('======== State: deploy completed ========');
 
     return {
@@ -96,6 +101,37 @@ export class StateDeployHelper {
       poseidon2: poseidon2Elements,
       poseidon3: poseidon3Elements,
       poseidon4: poseidon4Elements
+    };
+  }
+
+  async deployIdentityTreeStore(stateContractAddress: string): Promise<{
+    identityTreeStore: Contract;
+  }> {
+    const signer = this.signers[0];
+    const [poseidon2Elements, poseidon3Elements] = await deployPoseidons(signer, [2, 3]);
+
+    const IdentityTreeStore = await ethers.getContractFactory("IdentityTreeStore", {
+      libraries: {
+        PoseidonUnit2L: await poseidon2Elements.getAddress(),
+        PoseidonUnit3L: await poseidon3Elements.getAddress(),
+      },
+    });
+
+    const identityTreeStore = await upgrades.deployProxy(
+      IdentityTreeStore,
+      [stateContractAddress],
+      { unsafeAllow: ["external-library-linking"] }
+    );
+    await identityTreeStore.waitForDeployment();
+
+    await run("verify:verify", {
+      address: await identityTreeStore.getAddress(),
+      constructorArguments: [],
+    });
+
+    console.log("\nIdentityTreeStore deployed to:", await identityTreeStore.getAddress());
+    return {
+      identityTreeStore,
     };
   }
 
@@ -150,6 +186,33 @@ export class StateDeployHelper {
 
     return {
       validator
+    };
+  }
+
+  async upgradeZkpVerifier(
+    contractAddress: string,
+    contractName: string
+  ): Promise<{
+    verifier: Contract;
+  }> {
+    console.log('======== verifier: upgrade started ========');
+
+    const owner = this.signers[0];
+
+    const VerifierFactory = await ethers.getContractFactory(contractName);
+    const verifier = await upgrades.upgradeProxy(contractAddress, VerifierFactory);
+    await verifier.waitForDeployment();
+    const s = await verifier.getZKPRequests(0, 4);
+    console.log('======== requests: ', s);
+
+    console.log(
+      `Verifier contract upgraded at address ${await verifier.getAddress()} from ${await owner.getAddress()}`
+    );
+
+    console.log('======== verifier: upgrade completed ========');
+
+    return {
+      verifier
     };
   }
 
