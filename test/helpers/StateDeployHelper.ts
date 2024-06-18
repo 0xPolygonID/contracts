@@ -189,6 +189,33 @@ export class StateDeployHelper {
     };
   }
 
+  async upgradeZkpVerifier(
+    contractAddress: string,
+    contractName: string
+  ): Promise<{
+    verifier: Contract;
+  }> {
+    console.log('======== verifier: upgrade started ========');
+
+    const owner = this.signers[0];
+
+    const VerifierFactory = await ethers.getContractFactory(contractName);
+    const verifier = await upgrades.upgradeProxy(contractAddress, VerifierFactory);
+    await verifier.waitForDeployment();
+    const s = await verifier.getZKPRequests(0, 4);
+    console.log('======== requests: ', s);
+
+    console.log(
+      `Verifier contract upgraded at address ${await verifier.getAddress()} from ${await owner.getAddress()}`
+    );
+
+    console.log('======== verifier: upgrade completed ========');
+
+    return {
+      verifier
+    };
+  }
+
   async getDefaultIdType(): Promise<{ defaultIdType: number; chainId: number }> {
     const chainId = parseInt(await network.provider.send('eth_chainId'), 16);
     const defaultIdType = chainIdDefaultIdTypeMap.get(chainId);
