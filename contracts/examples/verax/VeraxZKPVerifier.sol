@@ -36,6 +36,11 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
     bytes32 private constant VeraxZKPVerifierStorageLocation =
         0xf2a0fb5adce57cdd20ffa282dfdeffa5cf790754d88eeeedb507a130ec7f2900;
 
+    /**
+    * @dev Version of contract
+    */
+    string public constant VERSION = "1.0.1";
+
     function _getVeraxZKPVerifierStorage() private pure returns (VeraxZKPVerifierStorage storage $) {
         assembly {
             $.slot := VeraxZKPVerifierStorageLocation
@@ -65,14 +70,22 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
 
         IZKPVerifier.ZKPRequest memory request = getZKPRequest(requestId);
 
+        uint64 attestationExpiration;
         if (portalInfo.schemaType == AttestationSchemaType.PoL) {
+            attestationExpiration = 30 days * 6;
             attestationPayload = abi.encode(requestId, inputs[request.validator.inputIndexOf('nullifier')]);
         } else {
-             attestationPayload = abi.encode(requestId, inputs[request.validator.inputIndexOf('nullifier')], inputs[request.validator.inputIndexOf('operatorOutput')]);
+            uint256 reputationLevel = inputs[request.validator.inputIndexOf('operatorOutput')];
+            if (reputationLevel >= 2) {
+                attestationExpiration = 30 days * 6;
+            } else {
+                attestationExpiration = 2 weeks;
+            }
+            attestationPayload = abi.encode(requestId, inputs[request.validator.inputIndexOf('nullifier')], reputationLevel);
         }
         AttestationPayload memory payload = AttestationPayload(
             bytes32(portalInfo.schemaId),
-            uint64(inputs[request.validator.inputIndexOf('timestamp')]), // expiration
+            uint64(inputs[request.validator.inputIndexOf('timestamp')]) + attestationExpiration, // expiration
             abi.encode(msg.sender), // message sender
             attestationPayload 
         );
