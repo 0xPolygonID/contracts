@@ -170,10 +170,12 @@ async function main() {
         }
       };
 
+      const issuers = !allowedIssuers.length ? [] : allowedIssuers.map( issuer => DID.idFromDID(DID.parse(issuer)).bigInt().toString())
+
       const tx = await veraxVerifier.setZKPRequest(query.requestId, {
         metadata: JSON.stringify(invokeRequestMetadata),
         validator: validatorAddressV3,
-        data: packV3ValidatorParams(query)
+        data: packV3ValidatorParams(query,issuers)
       });
 
       console.log(tx.hash);

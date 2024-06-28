@@ -1,7 +1,7 @@
 import { StateDeployHelper } from '../../test/helpers/StateDeployHelper';
 
 async function main() {
-  const contractAddress = '';
+  const contractAddress = '0x07D5A8d32A3B42536c3019fD10F62A893aCc9021';
   const contractName = 'VeraxZKPVerifier';
 
   const stateDeployHelper = await StateDeployHelper.initialize();

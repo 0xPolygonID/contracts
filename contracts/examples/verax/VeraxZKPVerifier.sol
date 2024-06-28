@@ -39,7 +39,7 @@ contract VeraxZKPVerifier is Ownable2StepUpgradeable, ZKPVerifierBase {
     /**
     * @dev Version of contract
     */
-    string public constant VERSION = "1.0.1";
+    string public constant VERSION = "1.0.3";
 
     function _getVeraxZKPVerifierStorage() private pure returns (VeraxZKPVerifierStorage storage $) {
         assembly {
