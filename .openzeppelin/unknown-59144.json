@@ -1,0 +1,1857 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x742673Fc2108d526fc3494d3780141552B660cAB",
+      "txHash": "0xbcd206be959d0c069960689d63a94c4e9f60e33d34565133e0e87a86e5aeecbf",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x6f6E19781600d6B06D64A6b86431FB7dB3E919e0",
+      "txHash": "0xd78bb2ecc56136bdce60cf52ec59fcb31d3990291c556c74c965ed8561b2ffc3",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b",
+      "txHash": "0xce0ec6d55cdec2bc6e1c44ed49274e50dc4fac04fcb3747bcf9f920a2177a2ac",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x07D5A8d32A3B42536c3019fD10F62A893aCc9021",
+      "txHash": "0xb2ffeaeb52b292bff56560a4f4f8d6a7915bee17be0a416dfe5f514c63051d51",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "02372e3ed19399eefa40832968318d78a67b06fd256231d45b210b2c0b182ef2": {
+      "address": "0xD5059856ABcB962208C22A1d3B315914a9Ff7E2B",
+      "txHash": "0x772a3bd000b0a6fe044e0af6fba0755acf010d093036a05c582099651393839b",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_array(t_uint256)651_storage",
+            "contract": "ReadonlyState",
+            "src": "contracts/examples/ReadonlyState.sol:27"
+          },
+          {
+            "label": "verifier",
+            "offset": 0,
+            "slot": "651",
+            "type": "t_contract(IStateTransitionVerifier)971",
+            "contract": "ReadonlyState",
+            "src": "contracts/examples/ReadonlyState.sol:32"
+          },
+          {
+            "label": "_stateData",
+            "offset": 0,
+            "slot": "652",
+            "type": "t_struct(Data)5788_storage",
+            "contract": "ReadonlyState",
+            "src": "contracts/examples/ReadonlyState.sol:37"
+          },
+          {
+            "label": "_gistData",
+            "offset": 0,
+            "slot": "702",
+            "type": "t_struct(Data)4060_storage",
+            "contract": "ReadonlyState",
+            "src": "contracts/examples/ReadonlyState.sol:42"
+          },
+          {
+            "label": "_defaultIdType",
+            "offset": 0,
+            "slot": "752",
+            "type": "t_bytes2",
+            "contract": "ReadonlyState",
+            "src": "contracts/examples/ReadonlyState.sol:47"
+          },
+          {
+            "label": "_defaultIdTypeInitialized",
+            "offset": 2,
+            "slot": "752",
+            "type": "t_bool",
+            "contract": "ReadonlyState",
+            "src": "contracts/examples/ReadonlyState.sol:52"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)2571_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ownable2StepStorage)2478_storage": {
+            "label": "struct Ownable2StepUpgradeable.Ownable2StepStorage",
+            "members": [
+              {
+                "label": "_pendingOwner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)2520_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_struct(Entry)5769_storage)dyn_storage": {
+            "label": "struct StateLib.Entry[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(RootEntry)4087_storage)dyn_storage": {
+            "label": "struct SmtLib.RootEntry[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)45_storage": {
+            "label": "uint256[45]",
+            "numberOfBytes": "1440"
+          },
+          "t_array(t_uint256)48_storage": {
+            "label": "uint256[48]",
+            "numberOfBytes": "1536"
+          },
+          "t_array(t_uint256)651_storage": {
+            "label": "uint256[651]",
+            "numberOfBytes": "20832"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bytes2": {
+            "label": "bytes2",
+            "numberOfBytes": "2"
+          },
+          "t_contract(IStateTransitionVerifier)971": {
+            "label": "contract IStateTransitionVerifier",
+            "numberOfBytes": "20"
+          },
+          "t_enum(NodeType)4036": {
+            "label": "enum SmtLib.NodeType",
+            "members": [
+              "EMPTY",
+              "LEAF",
+              "MIDDLE"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Entry)5769_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct StateLib.Entry[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => uint256[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Node)4114_storage)": {
+            "label": "mapping(uint256 => struct SmtLib.Node)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Data)4060_storage": {
+            "label": "struct SmtLib.Data",
+            "members": [
+              {
+                "label": "nodes",
+                "type": "t_mapping(t_uint256,t_struct(Node)4114_storage)",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "rootEntries",
+                "type": "t_array(t_struct(RootEntry)4087_storage)dyn_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "rootIndexes",
+                "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "maxDepth",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "initialized",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "__gap",
+                "type": "t_array(t_uint256)45_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "1600"
+          },
+          "t_struct(Data)5788_storage": {
+            "label": "struct StateLib.Data",
+            "members": [
+              {
+                "label": "stateEntries",
+                "type": "t_mapping(t_uint256,t_array(t_struct(Entry)5769_storage)dyn_storage)",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "stateIndexes",
+                "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "__gap",
+                "type": "t_array(t_uint256)48_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "1600"
+          },
+          "t_struct(Entry)5769_storage": {
+            "label": "struct StateLib.Entry",
+            "members": [
+              {
+                "label": "state",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "block",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Node)4114_storage": {
+            "label": "struct SmtLib.Node",
+            "members": [
+              {
+                "label": "nodeType",
+                "type": "t_enum(NodeType)4036",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "childLeft",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "childRight",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "index",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "value",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(RootEntry)4087_storage": {
+            "label": "struct SmtLib.RootEntry",
+            "members": [
+              {
+                "label": "root",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "createdAtTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "createdAtBlock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "1b5d76363e58be5d496ce6ddf358646b968c880504eebcd3c91e4ef420f0b2f9": {
+      "address": "0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D",
+      "txHash": "0x2af375c72bd597e00c192530b9bfd4f1086c3f5c17aeccc45a3bf9a8513707a6",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IState)287": {
+            "label": "contract IState",
+            "numberOfBytes": "20"
+          },
+          "t_struct(IdentityTreeStoreMainStorage)48_storage": {
+            "label": "struct IdentityTreeStore.IdentityTreeStoreMainStorage",
+            "members": [
+              {
+                "label": "_state",
+                "type": "t_contract(IState)287",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)2571_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          }
+        },
+        "namespaces": {
+          "erc7201:iden3.storage.IdentityTreeStore.Main": [
+            {
+              "contract": "IdentityTreeStore",
+              "label": "_state",
+              "type": "t_contract(IState)287",
+              "src": "@iden3/contracts/identitytreestore/IdentityTreeStore.sol:50",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "a4dcfd1c9a01be65565803e48f8b5471cebc94dbc0cbee7354ce5eb8a4a90fbe": {
+      "address": "0x566D1cDB65520eB7Ae2A43a36843d76A3DC195f1",
+      "txHash": "0xa1fff8fff436fd7b9d372239479733fc991a2a3cc1ed52397bc64c80721e14aa",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)2571_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ownable2StepStorage)2478_storage": {
+            "label": "struct Ownable2StepUpgradeable.Ownable2StepStorage",
+            "members": [
+              {
+                "label": "_pendingOwner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)2520_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "aebba297af1a566f59de4886db10a298dd474b60a7f6932246b437cc69c3374b": {
+      "address": "0x9DB901F3AFdAAA73F5B2123B186F566fA3Ed1551",
+      "txHash": "0x763413ffb252336dccfc1c69980c1242f5d67a7e05a7bf098249e37295165721",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint64)dyn_storage": {
+            "label": "uint64[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_contract(ICircuitValidator)96": {
+            "label": "contract ICircuitValidator",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPortal)3796": {
+            "label": "contract IPortal",
+            "numberOfBytes": "20"
+          },
+          "t_enum(AttestationSchemaType)3812": {
+            "label": "enum VeraxZKPVerifier.AttestationSchemaType",
+            "members": [
+              "PoU",
+              "PoL"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)2387_storage))": {
+            "label": "mapping(address => mapping(uint64 => struct ZKPVerifierBase.Proof))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(PortalInfo)3821_storage)": {
+            "label": "mapping(uint64 => struct VeraxZKPVerifier.PortalInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(Proof)2387_storage)": {
+            "label": "mapping(uint64 => struct ZKPVerifierBase.Proof)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(ZKPRequest)309_storage)": {
+            "label": "mapping(uint64 => struct IZKPVerifier.ZKPRequest)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)2571_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ownable2StepStorage)2478_storage": {
+            "label": "struct Ownable2StepUpgradeable.Ownable2StepStorage",
+            "members": [
+              {
+                "label": "_pendingOwner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)2520_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PortalInfo)3821_storage": {
+            "label": "struct VeraxZKPVerifier.PortalInfo",
+            "members": [
+              {
+                "label": "attestationPortalContract",
+                "type": "t_contract(IPortal)3796",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "schemaId",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "schemaType",
+                "type": "t_enum(AttestationSchemaType)3812",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Proof)2387_storage": {
+            "label": "struct ZKPVerifierBase.Proof",
+            "members": [
+              {
+                "label": "isVerified",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "storageFields",
+                "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "validatorVersion",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "blockNumber",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "blockTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(VeraxZKPVerifierStorage)3828_storage": {
+            "label": "struct VeraxZKPVerifier.VeraxZKPVerifierStorage",
+            "members": [
+              {
+                "label": "portalInfoForReq",
+                "type": "t_mapping(t_uint64,t_struct(PortalInfo)3821_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ZKPRequest)309_storage": {
+            "label": "struct IZKPVerifier.ZKPRequest",
+            "members": [
+              {
+                "label": "metadata",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "validator",
+                "type": "t_contract(ICircuitValidator)96",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "data",
+                "type": "t_bytes_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(ZKPVerifierStorage)2404_storage": {
+            "label": "struct ZKPVerifierBase.ZKPVerifierStorage",
+            "members": [
+              {
+                "label": "_proofs",
+                "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)2387_storage))",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_requests",
+                "type": "t_mapping(t_uint64,t_struct(ZKPRequest)309_storage)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_requestIds",
+                "type": "t_array(t_uint64)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          }
+        },
+        "namespaces": {
+          "erc7201:polygonid.storage.VeraxZKPVerifier": [
+            {
+              "contract": "VeraxZKPVerifier",
+              "label": "portalInfoForReq",
+              "type": "t_mapping(t_uint64,t_struct(PortalInfo)3821_storage)",
+              "src": "contracts/examples/verax/VeraxZKPVerifier.sol:32",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:iden3.storage.ZKPVerifier": [
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_proofs",
+              "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)2387_storage))",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:21",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requests",
+              "type": "t_mapping(t_uint64,t_struct(ZKPRequest)309_storage)",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:22",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requestIds",
+              "type": "t_array(t_uint64)dyn_storage",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:23",
+              "offset": 0,
+              "slot": "2"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "abdd25647f2bccd872f0f7edf77b262cb822dc1187e4f1c36b19eb6c8ea07412": {
+      "address": "0x6495E29E58A7F1e6f3E84669aD3B63D691A8d7F1",
+      "txHash": "0x88c96cedba2a469e565a9b1f7438d223091ebf66c7c1390b0d5312c8373fb125",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint64)dyn_storage": {
+            "label": "uint64[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_contract(ICircuitValidator)96": {
+            "label": "contract ICircuitValidator",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPortal)3796": {
+            "label": "contract IPortal",
+            "numberOfBytes": "20"
+          },
+          "t_enum(AttestationSchemaType)3812": {
+            "label": "enum VeraxZKPVerifier.AttestationSchemaType",
+            "members": [
+              "PoU",
+              "PoL"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)2387_storage))": {
+            "label": "mapping(address => mapping(uint64 => struct ZKPVerifierBase.Proof))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(PortalInfo)3821_storage)": {
+            "label": "mapping(uint64 => struct VeraxZKPVerifier.PortalInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(Proof)2387_storage)": {
+            "label": "mapping(uint64 => struct ZKPVerifierBase.Proof)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(ZKPRequest)309_storage)": {
+            "label": "mapping(uint64 => struct IZKPVerifier.ZKPRequest)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)2571_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ownable2StepStorage)2478_storage": {
+            "label": "struct Ownable2StepUpgradeable.Ownable2StepStorage",
+            "members": [
+              {
+                "label": "_pendingOwner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)2520_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PortalInfo)3821_storage": {
+            "label": "struct VeraxZKPVerifier.PortalInfo",
+            "members": [
+              {
+                "label": "attestationPortalContract",
+                "type": "t_contract(IPortal)3796",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "schemaId",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "schemaType",
+                "type": "t_enum(AttestationSchemaType)3812",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Proof)2387_storage": {
+            "label": "struct ZKPVerifierBase.Proof",
+            "members": [
+              {
+                "label": "isVerified",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "storageFields",
+                "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "validatorVersion",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "blockNumber",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "blockTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(VeraxZKPVerifierStorage)3828_storage": {
+            "label": "struct VeraxZKPVerifier.VeraxZKPVerifierStorage",
+            "members": [
+              {
+                "label": "portalInfoForReq",
+                "type": "t_mapping(t_uint64,t_struct(PortalInfo)3821_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ZKPRequest)309_storage": {
+            "label": "struct IZKPVerifier.ZKPRequest",
+            "members": [
+              {
+                "label": "metadata",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "validator",
+                "type": "t_contract(ICircuitValidator)96",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "data",
+                "type": "t_bytes_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(ZKPVerifierStorage)2404_storage": {
+            "label": "struct ZKPVerifierBase.ZKPVerifierStorage",
+            "members": [
+              {
+                "label": "_proofs",
+                "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)2387_storage))",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_requests",
+                "type": "t_mapping(t_uint64,t_struct(ZKPRequest)309_storage)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_requestIds",
+                "type": "t_array(t_uint64)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          }
+        },
+        "namespaces": {
+          "erc7201:polygonid.storage.VeraxZKPVerifier": [
+            {
+              "contract": "VeraxZKPVerifier",
+              "label": "portalInfoForReq",
+              "type": "t_mapping(t_uint64,t_struct(PortalInfo)3821_storage)",
+              "src": "contracts/examples/verax/VeraxZKPVerifier.sol:32",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:iden3.storage.ZKPVerifier": [
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_proofs",
+              "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)2387_storage))",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:21",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requests",
+              "type": "t_mapping(t_uint64,t_struct(ZKPRequest)309_storage)",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:22",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requestIds",
+              "type": "t_array(t_uint64)dyn_storage",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:23",
+              "offset": 0,
+              "slot": "2"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "c383bec902123bac297af8e6cdb500109bde21591d4036bd7aeb9a5afbe6dce5": {
+      "address": "0x0aDFC9ba4a674513D87f2f0C2238Be9F54c44b32",
+      "txHash": "0xcc1182aa7dece1cabeed57a569b632b3a688db5368f4f394f966e74ee85a1171",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint64)dyn_storage": {
+            "label": "uint64[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_contract(ICircuitValidator)15": {
+            "label": "contract ICircuitValidator",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPortal)348": {
+            "label": "contract IPortal",
+            "numberOfBytes": "20"
+          },
+          "t_enum(AttestationSchemaType)364": {
+            "label": "enum VeraxZKPVerifier.AttestationSchemaType",
+            "members": [
+              "PoU",
+              "PoL"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)90_storage))": {
+            "label": "mapping(address => mapping(uint64 => struct ZKPVerifierBase.Proof))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(PortalInfo)373_storage)": {
+            "label": "mapping(uint64 => struct VeraxZKPVerifier.PortalInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(Proof)90_storage)": {
+            "label": "mapping(uint64 => struct ZKPVerifierBase.Proof)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(ZKPRequest)27_storage)": {
+            "label": "mapping(uint64 => struct IZKPVerifier.ZKPRequest)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)274_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ownable2StepStorage)181_storage": {
+            "label": "struct Ownable2StepUpgradeable.Ownable2StepStorage",
+            "members": [
+              {
+                "label": "_pendingOwner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)223_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PortalInfo)373_storage": {
+            "label": "struct VeraxZKPVerifier.PortalInfo",
+            "members": [
+              {
+                "label": "attestationPortalContract",
+                "type": "t_contract(IPortal)348",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "schemaId",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "schemaType",
+                "type": "t_enum(AttestationSchemaType)364",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Proof)90_storage": {
+            "label": "struct ZKPVerifierBase.Proof",
+            "members": [
+              {
+                "label": "isVerified",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "storageFields",
+                "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "validatorVersion",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "blockNumber",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "blockTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(VeraxZKPVerifierStorage)380_storage": {
+            "label": "struct VeraxZKPVerifier.VeraxZKPVerifierStorage",
+            "members": [
+              {
+                "label": "portalInfoForReq",
+                "type": "t_mapping(t_uint64,t_struct(PortalInfo)373_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ZKPRequest)27_storage": {
+            "label": "struct IZKPVerifier.ZKPRequest",
+            "members": [
+              {
+                "label": "metadata",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "validator",
+                "type": "t_contract(ICircuitValidator)15",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "data",
+                "type": "t_bytes_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(ZKPVerifierStorage)107_storage": {
+            "label": "struct ZKPVerifierBase.ZKPVerifierStorage",
+            "members": [
+              {
+                "label": "_proofs",
+                "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)90_storage))",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_requests",
+                "type": "t_mapping(t_uint64,t_struct(ZKPRequest)27_storage)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_requestIds",
+                "type": "t_array(t_uint64)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          }
+        },
+        "namespaces": {
+          "erc7201:polygonid.storage.VeraxZKPVerifier": [
+            {
+              "contract": "VeraxZKPVerifier",
+              "label": "portalInfoForReq",
+              "type": "t_mapping(t_uint64,t_struct(PortalInfo)373_storage)",
+              "src": "contracts/examples/verax/VeraxZKPVerifier.sol:32",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:iden3.storage.ZKPVerifier": [
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_proofs",
+              "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)90_storage))",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:21",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requests",
+              "type": "t_mapping(t_uint64,t_struct(ZKPRequest)27_storage)",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:22",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requestIds",
+              "type": "t_array(t_uint64)dyn_storage",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:23",
+              "offset": 0,
+              "slot": "2"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "df4683855a9a8db092205e9948156c6a36a266946a8da859b3371bf04773530e": {
+      "address": "0xD26D43bBf3FdcFc441dcA1dAAaB80bCdb1E050d6",
+      "txHash": "0x8900d014751f52b40bd56338344ee309eb3c4ca635f3c35cb04faa77e0bde9ac",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint64)dyn_storage": {
+            "label": "uint64[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_contract(ICircuitValidator)15": {
+            "label": "contract ICircuitValidator",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPortal)348": {
+            "label": "contract IPortal",
+            "numberOfBytes": "20"
+          },
+          "t_enum(AttestationSchemaType)364": {
+            "label": "enum VeraxZKPVerifier.AttestationSchemaType",
+            "members": [
+              "PoU",
+              "PoL"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)90_storage))": {
+            "label": "mapping(address => mapping(uint64 => struct ZKPVerifierBase.Proof))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_uint256)": {
+            "label": "mapping(string => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(PortalInfo)373_storage)": {
+            "label": "mapping(uint64 => struct VeraxZKPVerifier.PortalInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(Proof)90_storage)": {
+            "label": "mapping(uint64 => struct ZKPVerifierBase.Proof)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_struct(ZKPRequest)27_storage)": {
+            "label": "mapping(uint64 => struct IZKPVerifier.ZKPRequest)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(InitializableStorage)274_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ownable2StepStorage)181_storage": {
+            "label": "struct Ownable2StepUpgradeable.Ownable2StepStorage",
+            "members": [
+              {
+                "label": "_pendingOwner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)223_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PortalInfo)373_storage": {
+            "label": "struct VeraxZKPVerifier.PortalInfo",
+            "members": [
+              {
+                "label": "attestationPortalContract",
+                "type": "t_contract(IPortal)348",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "schemaId",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "schemaType",
+                "type": "t_enum(AttestationSchemaType)364",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Proof)90_storage": {
+            "label": "struct ZKPVerifierBase.Proof",
+            "members": [
+              {
+                "label": "isVerified",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "storageFields",
+                "type": "t_mapping(t_string_memory_ptr,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "validatorVersion",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "blockNumber",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "blockTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(VeraxZKPVerifierStorage)380_storage": {
+            "label": "struct VeraxZKPVerifier.VeraxZKPVerifierStorage",
+            "members": [
+              {
+                "label": "portalInfoForReq",
+                "type": "t_mapping(t_uint64,t_struct(PortalInfo)373_storage)",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ZKPRequest)27_storage": {
+            "label": "struct IZKPVerifier.ZKPRequest",
+            "members": [
+              {
+                "label": "metadata",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "validator",
+                "type": "t_contract(ICircuitValidator)15",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "data",
+                "type": "t_bytes_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(ZKPVerifierStorage)107_storage": {
+            "label": "struct ZKPVerifierBase.ZKPVerifierStorage",
+            "members": [
+              {
+                "label": "_proofs",
+                "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)90_storage))",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_requests",
+                "type": "t_mapping(t_uint64,t_struct(ZKPRequest)27_storage)",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_requestIds",
+                "type": "t_array(t_uint64)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          }
+        },
+        "namespaces": {
+          "erc7201:polygonid.storage.VeraxZKPVerifier": [
+            {
+              "contract": "VeraxZKPVerifier",
+              "label": "portalInfoForReq",
+              "type": "t_mapping(t_uint64,t_struct(PortalInfo)373_storage)",
+              "src": "contracts/examples/verax/VeraxZKPVerifier.sol:32",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:iden3.storage.ZKPVerifier": [
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_proofs",
+              "type": "t_mapping(t_address,t_mapping(t_uint64,t_struct(Proof)90_storage))",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:21",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requests",
+              "type": "t_mapping(t_uint64,t_struct(ZKPRequest)27_storage)",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:22",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "ZKPVerifierBase",
+              "label": "_requestIds",
+              "type": "t_array(t_uint64)dyn_storage",
+              "src": "@iden3/contracts/verifiers/ZKPVerifierBase.sol:23",
+              "offset": 0,
+              "slot": "2"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:23",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
