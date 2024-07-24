@@ -48,13 +48,6 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
     expect(token.transfer).not.to.be.undefined;
     expect(token.submitZKPResponse).not.to.be.undefined;
 
-    // try transfer without given proof
-
-    await expect(
-      token.transfer('0x900942Fd967cf176D0c0A1302ee0722e1468f580', 1)
-    ).to.be.revertedWith(
-      'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
-    );
     expect(await token.balanceOf(account)).to.equal(0);
 
     // must be no queries
@@ -85,7 +78,19 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
     const requestId = await token.TRANSFER_REQUEST_ID_V3_VALIDATOR();
     expect(requestId).to.be.equal(3);
 
+    // try transfer without given proof (request does not exist)
+    await expect(
+      token.transfer('0x900942Fd967cf176D0c0A1302ee0722e1468f580', 1)
+    ).to.be.revertedWith("request id doesn't exist");
+
     await callBack(query, token, requestId);
+
+    // try transfer without given proof (request exists)
+    await expect(
+      token.transfer('0x900942Fd967cf176D0c0A1302ee0722e1468f580', 1)
+    ).to.be.revertedWith(
+      'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
+    );
 
     const requestData = await token.getZKPRequest(requestId);
     const parsed = unpackV3ValidatorParams(requestData.data);
@@ -99,11 +104,11 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
 
     // submit response for non-existing request
     await expect(token.submitZKPResponse(1, inputs, pi_a, pi_b, pi_c)).to.be.revertedWith(
-      'validator is not set for this request id'
+      "request id doesn't exist"
     );
 
     await token.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
-    expect(await token.isProofSubmitted(account, requestId)).to.be.true; // check proof is assigned
+    expect(await token.isProofVerified(account, requestId)).to.be.true; // check proof is assigned
 
     // check that tokens were minted
 

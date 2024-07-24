@@ -64,9 +64,7 @@ export async function deployERC20ZKPVerifierToken(
   name: string,
   symbol: string,
   contractName = 'ERC20Verifier'
-): Promise<{
-  address: string;
-}> {
+): Promise<Contract> {
   const ERC20Verifier = await ethers.getContractFactory(contractName);
   const erc20Verifier = await upgrades.deployProxy(ERC20Verifier, [name, symbol]);
   console.log(contractName + ' deployed to:', await erc20Verifier.getAddress());
