@@ -42,11 +42,11 @@ const config: HardhatUserConfig = {
     //   url: `${process.env.LINEA_SEPOLIA_RPC_URL}`,
     //   accounts: [`0x${process.env.LINEA_SEPOLIA_PRIVATE_KEY}`]
     // },
-    linea: {
-      chainId: 59144,
-      url: `${process.env.LINEA_RPC_URL}`,
-      accounts: [`0x${process.env.LINEA_PRIVATE_KEY}`]
-    },
+    // linea: {
+    //   chainId: 59144,
+    //   url: `${process.env.LINEA_RPC_URL}`,
+    //   accounts: [`0x${process.env.LINEA_PRIVATE_KEY}`]
+    // },
     localhost: {
       url: 'http://127.0.0.1:8545',
       accounts: {
