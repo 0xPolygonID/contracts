@@ -53,8 +53,7 @@ contract VCPaymentV2 is Ownable {
     event Payment(
         uint256 indexed issuerId,
         string paymentId,
-        uint256 indexed schemaHash,
-        uint256 timestamp
+        uint256 indexed schemaHash
     );
 
     error InvalidOwnerPartPercent(string message);
@@ -117,7 +116,7 @@ contract VCPaymentV2 is Ownable {
         if (withdrawAddress == address(0)) {
             revert InvalidWithdrawAddress('Invalid withdraw address');
         }
-        PaymentData memory payData = getPaymentData(issuerId, schemaHash);
+        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         uint256 issuerBalance = issuerAddressBalance[payData.withdrawAddress];
         issuerAddressBalance[payData.withdrawAddress] = 0;
         issuerAddressBalance[withdrawAddress] = issuerBalance;
@@ -131,7 +130,7 @@ contract VCPaymentV2 is Ownable {
         uint256 schemaHash,
         uint256 value
     ) external ownerOrIssuer(issuerId, schemaHash) {
-        PaymentData memory payData = getPaymentData(issuerId, schemaHash);
+        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         payData.valueToPay = value;
         _setPaymentData(issuerId, schemaHash, payData);
     }
@@ -141,7 +140,7 @@ contract VCPaymentV2 is Ownable {
         if (payments[payment]) {
             revert PaymentError('Payment already done');
         }
-        PaymentData memory payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
+        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         if (payData.valueToPay == 0) {
             revert PaymentError('Payment value not found for this issuer and schema');
         }
@@ -158,7 +157,7 @@ contract VCPaymentV2 is Ownable {
 
         payData.totalValue += issuerPart;
         _setPaymentData(issuerId, schemaHash, payData);
-        emit Payment(issuerId, paymentId, schemaHash, block.timestamp);
+        emit Payment(issuerId, paymentId, schemaHash);
     }
 
     function isPaymentDone(string calldata paymentId, uint256 issuerId) public view returns (bool) {
@@ -179,8 +178,12 @@ contract VCPaymentV2 is Ownable {
     }
 
     function ownerWithdraw() public onlyOwner {
-        _withdraw(ownerBalance, owner());
+        if (ownerBalance == 0) {
+            revert WithdrawError('There is no balance to withdraw');
+        }
+        uint256 amount = ownerBalance;
         ownerBalance = 0;
+        _withdraw(amount, owner());
     }
 
     function getPaymentData(
@@ -200,8 +203,11 @@ contract VCPaymentV2 is Ownable {
 
     function _withdrawToIssuer(address issuer) internal {
         uint256 amount = issuerAddressBalance[issuer];
-        _withdraw(amount, issuer);
+        if (amount == 0) {
+            revert WithdrawError('There is no balance to withdraw');
+        }
         issuerAddressBalance[issuer] = 0;
+        _withdraw(amount, issuer);
     }
 
     function _withdraw(uint amount, address to) internal {
