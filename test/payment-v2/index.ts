@@ -262,4 +262,32 @@ describe.only('Payment example V2', () => {
       .getPaymentData(issuerId1.bigInt(), schemaHash1.bigInt());
     expect(paymentData[4]).to.be.eq(issuer2Signer.address);
   });
+
+  it('test rounded division for percents', async () => {
+    // set 3% to owner and payment value 25555
+    await payment.setPaymentValue(
+      issuerId1.bigInt(),
+      schemaHash1.bigInt(),
+      25555,
+      3,
+      issuer1Signer.address
+    );
+    await payment
+      .connect(userSigner)
+      .pay('payment-id-1', issuerId1.bigInt(), schemaHash1.bigInt(), {
+        value: 25555
+      });
+
+    const issuerBalanceBeforeWithdraw = await ethers.provider.getBalance(issuer1Signer.address);
+    const withdrawTx = await payment.connect(issuer1Signer).issuerWithdraw();
+    const receipt = await withdrawTx.wait();
+    const gasSpent = receipt!.gasUsed * receipt!.gasPrice;
+
+    // Solidity rounds towards zero.
+    // Owner part = 25555 * 3 / 100 = 766.65 => 766.
+    // Issuer part = 25555 - 766 = 24789
+    expect(await ethers.provider.getBalance(issuer1Signer.address)).to.be.eq(
+      issuerBalanceBeforeWithdraw + BigInt(24789) - gasSpent
+    );
+  });
 });
