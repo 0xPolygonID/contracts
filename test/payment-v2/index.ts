@@ -27,24 +27,27 @@ describe.only('Payment example V2', () => {
     userSigner = signers[5];
     owner = signers[0];
 
-    payment = await new VCPaymentV2__factory(owner).deploy(ownerPartPercent);
+    payment = await new VCPaymentV2__factory(owner).deploy();
 
     await payment.setPaymentValue(
       issuerId1.bigInt(),
       schemaHash1.bigInt(),
       10000,
+      ownerPartPercent,
       issuer1Signer.address
     );
     await payment.setPaymentValue(
       issuerId1.bigInt(),
       schemaHash2.bigInt(),
       20000,
+      ownerPartPercent,
       issuer1Signer.address
     );
     await payment.setPaymentValue(
       issuerId2.bigInt(),
       schemaHash3.bigInt(),
       30000,
+      ownerPartPercent,
       issuer2Signer.address
     );
   });
@@ -179,7 +182,7 @@ describe.only('Payment example V2', () => {
     const paymentData = await payment
       .connect(issuer2Signer)
       .getPaymentData(issuerId1.bigInt(), schemaHash1.bigInt());
-    expect(paymentData[3]).to.be.eq(issuer2Signer.address);
+    expect(paymentData[4]).to.be.eq(issuer2Signer.address);
   });
 
   it('updateValueToPay', async () => {
@@ -212,17 +215,51 @@ describe.only('Payment example V2', () => {
     ).to.be.revertedWithCustomError(payment, 'OwnerOrIssuerError');
   });
 
+  it('updateOwnerPartPercent work only for owner', async () => {
+    await expect(
+      payment
+        .connect(issuer1Signer)
+        .updateOwnerPartPercent(issuerId1.bigInt(), schemaHash1.bigInt(), 3)
+    ).to.be.revertedWithCustomError(payment, 'OwnableUnauthorizedAccount');
+
+    await payment
+      .connect(owner)
+      .updateOwnerPartPercent(issuerId1.bigInt(), schemaHash1.bigInt(), 3);
+
+    const paymentData = await payment
+      .connect(owner)
+      .getPaymentData(issuerId1.bigInt(), schemaHash1.bigInt());
+    expect(paymentData[3]).to.be.eq(3);
+  });
+
   it('updateValueToPay work only for issuer or owner', async () => {
     await expect(
       payment.connect(userSigner).updateValueToPay(issuerId1.bigInt(), schemaHash1.bigInt(), 1111)
     ).to.be.revertedWithCustomError(payment, 'OwnerOrIssuerError');
+
+    await payment
+      .connect(issuer1Signer)
+      .updateValueToPay(issuerId1.bigInt(), schemaHash1.bigInt(), 1111);
+
+    const paymentData = await payment
+      .connect(issuer1Signer)
+      .getPaymentData(issuerId1.bigInt(), schemaHash1.bigInt());
+    expect(paymentData[2]).to.be.eq(1111);
   });
 
   it('updateWithdrawAddress work only for issuer or owner', async () => {
     await expect(
       payment
         .connect(userSigner)
-        .updateValueToPay(issuerId1.bigInt(), schemaHash1.bigInt(), issuer2Signer.address)
+        .updateWithdrawAddress(issuerId1.bigInt(), schemaHash1.bigInt(), issuer2Signer.address)
     ).to.be.revertedWithCustomError(payment, 'OwnerOrIssuerError');
+
+    await payment
+      .connect(issuer1Signer)
+      .updateWithdrawAddress(issuerId1.bigInt(), schemaHash1.bigInt(), issuer2Signer.address);
+    const paymentData = await payment
+      .connect(issuer2Signer)
+      .getPaymentData(issuerId1.bigInt(), schemaHash1.bigInt());
+    expect(paymentData[4]).to.be.eq(issuer2Signer.address);
   });
 });

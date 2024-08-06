@@ -10,6 +10,7 @@ contract VCPaymentV2 is Ownable {
         uint256 issuerId;
         uint256 schemaHash;
         uint256 valueToPay;
+        uint256 ownerPartPercent;
         address withdrawAddress;
         // for reporting
         uint256 totalValue;
@@ -45,11 +46,6 @@ contract VCPaymentV2 is Ownable {
      */
     string public constant VERSION = '2.0.0';
 
-    /**
-     * @dev Version of contract
-     */
-    uint256 public ownerPartPercent;
-
     event Payment(
         uint256 indexed issuerId,
         string paymentId,
@@ -74,33 +70,40 @@ contract VCPaymentV2 is Ownable {
         _;
     }
 
-    constructor(uint256 _ownerPartPercent) Ownable(_msgSender()) {
-        if (ownerPartPercent > 0 && ownerPartPercent < 100) {
+    /**
+     * @dev Valid percent value modifier
+     */
+    modifier validPercentValue(uint256 percent) {
+        if (percent < 0 || percent > 100) {
             revert InvalidOwnerPartPercent('Invalid owner part percent');
         }
-        ownerPartPercent = _ownerPartPercent;
+        _;
     }
 
-    function updateOwnerPartPercent(uint256 _ownerPartPercent) public onlyOwner {
-        if (ownerPartPercent > 0 && ownerPartPercent < 100) {
-            revert InvalidOwnerPartPercent('Invalid owner part percent');
+    /**
+     * @dev Valid address
+     */
+    modifier validAddress(address withdrawAddress) {
+        if (withdrawAddress == address(0)) {
+            revert InvalidWithdrawAddress('Invalid withdraw address');
         }
-        ownerPartPercent = _ownerPartPercent;
+        _;
     }
+
+    constructor() Ownable(_msgSender()) { }
 
     function setPaymentValue(
         uint256 issuerId,
         uint256 schemaHash,
         uint256 value,
+        uint256 ownerPartPercent,
         address withdrawAddress
-    ) public onlyOwner {
-        if (withdrawAddress == address(0)) {
-            revert InvalidWithdrawAddress('Invalid withdraw address');
-        }
+    ) public onlyOwner validPercentValue(ownerPartPercent) validAddress(withdrawAddress) {
         PaymentData memory newPaymentData = PaymentData(
             issuerId,
             schemaHash,
             value,
+            ownerPartPercent,
             withdrawAddress,
             0
         );
@@ -108,11 +111,20 @@ contract VCPaymentV2 is Ownable {
         _setPaymentData(issuerId, schemaHash, newPaymentData);
     }
 
+    function updateOwnerPartPercent(
+        uint256 issuerId,
+        uint256 schemaHash,
+        uint256 ownerPartPercent) public onlyOwner validPercentValue(ownerPartPercent) {
+        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
+        payData.ownerPartPercent = ownerPartPercent;
+        _setPaymentData(issuerId, schemaHash, payData);
+    }
+
     function updateWithdrawAddress(
         uint256 issuerId,
         uint256 schemaHash,
         address withdrawAddress
-    ) external ownerOrIssuer(issuerId, schemaHash) {
+    ) external ownerOrIssuer(issuerId, schemaHash) validAddress(withdrawAddress) {
         if (withdrawAddress == address(0)) {
             revert InvalidWithdrawAddress('Invalid withdraw address');
         }
@@ -149,7 +161,7 @@ contract VCPaymentV2 is Ownable {
         }
         payments[payment] = true;
 
-        uint256 ownerPart = (msg.value * ownerPartPercent) / 100;
+        uint256 ownerPart = (msg.value * payData.ownerPartPercent) / 100;
         uint256 issuerPart = msg.value - ownerPart;
 
         issuerAddressBalance[payData.withdrawAddress] += issuerPart;
