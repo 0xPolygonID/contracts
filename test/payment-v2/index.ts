@@ -1,6 +1,6 @@
 import { Hex } from '@iden3/js-crypto';
 import { DID, SchemaHash } from '@iden3/js-iden3-core';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { VCPaymentV2, VCPaymentV2__factory } from '../../typechain-types';
 import { expect } from 'chai';
 import { Signer } from 'ethers';
@@ -27,7 +27,10 @@ describe.only('Payment example V2', () => {
     userSigner = signers[5];
     owner = signers[0];
 
-    payment = await new VCPaymentV2__factory(owner).deploy();
+    payment = (await upgrades.deployProxy(
+      new VCPaymentV2__factory(owner)
+    )) as unknown as VCPaymentV2;
+    await payment.waitForDeployment();
 
     await payment.setPaymentValue(
       issuerId1.bigInt(),

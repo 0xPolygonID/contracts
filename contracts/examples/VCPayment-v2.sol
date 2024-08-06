@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.20;
-import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
+import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
 
-contract VCPaymentV2 is Ownable {
+contract VCPaymentV2 is Ownable2StepUpgradeable {
+    /**
+     * @dev Version of contract
+     */
+    string public constant VERSION = '2.0.0';
+
     /**
      * @dev Payment Data structure
      */
@@ -17,34 +22,45 @@ contract VCPaymentV2 is Ownable {
     }
 
     /**
-     * @dev mapping of paymentDataId - keccak256(abi.encode(issuerId, schemaHash)) => PaymentData
+     * @dev Main storage structure for the contract
      */
-    mapping(bytes32 paymentDataId => PaymentData paymentData) private paymentData;
+    struct Data {
+        /**
+         * @dev mapping of paymentDataId - keccak256(abi.encode(issuerId, schemaHash)) => PaymentData
+         */
+        mapping(bytes32 paymentDataId => PaymentData paymentData) paymentData;
 
-    /**
-     * @dev mapping of paymentRequestId - keccak256(abi.encode(issuerId, paymentId)) => bool
-     */
-    mapping(bytes32 paymentRequestId => bool isPaid) public payments;
+        /**
+         * @dev mapping of paymentRequestId - keccak256(abi.encode(issuerId, paymentId)) => bool
+         */
+        mapping(bytes32 paymentRequestId => bool isPaid) payments;
 
-    /**
-     * @dev mapping of issuerAddress - balance
-     */
-    mapping(address issuerAddress => uint256 balance) public issuerAddressBalance;
+        /**
+         * @dev mapping of issuerAddress - balance
+         */
+        mapping(address issuerAddress => uint256 balance) issuerAddressBalance;
 
-    /**
-     * @dev owner balance
-     */
-    uint256 ownerBalance;
+        /**
+         * @dev owner balance
+         */
+        uint256 ownerBalance;
 
-    /**
-     * @dev list of paymentDataId - keccak256(abi.encode(issuerId, schemaHash))
-     */
-    bytes32[] internal paymentDataIds;
+        /**
+         * @dev list of paymentDataId - keccak256(abi.encode(issuerId, schemaHash))
+         */
+        bytes32[] paymentDataIds;
+    }
 
-    /**
-     * @dev Version of contract
-     */
-    string public constant VERSION = '2.0.0';
+    // keccak256(abi.encode(uint256(keccak256("iden3.payment.VCPaymentV2")) - 1)) &
+    //    ~bytes32(uint256(0xff));
+    bytes32 private constant PaymentDataStorageLocation =
+        0x44514a56870e41e3c7e86465174b83bedf47fb1cfe5903a18593015eed22d600;
+
+    function _getPaymentDataStorage() private pure returns (Data storage $) {
+        assembly {
+            $.slot := PaymentDataStorageLocation
+        }
+    }
 
     event Payment(
         uint256 indexed issuerId,
@@ -62,7 +78,8 @@ contract VCPaymentV2 is Ownable {
      * @dev Owner or issuer modifier
      */
     modifier ownerOrIssuer(uint256 issuerId, uint256 schemaHash) {
-        address issuerAddress = paymentData[keccak256(abi.encode(issuerId, schemaHash))]
+        Data storage $ = _getPaymentDataStorage();
+        address issuerAddress = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))]
             .withdrawAddress;
         if (issuerAddress != _msgSender() && owner() != _msgSender()) {
             revert OwnerOrIssuerError('Only issuer or owner can call this function');
@@ -90,7 +107,12 @@ contract VCPaymentV2 is Ownable {
         _;
     }
 
-    constructor() Ownable(_msgSender()) { }
+     /**
+     * @dev Initialize the contract
+     */
+    function initialize() public initializer {
+        __Ownable_init(_msgSender());
+    }
 
     function setPaymentValue(
         uint256 issuerId,
@@ -99,6 +121,7 @@ contract VCPaymentV2 is Ownable {
         uint256 ownerPartPercent,
         address withdrawAddress
     ) public onlyOwner validPercentValue(ownerPartPercent) validAddress(withdrawAddress) {
+        Data storage $ = _getPaymentDataStorage();
         PaymentData memory newPaymentData = PaymentData(
             issuerId,
             schemaHash,
@@ -107,7 +130,7 @@ contract VCPaymentV2 is Ownable {
             withdrawAddress,
             0
         );
-        paymentDataIds.push(keccak256(abi.encode(issuerId, schemaHash)));
+        $.paymentDataIds.push(keccak256(abi.encode(issuerId, schemaHash)));
         _setPaymentData(issuerId, schemaHash, newPaymentData);
     }
 
@@ -115,7 +138,8 @@ contract VCPaymentV2 is Ownable {
         uint256 issuerId,
         uint256 schemaHash,
         uint256 ownerPartPercent) public onlyOwner validPercentValue(ownerPartPercent) {
-        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
+        Data storage $ = _getPaymentDataStorage();
+        PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         payData.ownerPartPercent = ownerPartPercent;
         _setPaymentData(issuerId, schemaHash, payData);
     }
@@ -125,13 +149,11 @@ contract VCPaymentV2 is Ownable {
         uint256 schemaHash,
         address withdrawAddress
     ) external ownerOrIssuer(issuerId, schemaHash) validAddress(withdrawAddress) {
-        if (withdrawAddress == address(0)) {
-            revert InvalidWithdrawAddress('Invalid withdraw address');
-        }
-        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
-        uint256 issuerBalance = issuerAddressBalance[payData.withdrawAddress];
-        issuerAddressBalance[payData.withdrawAddress] = 0;
-        issuerAddressBalance[withdrawAddress] = issuerBalance;
+        Data storage $ = _getPaymentDataStorage();
+        PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
+        uint256 issuerBalance = $.issuerAddressBalance[payData.withdrawAddress];
+        $.issuerAddressBalance[payData.withdrawAddress] = 0;
+        $.issuerAddressBalance[withdrawAddress] = issuerBalance;
 
         payData.withdrawAddress = withdrawAddress;
         _setPaymentData(issuerId, schemaHash, payData);
@@ -142,30 +164,32 @@ contract VCPaymentV2 is Ownable {
         uint256 schemaHash,
         uint256 value
     ) external ownerOrIssuer(issuerId, schemaHash) {
-        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
+        Data storage $ = _getPaymentDataStorage();
+        PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         payData.valueToPay = value;
         _setPaymentData(issuerId, schemaHash, payData);
     }
 
     function pay(string calldata paymentId, uint256 issuerId, uint256 schemaHash) external payable {
+        Data storage $ = _getPaymentDataStorage();
         bytes32 payment = keccak256(abi.encode(issuerId, paymentId));
-        if (payments[payment]) {
+        if ($.payments[payment]) {
             revert PaymentError('Payment already done');
         }
-        PaymentData storage payData = paymentData[keccak256(abi.encode(issuerId, schemaHash))];
+        PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         if (payData.valueToPay == 0) {
             revert PaymentError('Payment value not found for this issuer and schema');
         }
         if (payData.valueToPay != msg.value) {
             revert PaymentError('Invalid value');
         }
-        payments[payment] = true;
+        $.payments[payment] = true;
 
         uint256 ownerPart = (msg.value * payData.ownerPartPercent) / 100;
         uint256 issuerPart = msg.value - ownerPart;
 
-        issuerAddressBalance[payData.withdrawAddress] += issuerPart;
-        ownerBalance += ownerPart;
+        $.issuerAddressBalance[payData.withdrawAddress] += issuerPart;
+        $.ownerBalance += ownerPart;
 
         payData.totalValue += issuerPart;
         _setPaymentData(issuerId, schemaHash, payData);
@@ -173,13 +197,15 @@ contract VCPaymentV2 is Ownable {
     }
 
     function isPaymentDone(string calldata paymentId, uint256 issuerId) public view returns (bool) {
-        return payments[keccak256(abi.encode(issuerId, paymentId))];
+        Data storage $ = _getPaymentDataStorage();
+        return $.payments[keccak256(abi.encode(issuerId, paymentId))];
     }
 
     function withdrawToAllIssuers() public onlyOwner {
-        for (uint256 i = 0; i < paymentDataIds.length; i++) {
-            PaymentData memory payData = paymentData[paymentDataIds[i]];
-            if (issuerAddressBalance[payData.withdrawAddress] != 0) {
+        Data storage $ = _getPaymentDataStorage();
+        for (uint256 i = 0; i < $.paymentDataIds.length; i++) {
+            PaymentData memory payData = $.paymentData[$.paymentDataIds[i]];
+            if ($.issuerAddressBalance[payData.withdrawAddress] != 0) {
                 _withdrawToIssuer(payData.withdrawAddress);
             }
         }
@@ -190,11 +216,12 @@ contract VCPaymentV2 is Ownable {
     }
 
     function ownerWithdraw() public onlyOwner {
-        if (ownerBalance == 0) {
+        Data storage $ = _getPaymentDataStorage();
+        if ($.ownerBalance == 0) {
             revert WithdrawError('There is no balance to withdraw');
         }
-        uint256 amount = ownerBalance;
-        ownerBalance = 0;
+        uint256 amount = $.ownerBalance;
+        $.ownerBalance = 0;
         _withdraw(amount, owner());
     }
 
@@ -202,23 +229,27 @@ contract VCPaymentV2 is Ownable {
         uint256 issuerId,
         uint256 schemaHash
     ) public view ownerOrIssuer(issuerId, schemaHash) returns (PaymentData memory) {
-        return paymentData[keccak256(abi.encode(issuerId, schemaHash))];
+        Data storage $ = _getPaymentDataStorage();
+        return $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
     }
 
     function getMyBalance() public view returns (uint256) {
-        return issuerAddressBalance[_msgSender()];
+        Data storage $ = _getPaymentDataStorage();
+        return $.issuerAddressBalance[_msgSender()];
     }
 
     function getOwnerBalance() public view onlyOwner returns (uint256) {
-        return ownerBalance;
+        Data storage $ = _getPaymentDataStorage();
+        return $.ownerBalance;
     }
 
     function _withdrawToIssuer(address issuer) internal {
-        uint256 amount = issuerAddressBalance[issuer];
+        Data storage $ = _getPaymentDataStorage();
+        uint256 amount = $.issuerAddressBalance[issuer];
         if (amount == 0) {
             revert WithdrawError('There is no balance to withdraw');
         }
-        issuerAddressBalance[issuer] = 0;
+        $.issuerAddressBalance[issuer] = 0;
         _withdraw(amount, issuer);
     }
 
@@ -241,6 +272,7 @@ contract VCPaymentV2 is Ownable {
         uint256 schemaHash,
         PaymentData memory payData
     ) internal {
-        paymentData[keccak256(abi.encode(issuerId, schemaHash))] = payData;
+        Data storage $ = _getPaymentDataStorage();
+        $.paymentData[keccak256(abi.encode(issuerId, schemaHash))] = payData;
     }
 }
