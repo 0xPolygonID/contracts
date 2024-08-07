@@ -5,7 +5,7 @@ import { VCPaymentV2, VCPaymentV2__factory } from '../../typechain-types';
 import { expect } from 'chai';
 import { Signer } from 'ethers';
 
-describe.only('Payment example V2', () => {
+describe('Payment example V2', () => {
   let payment: VCPaymentV2;
   const issuerId1 = DID.idFromDID(
     DID.parse('did:polygonid:polygon:amoy:2qQ68JkRcf3ymy9wtzKyY3Dajst9c6cHCDZyx7NrTz')

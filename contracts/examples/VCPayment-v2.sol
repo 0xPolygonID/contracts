@@ -8,9 +8,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
      */
     string public constant VERSION = '2.0.0';
 
-    /**
-     * @dev Payment Data structure
-     */
+    /// @custom:storage-location erc7201:iden3.storage.VCPayment
     struct PaymentData {
         uint256 issuerId;
         uint256 schemaHash;
@@ -24,7 +22,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
     /**
      * @dev Main storage structure for the contract
      */
-    struct Data {
+    struct VCPaymentStorage {
         /**
          * @dev mapping of paymentDataId - keccak256(abi.encode(issuerId, schemaHash)) => PaymentData
          */
@@ -51,12 +49,12 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         bytes32[] paymentDataIds;
     }
 
-    // keccak256(abi.encode(uint256(keccak256("iden3.payment.VCPaymentV2")) - 1)) &
+    // keccak256(abi.encode(uint256(keccak256("iden3.storage.VCPayment")) - 1)) &
     //    ~bytes32(uint256(0xff));
     bytes32 private constant PaymentDataStorageLocation =
-        0x44514a56870e41e3c7e86465174b83bedf47fb1cfe5903a18593015eed22d600;
+        0xbb49acb92ce91902600caabfefad66ed7ac2a150edbd631ab48a5501402b3300;
 
-    function _getPaymentDataStorage() private pure returns (Data storage $) {
+    function _getPaymentDataStorage() private pure returns (VCPaymentStorage storage $) {
         assembly {
             $.slot := PaymentDataStorageLocation
         }
@@ -78,7 +76,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
      * @dev Owner or issuer modifier
      */
     modifier ownerOrIssuer(uint256 issuerId, uint256 schemaHash) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         address issuerAddress = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))]
             .withdrawAddress;
         if (issuerAddress != _msgSender() && owner() != _msgSender()) {
@@ -121,7 +119,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 ownerPartPercent,
         address withdrawAddress
     ) public onlyOwner validPercentValue(ownerPartPercent) validAddress(withdrawAddress) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         PaymentData memory newPaymentData = PaymentData(
             issuerId,
             schemaHash,
@@ -138,7 +136,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 issuerId,
         uint256 schemaHash,
         uint256 ownerPartPercent) public onlyOwner validPercentValue(ownerPartPercent) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         payData.ownerPartPercent = ownerPartPercent;
         _setPaymentData(issuerId, schemaHash, payData);
@@ -149,7 +147,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 schemaHash,
         address withdrawAddress
     ) external ownerOrIssuer(issuerId, schemaHash) validAddress(withdrawAddress) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         uint256 issuerBalance = $.issuerAddressBalance[payData.withdrawAddress];
         $.issuerAddressBalance[payData.withdrawAddress] = 0;
@@ -164,14 +162,14 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 schemaHash,
         uint256 value
     ) external ownerOrIssuer(issuerId, schemaHash) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
         payData.valueToPay = value;
         _setPaymentData(issuerId, schemaHash, payData);
     }
 
     function pay(string calldata paymentId, uint256 issuerId, uint256 schemaHash) external payable {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         bytes32 payment = keccak256(abi.encode(issuerId, paymentId));
         if ($.payments[payment]) {
             revert PaymentError('Payment already done');
@@ -197,12 +195,12 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
     }
 
     function isPaymentDone(string calldata paymentId, uint256 issuerId) public view returns (bool) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         return $.payments[keccak256(abi.encode(issuerId, paymentId))];
     }
 
     function withdrawToAllIssuers() public onlyOwner {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         for (uint256 i = 0; i < $.paymentDataIds.length; i++) {
             PaymentData memory payData = $.paymentData[$.paymentDataIds[i]];
             if ($.issuerAddressBalance[payData.withdrawAddress] != 0) {
@@ -216,7 +214,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
     }
 
     function ownerWithdraw() public onlyOwner {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         if ($.ownerBalance == 0) {
             revert WithdrawError('There is no balance to withdraw');
         }
@@ -229,22 +227,22 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 issuerId,
         uint256 schemaHash
     ) public view ownerOrIssuer(issuerId, schemaHash) returns (PaymentData memory) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         return $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
     }
 
     function getMyBalance() public view returns (uint256) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         return $.issuerAddressBalance[_msgSender()];
     }
 
     function getOwnerBalance() public view onlyOwner returns (uint256) {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         return $.ownerBalance;
     }
 
     function _withdrawToIssuer(address issuer) internal {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         uint256 amount = $.issuerAddressBalance[issuer];
         if (amount == 0) {
             revert WithdrawError('There is no balance to withdraw');
@@ -272,7 +270,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 schemaHash,
         PaymentData memory payData
     ) internal {
-        Data storage $ = _getPaymentDataStorage();
+        VCPaymentStorage storage $ = _getPaymentDataStorage();
         $.paymentData[keccak256(abi.encode(issuerId, schemaHash))] = payData;
     }
 }
