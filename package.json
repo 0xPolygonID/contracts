@@ -72,6 +72,8 @@
     "upgrade:amoy:v3": "npx hardhat run scripts/upgradeV3Validator.ts --network amoy",
     "deploy:vc-payment": "npx hardhat run scripts/deployVCPayment.ts --network linea",
     "payment:set-payment-value": "npx hardhat run scripts/setPaymentValue.ts --network linea",
+    "deploy:vc-payment-v2": "npx hardhat run scripts/deployVCPaymentV2.ts --network linea",
+    "payment:set-payment-value-v2": "npx hardhat run scripts/setPaymentValueV2.ts --network linea",
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "lint:contracts": "npx solhint contracts/**/*.sol",
     "prettier:contracts": "prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol'"
