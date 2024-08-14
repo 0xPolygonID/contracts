@@ -4,12 +4,17 @@ import { VeraxSdk } from "@verax-attestation-registry/verax-sdk";
 async function main() {
   const veraxSdk = new VeraxSdk(VeraxSdk.DEFAULT_LINEA_MAINNET);
   const attestations: { attestationData: `0x${string}`; subject: `0x${string}` }[] = [];
-  for (let i = 0; i < 40; i++) {
+  let i = 0;
+  while (true) {
     const attestationsBatch = (await veraxSdk.attestation.findBy(100, i * 100, {
       schemaId: '0x021fa993b2ac55b95340608478282821b89398de6fa14073b4d44a3564a8c79d' // PoU schema in LINEA MAIN
     })) as { attestationData: `0x${string}`; subject: `0x${string}` }[];
     attestations.push(...attestationsBatch);
     console.log(attestations.length);
+    i++;
+    if (attestationsBatch.length < 100) {
+      break;
+    }
   }
 
   let repLvl1Count = 0;
