@@ -8,6 +8,7 @@ import {INonMerklizedIssuer} from '@iden3/contracts/interfaces/INonMerklizedIssu
 import {NonMerklizedIssuerBase} from '@iden3/contracts/lib/NonMerklizedIssuerBase.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
+import {IState} from '@iden3/contracts/interfaces/IState.sol';
 
 /**
  * @dev Example of decentralized balance credential issuer.
@@ -62,8 +63,8 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
         uint256[8] claim;
     }
 
-    function initialize(address _stateContractAddr) public override initializer {
-        super.initialize(_stateContractAddr);
+    function initialize(address _stateContractAddr) public initializer {
+        super.initialize(_stateContractAddr,IState(_stateContractAddr).getDefaultIdType());
         __Ownable_init(_msgSender());
     }
 
