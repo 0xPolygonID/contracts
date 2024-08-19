@@ -37,15 +37,15 @@ const config: HardhatUserConfig = {
     //   url: `${process.env.AMOY_RPC_URL}`,
     //   accounts: [`0x${process.env.AMOY_PRIVATE_KEY}`]
     // },
+    // 'linea-sepolia': {
+    //   chainId: 59141,
+    //   url: `${process.env.LINEA_SEPOLIA_RPC_URL}`,
+    //   accounts: [`0x${process.env.LINEA_SEPOLIA_PRIVATE_KEY}`]
+    // },
     // linea: {
     //   chainId: 59144,
     //   url: `${process.env.LINEA_RPC_URL}`,
     //   accounts: [`0x${process.env.LINEA_PRIVATE_KEY}`]
-    // },
-    // sepolia: {
-    //   chainId: 59141,
-    //   url: `${process.env.SEPOLIA_RPC_URL}`,
-    //   accounts: [`0x${process.env.SEPOLIA_PRIVATE_KEY}`]
     // },
     localhost: {
       url: 'http://127.0.0.1:8545',
