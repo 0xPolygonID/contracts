@@ -44,7 +44,15 @@ Also, it contains the example of ERC20 based smart contract with enabled zkp ver
 
 Current addresses on **Polygon Mainnet**:
 
-(V2.0.1 V2 validators)
+(V2.0.5-beta.1 V3 validators)
+
+|                   |                                Sig                                 |
+|:-----------------:|:------------------------------------------------------------------:|
+|   **Verifier**    |             0x6f9D177019E3b04D2b0fe674fCa106B570e74EfD             |
+|  **Validators**   |             0xd8946ddCD36Ae2552321769070bB263A275dcE35             |
+
+
+(V2.0.5 V2 validators)
 
 |                   |                                Sig                                |                                MTP                                |
 |:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
