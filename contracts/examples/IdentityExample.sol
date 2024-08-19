@@ -5,6 +5,8 @@ import {Ownable2StepUpgradeable} from '@openzeppelin/contracts-upgradeable/acces
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
+import {IState} from '@iden3/contracts/interfaces/IState.sol';
+
 
 /**
  * @dev Example of centralized credential issuer.
@@ -13,8 +15,8 @@ import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 contract IdentityExample is IdentityBase, Ownable2StepUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
-    function initialize(address _stateContractAddr) public override initializer {
-        super.initialize(_stateContractAddr);
+    function initialize(address _stateContractAddr) public initializer{
+        super.initialize(_stateContractAddr,IState(_stateContractAddr).getDefaultIdType());
         __Ownable_init(_msgSender());
     }
 
