@@ -99,6 +99,14 @@ contract ReadonlyState is Ownable2StepUpgradeable, IState {
         _setDefaultIdType(defaultIdType);
     }
 
+    function isIdTypeSupported(bytes2 idType) external view returns (bool){
+      return  idType == _defaultIdType;
+    }
+    function getIdTypeIfSupported(uint256 id) external view returns (bytes2){
+        bytes2 idType = GenesisUtils.getIdType(id);
+        require( idType == _defaultIdType, "id type is not supported");
+        return idType;
+    }
     /**
      * @dev Change the state of an identity (transit to the new state) with ZKP ownership check.
      * @param id Identity
