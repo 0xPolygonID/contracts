@@ -20,7 +20,7 @@ describe('Payment example V2', () => {
   let issuer1Signer, issuer2Signer, owner, userSigner: Signer;
 
   beforeEach(async () => {
-    const ownerPartPercent = 5;
+    const ownerPercentage = 5;
     const signers = await ethers.getSigners();
     issuer1Signer = signers[1];
     issuer2Signer = signers[2];
@@ -36,21 +36,21 @@ describe('Payment example V2', () => {
       issuerId1.bigInt(),
       schemaHash1.bigInt(),
       10000,
-      ownerPartPercent,
+      ownerPercentage,
       issuer1Signer.address
     );
     await payment.setPaymentValue(
       issuerId1.bigInt(),
       schemaHash2.bigInt(),
       20000,
-      ownerPartPercent,
+      ownerPercentage,
       issuer1Signer.address
     );
     await payment.setPaymentValue(
       issuerId2.bigInt(),
       schemaHash3.bigInt(),
       30000,
-      ownerPartPercent,
+      ownerPercentage,
       issuer2Signer.address
     );
   });
@@ -218,16 +218,14 @@ describe('Payment example V2', () => {
     ).to.be.revertedWithCustomError(payment, 'OwnerOrIssuerError');
   });
 
-  it('updateOwnerPartPercent work only for owner', async () => {
+  it('updateOwnerPercentage work only for owner', async () => {
     await expect(
       payment
         .connect(issuer1Signer)
-        .updateOwnerPartPercent(issuerId1.bigInt(), schemaHash1.bigInt(), 3)
+        .updateOwnerPercentage(issuerId1.bigInt(), schemaHash1.bigInt(), 3)
     ).to.be.revertedWithCustomError(payment, 'OwnableUnauthorizedAccount');
 
-    await payment
-      .connect(owner)
-      .updateOwnerPartPercent(issuerId1.bigInt(), schemaHash1.bigInt(), 3);
+    await payment.connect(owner).updateOwnerPercentage(issuerId1.bigInt(), schemaHash1.bigInt(), 3);
 
     const paymentData = await payment
       .connect(owner)

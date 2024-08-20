@@ -13,7 +13,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 issuerId;
         uint256 schemaHash;
         uint256 valueToPay;
-        uint256 ownerPartPercent;
+        uint256 ownerPercentage;
         address withdrawAddress;
         // for reporting
         uint256 totalValue;
@@ -66,7 +66,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 indexed schemaHash
     );
 
-    error InvalidOwnerPartPercent(string message);
+    error InvalidOwnerPercentage(string message);
     error InvalidWithdrawAddress(string message);
     error PaymentError(string message);
     error WithdrawError(string message);
@@ -90,7 +90,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
      */
     modifier validPercentValue(uint256 percent) {
         if (percent < 0 || percent > 100) {
-            revert InvalidOwnerPartPercent('Invalid owner part percent');
+            revert InvalidOwnerPercentage('Invalid owner percentage');
         }
         _;
     }
@@ -116,15 +116,15 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         uint256 issuerId,
         uint256 schemaHash,
         uint256 value,
-        uint256 ownerPartPercent,
+        uint256 ownerPercentage,
         address withdrawAddress
-    ) public onlyOwner validPercentValue(ownerPartPercent) validAddress(withdrawAddress) {
+    ) public onlyOwner validPercentValue(ownerPercentage) validAddress(withdrawAddress) {
         VCPaymentStorage storage $ = _getVCPaymentStorage();
         PaymentData memory newPaymentData = PaymentData(
             issuerId,
             schemaHash,
             value,
-            ownerPartPercent,
+            ownerPercentage,
             withdrawAddress,
             0
         );
@@ -132,13 +132,13 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         _setPaymentData(issuerId, schemaHash, newPaymentData);
     }
 
-    function updateOwnerPartPercent(
+    function updateOwnerPercentage(
         uint256 issuerId,
         uint256 schemaHash,
-        uint256 ownerPartPercent) public onlyOwner validPercentValue(ownerPartPercent) {
+        uint256 ownerPercentage) public onlyOwner validPercentValue(ownerPercentage) {
         VCPaymentStorage storage $ = _getVCPaymentStorage();
         PaymentData storage payData = $.paymentData[keccak256(abi.encode(issuerId, schemaHash))];
-        payData.ownerPartPercent = ownerPartPercent;
+        payData.ownerPercentage = ownerPercentage;
         _setPaymentData(issuerId, schemaHash, payData);
     }
 
@@ -183,7 +183,7 @@ contract VCPaymentV2 is Ownable2StepUpgradeable {
         }
         $.payments[payment] = true;
 
-        uint256 ownerPart = (msg.value * payData.ownerPartPercent) / 100;
+        uint256 ownerPart = (msg.value * payData.ownerPercentage) / 100;
         uint256 issuerPart = msg.value - ownerPart;
 
         $.issuerAddressBalance[payData.withdrawAddress] += issuerPart;
