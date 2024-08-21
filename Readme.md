@@ -44,7 +44,7 @@ Also, it contains the example of ERC20 based smart contract with enabled zkp ver
 
 Current addresses on **Polygon Mainnet**:
 
-(V2.0.5-beta.1 V3 validators)
+(V2.0.6-beta.1 V3 validators)
 
 |                   |                                Sig                                 |
 |:-----------------:|:------------------------------------------------------------------:|
@@ -52,7 +52,7 @@ Current addresses on **Polygon Mainnet**:
 |  **Validators**   |             0xd8946ddCD36Ae2552321769070bB263A275dcE35             |
 
 
-(V2.0.5 V2 validators)
+(V2.0.6 V2 validators)
 
 |                   |                                Sig                                |                                MTP                                |
 |:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
@@ -70,7 +70,7 @@ Current addresses on **Polygon Mainnet**:
 | **ERC20 example** | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B (request id = 1 (sig)) | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B  (request id = 2 (mtp) |
 
 
-Current addresses for V3 beta circuit on **Polygon Amoy** testnet. (2.0.1-beta.1 V3 validator):
+Current addresses for V3 beta circuit on **Polygon Amoy** testnet. (2.0.6-beta.1 V3 validator):
 
 |                      |                                          V3 validator 2.0.1-beta.1                                          |   
 |:--------------------:|:-----------------------------------------------------------------------------------------------------------:|
@@ -99,7 +99,7 @@ Current addresses on **Polygon Mumbai** testnet. (V2.0.1 V2 validators)
 | **ERC20 example** | 0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03 (request id = 1) | 0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03  (request id = 2) |
 
 
-Current addresses on **Polygon Amoy** testnet. (V2.0.1 V2 validators)
+Current addresses on **Polygon Amoy** testnet. (V2.0.6 V2 validators)
 
 |                   |                             Sig                             |                             MTP                              |
 |:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
