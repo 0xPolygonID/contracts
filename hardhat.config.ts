@@ -22,6 +22,12 @@ const config: HardhatUserConfig = {
       },
       {
         version: '0.8.16'
+      },
+      {
+        version: '0.8.24',
+        settings: {
+          evmVersion: `cancun`
+        }
       }
     ]
   },
@@ -36,6 +42,11 @@ const config: HardhatUserConfig = {
     //   chainId: 80002,
     //   url: `${process.env.AMOY_RPC_URL}`,
     //   accounts: [`0x${process.env.AMOY_PRIVATE_KEY}`]
+    // },
+    // zkevm: {
+    //   chainId: 1101,
+    //   url: `${process.env.ZK_EVM_RPC_URL}`,
+    //   accounts: [`0x${process.env.ZK_EVM_PRIVATE_KEY}`, `0x${process.env.ZK_EVM_PRIVATE_KEY_2}`]
     // },
     // 'linea-sepolia': {
     //   chainId: 59141,
@@ -62,6 +73,7 @@ const config: HardhatUserConfig = {
       'linea': process.env.LINEA_API_KEY,
       'linea-sepolia': process.env.LINEA_API_KEY,
       'amoy': process.env.AMOY_API_KEY,
+      'polygonZkEVM': process.env.ZK_EVM_API_KEY
     },
     customChains: [
       {
