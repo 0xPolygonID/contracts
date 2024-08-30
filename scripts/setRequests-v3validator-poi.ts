@@ -2,7 +2,8 @@ import { ethers } from 'hardhat';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
 import { Blockchain, DID, DidMethod, NetworkId } from '@iden3/js-iden3-core';
 import { buildVerifierId, calculateQueryHashV3, coreSchemaFromStr } from '../test/utils/utils';
-import { Merklizer } from '@iden3/js-jsonld-merklization';
+import { Merklizer, Path } from '@iden3/js-jsonld-merklization';
+import { byteEncoder, calculateCoreSchemaHash } from '@0xpolygonid/js-sdk';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal
@@ -43,7 +44,7 @@ const poiLd = `{
       "id": "@id",
       "type": "@type",
       "AnimaProofOfIdentity": {
-        "@id": "https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v1.json-ld#AnimaProofOfIdentity",
+        "@id": "https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v2.json-ld#AnimaProofOfIdentity",
         "@context": {
           "@version": 1.1,
           "@protected": true,
@@ -98,13 +99,16 @@ const poiLd = `{
           "kyc_aml_validated": {
             "@id": "kyc-vocab:kyc_aml_validated",
             "@type": "xsd:boolean"
+          },
+          "document_country_code": {
+            "@id": "kyc-vocab:document_country_code",
+            "@type": "xsd:integer"
           }
         }
       }
     }
   ]
-}
-`;
+}`;
 async function main() {
   const validatorAddressV3 = '0xB752Eec418f178ac8B48f15962B55c37F8D4748d';
   const erc20verifierAddress = '0xdE9eBC446d69EF9a876a377e3E3cEe91d08fE2A0';
@@ -114,8 +118,8 @@ async function main() {
   console.log(universalVerifier, ' attached to:', await universalVerifier.getAddress());
 
   const schemaClaimPathKeyCountry =
-    '5244732443531950329461980118609862873136061854573436650775319647833037507304';
-  const schema = '124850561539049671310487367157968055340';
+    '3575516182025082671176914081873706243384371786539686535181502956761345737729';
+  const schema = '171923472036017675847233769422329359923';
 
   const verifierId = buildVerifierId(await universalVerifier.getAddress(), {
     blockchain: Blockchain.Polygon,
@@ -123,25 +127,21 @@ async function main() {
     method: DidMethod.Iden3
   });
 
+  const requestId = 21;
   const countryNIN = {
-    requestId: 10,
+    requestId,
     schema: schema,
     claimPathKey: schemaClaimPathKeyCountry,
     operator: Operators.NIN,
-    value: [
-      await Merklizer.hashValue('http://www.w3.org/2001/XMLSchema#string', 'US'),
-      await Merklizer.hashValue('http://www.w3.org/2001/XMLSchema#string', 'USA')
-    ],
+    value: [840],
     slotIndex: 0,
     queryHash: '',
     circuitIds: ['credentialAtomicQueryV3OnChain-beta.1'],
-    allowedIssuers: [
-      'did:iden3:privado:main:2SdUfDwHK3koyaH5WzhvPhpcjFfdem2xD625aymTNc',
-      'did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7'
-    ],
+    allowedIssuers: //['did:iden3:privado:main:2SdUfDwHK3koyaH5WzhvPhpcjFfdem2xD625aymTNc'],
+     ['did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7'],
     skipClaimRevocationCheck: false,
     verifierID: verifierId.bigInt(),
-    nullifierSessionID: 10,
+    nullifierSessionID: requestId,
     groupID: 0,
     proofType: 0
   };
@@ -182,10 +182,10 @@ async function main() {
           query: {
             allowedIssuers: !countryNIN.allowedIssuers.length ? ['*'] : countryNIN.allowedIssuers,
             context:
-              'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v1.json-ld',
+              'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v2.json-ld',
             credentialSubject: {
-              document_country: {
-                $nin: ['US', 'USA']
+              document_country_code: {
+                $nin: [840]
               }
             },
             type: 'AnimaProofOfIdentity'
@@ -195,14 +195,14 @@ async function main() {
     }
   };
 
-  await universalVerifier.setZKPRequest(10, {
+  await universalVerifier.setZKPRequest(requestId, {
     metadata: JSON.stringify(invokeRequestMetadataEmailSd),
     validator: validatorAddressV3,
     data: dataV3EmailSD
   });
 
   console.log(JSON.stringify(invokeRequestMetadataEmailSd, null, '\t'));
-  console.log(`Request ID: ${10} is set`);
+  console.log(`Request ID: ${requestId} is set`);
 }
 
 main()
