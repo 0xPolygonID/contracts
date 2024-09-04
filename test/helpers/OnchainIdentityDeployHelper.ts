@@ -49,8 +49,10 @@ export class OnchainIdentityDeployHelper {
       }
     });
     const Identity = await upgrades.deployProxy(IdentityFactory, [stateAddress], {
+      initializer: 'initialize(address)',
       unsafeAllowLinkedLibraries: true
-    });
+      }
+    );
     await Identity.waitForDeployment();
     this.log(
       `Identity contract deployed to address ${await Identity.getAddress()} from ${await owner.getAddress()}`

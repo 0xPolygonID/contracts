@@ -56,6 +56,7 @@ export class BalanceCredentialIssuerDeployHelper {
       balanceCredentialIssuerFactory,
       [stateContractAddress],
       {
+        initializer: 'initialize(address)',
         unsafeAllow: ['external-library-linking', 'struct-definition', 'state-variable-assignment']
       }
     );
