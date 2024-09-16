@@ -55,7 +55,7 @@
     "deploy:mumbai:v3": "npx hardhat run scripts/deployV3Validator.ts --network mumbai",
     "deploy:mumbai:erc20:v3": "npx hardhat run scripts/deployERC20SelectiveDisclosure.ts --network mumbai",
     "setrequests:mumbai:v3": "npx hardhat run scripts/setRequests-v3validator.ts --network mumbai",
-    "setrequests:cardona:v3": "npx hardhat run scripts/setRequests-v3validator.ts --network zkevm_cardona",
+    "setrequests:cardona:v3": "npx hardhat run scripts/setRequests-v3validator-poi.ts --network zkevm_cardona",
     "setrequests:mumbai:v2": "npx hardhat run scripts/setRequests-v2validator.ts --network mumbai",
     "upgrade:mumbai:sigv2": "npx hardhat run scripts/upgradeSigValidator.ts --network mumbai",
     "upgrade:mumbai:mtpv2": "npx hardhat run scripts/upgradeMTPValidator.ts --network mumbai",
