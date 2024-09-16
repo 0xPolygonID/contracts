@@ -112,6 +112,10 @@ const poiLd = `{
 async function main() {
   const validatorAddressV3 = '0xB752Eec418f178ac8B48f15962B55c37F8D4748d';
   const erc20verifierAddress = '0xdE9eBC446d69EF9a876a377e3E3cEe91d08fE2A0';
+  const excludedCountryCodes = [
+    12, 50, 68, 112, 104, 384, 818, 804, 192, 180, 364, 368, 430, 434, 466, 504, 524, 408, 414, 512,
+    634, 706, 729, 760, 788, 826, 840, 862, 887, 716
+  ];
 
   const UniversalVerifierFactory = await ethers.getContractFactory('UniversalVerifier');
   const universalVerifier = await UniversalVerifierFactory.attach(erc20verifierAddress); // current mtp validator address on mumbai
@@ -127,18 +131,18 @@ async function main() {
     method: DidMethod.Iden3
   });
 
-  const requestId = 21;
+  const requestId = 31;
   const countryNIN = {
     requestId,
     schema: schema,
     claimPathKey: schemaClaimPathKeyCountry,
     operator: Operators.NIN,
-    value: [840],
+    value: excludedCountryCodes,
     slotIndex: 0,
     queryHash: '',
     circuitIds: ['credentialAtomicQueryV3OnChain-beta.1'],
-    allowedIssuers: //['did:iden3:privado:main:2SdUfDwHK3koyaH5WzhvPhpcjFfdem2xD625aymTNc'],
-     ['did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7'],
+    //['did:iden3:privado:main:2SdUfDwHK3koyaH5WzhvPhpcjFfdem2xD625aymTNc'],
+    allowedIssuers: ['did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7'],
     skipClaimRevocationCheck: false,
     verifierID: verifierId.bigInt(),
     nullifierSessionID: requestId,
@@ -185,7 +189,7 @@ async function main() {
               'https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v2.json-ld',
             credentialSubject: {
               document_country_code: {
-                $nin: [840]
+                $nin: excludedCountryCodes
               }
             },
             type: 'AnimaProofOfIdentity'
