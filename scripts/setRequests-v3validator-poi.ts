@@ -36,6 +36,49 @@ export const QueryOperators = {
   $gte: Operators.GTE
 };
 
+const KYC_EXCLUDED_COUNTRIES = {
+  Afghanistan: 4,
+  'American Samoa': 16,
+  Anguilla: 660,
+  'Antigua and Barbuda': 28,
+  Belarus: 112,
+  'Bosnia and Herzegovina': 70,
+  'Central African Republic': 140,
+  Cuba: 192,
+  'DR Congo': 180,
+  Ethiopia: 231,
+  Fiji: 242,
+  Guam: 316,
+  'Hong Kong': 344,
+  Iran: 364,
+  Iraq: 368,
+  Kosovo: 999,
+  Lebanon: 422,
+  Libya: 434,
+  Mali: 466,
+  Montenegro: 499,
+  Myanmar: 104,
+  Nicaragua: 558,
+  'North Korea': 408,
+  'North Macedonia': 807,
+  Palau: 585,
+  Panama: 591,
+  Russia: 643,
+  Samoa: 882,
+  Serbia: 688,
+  Somalia: 706,
+  'South Sudan': 728,
+  Sudan: 729,
+  'Syrian Arab Republic': 760,
+  Ukraine: 804,
+  'US Virgin Islands': 850,
+  Vanuatu: 548,
+  Venezuela: 862,
+  'Yemen, Rep': 887,
+  'United Kingdom': 826,
+  'United States': 840
+};
+
 const poiLd = `{
   "@context": [
     {
@@ -112,10 +155,7 @@ const poiLd = `{
 async function main() {
   const validatorAddressV3 = '0xB752Eec418f178ac8B48f15962B55c37F8D4748d';
   const erc20verifierAddress = '0xdE9eBC446d69EF9a876a377e3E3cEe91d08fE2A0';
-  const excludedCountryCodes = [
-    12, 50, 68, 112, 104, 384, 818, 804, 192, 180, 364, 368, 430, 434, 466, 504, 524, 408, 414, 512,
-    634, 706, 729, 760, 788, 826, 840, 862, 887, 716
-  ];
+  const excludedCountryCodes = Object.values(KYC_EXCLUDED_COUNTRIES).sort((a, b) => a - b);
 
   const UniversalVerifierFactory = await ethers.getContractFactory('UniversalVerifier');
   const universalVerifier = await UniversalVerifierFactory.attach(erc20verifierAddress); // current mtp validator address on mumbai
@@ -131,7 +171,7 @@ async function main() {
     method: DidMethod.Iden3
   });
 
-  const requestId = 33;
+  const requestId = 34;
   const countryNIN = {
     requestId,
     schema: schema,
