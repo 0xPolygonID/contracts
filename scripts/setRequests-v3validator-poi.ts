@@ -127,11 +127,11 @@ async function main() {
 
   const verifierId = buildVerifierId(await universalVerifier.getAddress(), {
     blockchain: Blockchain.Polygon,
-    networkId: NetworkId.Mumbai,
+    networkId: NetworkId.Amoy,
     method: DidMethod.Iden3
   });
 
-  const requestId = 30;
+  const requestId = 33;
   const countryNIN = {
     requestId,
     schema: schema,

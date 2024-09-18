@@ -51,7 +51,8 @@ const config: HardhatUserConfig = {
     zkevm_cardona: {
       chainId: 2442,
       url: `${process.env.ZK_EVM_RPC_URL}`,
-      accounts: [`0x${process.env.ZK_EVM_PRIVATE_KEY}`]
+      accounts: [`0x${process.env.ZK_EVM_PRIVATE_KEY}`],
+      gasPrice: 1000000000
     },
     // 'linea-sepolia': {
     //   chainId: 59141,
