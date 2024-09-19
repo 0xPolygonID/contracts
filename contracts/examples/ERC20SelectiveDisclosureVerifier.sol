@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.26;
 
 import {ERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
+import {IState} from '@iden3/contracts/interfaces/IState.sol';
 
 contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifier {
     uint64 public constant TRANSFER_REQUEST_ID_V3_VALIDATOR = 3;
@@ -39,11 +40,11 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
         _;
     }
 
-    function initialize(string memory name, string memory symbol) public initializer {
+    function initialize(string memory name, string memory symbol, IState stateCrossChain) public initializer {
         ERC20SelectiveDisclosureVerifierStorage
             storage $ = _getERC20SelectiveDisclosureVerifierStorage();
         super.__ERC20_init(name, symbol);
-        super.__EmbeddedZKPVerifier_init(_msgSender());
+        super.__EmbeddedZKPVerifier_init(_msgSender(), stateCrossChain);
         $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID = 5 * 10 ** uint256(decimals());
     }
 
@@ -53,11 +54,11 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
         ICircuitValidator validator
     ) internal view override {
         // check that challenge input is address of sender
-        address addr = PrimitiveTypeUtils.uint256LEToAddress(
+        /*address addr = PrimitiveTypeUtils.uint256LEToAddress(
             inputs[validator.inputIndexOf('challenge')]
         );
         // this is linking between msg.sender and
-        require(_msgSender() == addr, 'address in proof is not a sender address');
+        require(_msgSender() == addr, 'address in proof is not a sender address');*/
     }
 
     function _afterProofSubmit(
@@ -95,7 +96,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
         return $._idToOperatorOutput[id];
     }
 
-    function getIdByAddress(address addr) public view returns (uint256) {
+    /*function getIdByAddress(address addr) public view returns (uint256) {
         return _getERC20SelectiveDisclosureVerifierStorage().addressToId[addr];
     }
 
@@ -105,5 +106,5 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
 
     function getTokenAmountForAirdropPerId() public view returns (uint256) {
         return _getERC20SelectiveDisclosureVerifierStorage().TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
-    }
+    }*/
 }

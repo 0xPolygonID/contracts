@@ -60,13 +60,34 @@ export async function deployValidatorContracts(
   };
 }
 
+export async function deployVerifierLib(): Promise<Contract> {
+  const contractName = 'VerifierLib';
+  const VerifierLib = await ethers.getContractFactory(contractName);
+  const verifierLib = await VerifierLib.deploy();
+  await verifierLib.waitForDeployment();
+
+  console.log(`${contractName} deployed to:  ${await verifierLib.getAddress()}`);
+
+  return verifierLib;
+}
+
 export async function deployERC20ZKPVerifierToken(
   name: string,
   symbol: string,
+  stateAddress: string,
   contractName = 'ERC20Verifier'
 ): Promise<Contract> {
-  const ERC20Verifier = await ethers.getContractFactory(contractName);
-  const erc20Verifier = await upgrades.deployProxy(ERC20Verifier, [name, symbol]);
+  const verifierLib = await deployVerifierLib();
+  const signers = await ethers.getSigners();
+  const ERC20Verifier = await ethers.getContractFactory(contractName, {
+    signer: signers[0],
+    libraries: {
+      VerifierLib: await verifierLib.getAddress()
+    }
+  });
+  const erc20Verifier = await upgrades.deployProxy(ERC20Verifier, [name, symbol, stateAddress], {
+    unsafeAllowLinkedLibraries: true
+  });
   console.log(contractName + ' deployed to:', await erc20Verifier.getAddress());
   return erc20Verifier;
 }
@@ -195,13 +216,13 @@ export async function deployClaimBuilderWrapper(enableLogging = false): Promise<
 
 export async function deployERC20LinkedUniversalVerifier(
   name: string,
-  symbol: string
+  symbol: string,
+  stateAddress: string
 ): Promise<{
   universalVerifier: Contract;
   erc20LinkedUniversalVerifier: Contract;
 }> {
-  const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
-  const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
+  const universalVerifier = await deployUniversalVerifier(stateAddress);
   const ERC20LinkedUniversalVerifier = await ethers.getContractFactory(
     'ERC20LinkedUniversalVerifier'
   );
@@ -220,15 +241,32 @@ export async function deployERC20LinkedUniversalVerifier(
   };
 }
 
+async function deployUniversalVerifier(stateAddress: string): Promise<Contract> {
+  const verifierLib = await deployVerifierLib();
+  const signers = await ethers.getSigners();
+  const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier', {
+    signer: signers[0],
+    libraries: {
+      VerifierLib: await verifierLib.getAddress()
+    }
+  });
+  const universalVerifier = await upgrades.deployProxy(UniversalVerifier, [stateAddress], {
+    unsafeAllowLinkedLibraries: true
+  });
+  universalVerifier.waitForDeployment();
+  console.log('UniversalVerifier deployed to:', await universalVerifier.getAddress());
+  return universalVerifier;
+}
+
 export async function deployERC721LinkedUniversalVerifier(
   name: string,
-  symbol: string
+  symbol: string,
+  stateAddress: string
 ): Promise<{
   universalVerifier: Contract;
   erc721LinkedUniversalVerifier: Contract;
 }> {
-  const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier');
-  const universalVerifier = await upgrades.deployProxy(UniversalVerifier);
+  const universalVerifier = await deployUniversalVerifier(stateAddress);
   const ERC721LinkedUniversalVerifier = await ethers.getContractFactory(
     'ERC721LinkedUniversalVerifier'
   );
