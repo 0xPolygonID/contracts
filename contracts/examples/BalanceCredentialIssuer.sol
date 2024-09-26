@@ -64,7 +64,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
     }
 
     function initialize(address _stateContractAddr) public initializer {
-        super.initialize(_stateContractAddr,IState(_stateContractAddr).getDefaultIdType());
+        super.initialize(_stateContractAddr, IState(_stateContractAddr).getDefaultIdType());
         __Ownable_init(_msgSender());
     }
 

@@ -40,7 +40,11 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
         _;
     }
 
-    function initialize(string memory name, string memory symbol, IState stateCrossChain) public initializer {
+    function initialize(
+        string memory name,
+        string memory symbol,
+        IState stateCrossChain
+    ) public initializer {
         ERC20SelectiveDisclosureVerifierStorage
             storage $ = _getERC20SelectiveDisclosureVerifierStorage();
         super.__ERC20_init(name, symbol);

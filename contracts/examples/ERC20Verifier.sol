@@ -37,7 +37,11 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
         _;
     }
 
-    function initialize(string memory name, string memory symbol, IState stateCrossChain) public initializer {
+    function initialize(
+        string memory name,
+        string memory symbol,
+        IState stateCrossChain
+    ) public initializer {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
         super.__ERC20_init(name, symbol);
         super.__EmbeddedZKPVerifier_init(_msgSender(), stateCrossChain);
@@ -85,7 +89,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
         super._update(from, to, amount);
     }
 
-   function getIdByAddress(address addr) public view returns (uint256) {
+    function getIdByAddress(address addr) public view returns (uint256) {
         return _getERC20VerifierStorage().addressToId[addr];
     }
 
