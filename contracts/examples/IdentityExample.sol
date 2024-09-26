@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.20;
+pragma solidity 0.8.27;
 
 import {Ownable2StepUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
 import {IdentityLib} from '@iden3/contracts/lib/IdentityLib.sol';
 import {IdentityBase} from '@iden3/contracts/lib/IdentityBase.sol';
 import {IState} from '@iden3/contracts/interfaces/IState.sol';
-
 
 /**
  * @dev Example of centralized credential issuer.
@@ -15,8 +14,8 @@ import {IState} from '@iden3/contracts/interfaces/IState.sol';
 contract IdentityExample is IdentityBase, Ownable2StepUpgradeable {
     using IdentityLib for IdentityLib.Data;
 
-    function initialize(address _stateContractAddr) public initializer{
-        super.initialize(_stateContractAddr,IState(_stateContractAddr).getDefaultIdType());
+    function initialize(address _stateContractAddr) public initializer {
+        super.initialize(_stateContractAddr, IState(_stateContractAddr).getDefaultIdType());
         __Ownable_init(_msgSender());
     }
 
