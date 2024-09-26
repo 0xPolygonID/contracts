@@ -26,22 +26,22 @@ export class StateDeployHelper {
     return new StateDeployHelper(sgrs, enableLogging);
   }
 
-  async deployOracleProofValidator(
-    contractName = 'OracleProofValidator',
+  async deployCrossChainProofValidator(
+    contractName = 'CrossChainProofValidator',
     domainName = 'StateInfo',
     signatureVersion = '1'
   ): Promise<Contract> {
     const chainId = parseInt(await network.provider.send('eth_chainId'), 16);
     const oracleSigningAddress = chainIdInfoMap.get(chainId)?.oracleSigningAddress;
 
-    const oracleProofValidator = await ethers.deployContract(contractName, [
+    const crossChainProofValidator = await ethers.deployContract(contractName, [
       domainName,
       signatureVersion,
       oracleSigningAddress
     ]);
-    await oracleProofValidator.waitForDeployment();
-    this.log(`${contractName} deployed to:`, await oracleProofValidator.getAddress());
-    return oracleProofValidator;
+    await crossChainProofValidator.waitForDeployment();
+    this.log(`${contractName} deployed to:`, await crossChainProofValidator.getAddress());
+    return crossChainProofValidator;
   }
 
   async deployStateCrossChainLib(StateCrossChainLibName = 'StateCrossChainLib'): Promise<Contract> {
@@ -64,7 +64,7 @@ export class StateDeployHelper {
     stateLib: Contract;
     smtLib: Contract;
     stateCrossChainLib: Contract;
-    oracleProofValidator: Contract;
+    crossChainProofValidator: Contract;
     poseidon1: Contract;
     poseidon2: Contract;
     poseidon3: Contract;
@@ -109,8 +109,8 @@ export class StateDeployHelper {
     this.log('deploying StateCrossChainLib...');
     const stateCrossChainLib = await this.deployStateCrossChainLib('StateCrossChainLib');
 
-    this.log('deploying OracleProofValidator...');
-    const oracleProofValidator = await this.deployOracleProofValidator();
+    this.log('deploying CrossChainProofValidator...');
+    const crossChainProofValidator = await this.deployCrossChainProofValidator();
 
     this.log('deploying state...');
     const StateFactory = await ethers.getContractFactory('State', {
@@ -128,7 +128,7 @@ export class StateDeployHelper {
         await g16Verifier.getAddress(),
         defaultIdType,
         await owner.getAddress(),
-        await oracleProofValidator.getAddress()
+        await crossChainProofValidator.getAddress()
       ],
       {
         unsafeAllowLinkedLibraries: true
@@ -154,7 +154,7 @@ export class StateDeployHelper {
       stateLib,
       smtLib,
       stateCrossChainLib,
-      oracleProofValidator,
+      crossChainProofValidator: crossChainProofValidator,
       poseidon1: poseidon1Elements,
       poseidon2: poseidon2Elements,
       poseidon3: poseidon3Elements,

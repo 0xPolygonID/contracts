@@ -15,3 +15,4 @@ import {VerifierSig} from '@iden3/contracts/lib/VerifierSig.sol';
 import {VerifierSigWrapper} from '@iden3/contracts/lib/VerifierSigWrapper.sol';
 import {VerifierV3} from '@iden3/contracts/lib/VerifierV3.sol';
 import {VerifierV3Wrapper} from '@iden3/contracts/lib/VerifierV3Wrapper.sol';
+import {CrossChainProofValidator} from '@iden3/contracts/cross-chain/CrossChainProofValidator.sol';
