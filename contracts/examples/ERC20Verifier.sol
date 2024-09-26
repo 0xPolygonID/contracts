@@ -85,7 +85,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
         super._update(from, to, amount);
     }
 
-   /* function getIdByAddress(address addr) public view returns (uint256) {
+   function getIdByAddress(address addr) public view returns (uint256) {
         return _getERC20VerifierStorage().addressToId[addr];
     }
 
@@ -95,5 +95,5 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
 
     function getTokenAmountForAirdropPerId() public view returns (uint256) {
         return _getERC20VerifierStorage().TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
-    } */
+    }
 }

@@ -43,9 +43,11 @@ export async function deployValidatorContracts(
 
   const ValidatorContract = await ethers.getContractFactory(validatorContractName);
 
+  const [signer] = await ethers.getSigners();
   const validatorContractProxy = await upgrades.deployProxy(ValidatorContract, [
     await validatorContractVerifierWrapper.getAddress(),
-    stateAddress
+    stateAddress,
+    await signer.getAddress()
   ]);
 
   await validatorContractProxy.waitForDeployment();
@@ -250,9 +252,15 @@ async function deployUniversalVerifier(stateAddress: string): Promise<Contract> 
       VerifierLib: await verifierLib.getAddress()
     }
   });
-  const universalVerifier = await upgrades.deployProxy(UniversalVerifier, [stateAddress], {
-    unsafeAllowLinkedLibraries: true
-  });
+
+  const signerAddress = await signers[0].getAddress();
+  const universalVerifier = await upgrades.deployProxy(
+    UniversalVerifier,
+    [stateAddress, signerAddress],
+    {
+      unsafeAllow: ['external-library-linking']
+    }
+  );
   universalVerifier.waitForDeployment();
   console.log('UniversalVerifier deployed to:', await universalVerifier.getAddress());
   return universalVerifier;

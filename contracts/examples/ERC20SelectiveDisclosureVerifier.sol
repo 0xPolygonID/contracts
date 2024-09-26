@@ -96,7 +96,7 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
         return $._idToOperatorOutput[id];
     }
 
-    /*function getIdByAddress(address addr) public view returns (uint256) {
+    function getIdByAddress(address addr) public view returns (uint256) {
         return _getERC20SelectiveDisclosureVerifierStorage().addressToId[addr];
     }
 
@@ -106,5 +106,5 @@ contract ERC20SelectiveDisclosureVerifier is ERC20Upgradeable, EmbeddedZKPVerifi
 
     function getTokenAmountForAirdropPerId() public view returns (uint256) {
         return _getERC20SelectiveDisclosureVerifierStorage().TOKEN_AMOUNT_FOR_AIRDROP_PER_ID;
-    }*/
+    }
 }
