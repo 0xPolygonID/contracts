@@ -154,7 +154,7 @@ const poiLd = `{
 }`;
 async function main() {
   const validatorAddressV3 = '0xB752Eec418f178ac8B48f15962B55c37F8D4748d';
-  const erc20verifierAddress = '0xdE9eBC446d69EF9a876a377e3E3cEe91d08fE2A0';
+  const erc20verifierAddress = '0xfcc86A79fCb057A8e55C6B853dff9479C3cf607c';
   const excludedCountryCodes = Object.values(KYC_EXCLUDED_COUNTRIES).sort((a, b) => a - b);
 
   const UniversalVerifierFactory = await ethers.getContractFactory('UniversalVerifier');
@@ -171,7 +171,7 @@ async function main() {
     method: DidMethod.Iden3
   });
 
-  const requestId = 34;
+  const requestId = 10;
   const countryNIN = {
     requestId,
     schema: schema,
@@ -182,7 +182,8 @@ async function main() {
     queryHash: '',
     circuitIds: ['credentialAtomicQueryV3OnChain-beta.1'],
     // allowedIssuers: ['did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7'],
-    allowedIssuers: ['did:iden3:privado:main:2SdUfDwHK3koyaH5WzhvPhpcjFfdem2xD625aymTNc'],
+    // allowedIssuers: ['did:iden3:privado:main:2SdUfDwHK3koyaH5WzhvPhpcjFfdem2xD625aymTNc'],
+    allowedIssuers: ['did:iden3:privado:main:2ScrbEuw9jLXMapW3DELXBbDco5EURzJZRN1tYj7L7'],
     skipClaimRevocationCheck: false,
     verifierID: verifierId.bigInt(),
     nullifierSessionID: requestId,

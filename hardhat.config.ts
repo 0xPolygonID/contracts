@@ -50,6 +50,12 @@ const config: HardhatUserConfig = {
     // },
     zkevm_cardona: {
       chainId: 2442,
+      url: `${process.env.ZK_EVM_CARDONA_RPC_URL}`,
+      accounts: [`0x${process.env.ZK_EVM_CARDONA_PRIVATE_KEY}`],
+      gasPrice: 1000000000
+    },
+    zkevm_mainnet: {
+      chainId: 1101,
       url: `${process.env.ZK_EVM_RPC_URL}`,
       accounts: [`0x${process.env.ZK_EVM_PRIVATE_KEY}`],
       gasPrice: 1000000000
