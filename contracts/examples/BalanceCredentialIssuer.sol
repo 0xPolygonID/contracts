@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.20;
+pragma solidity 0.8.27;
 
 import {Ownable2StepUpgradeable} from '@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol';
 import {ClaimBuilder} from '@iden3/contracts/lib/ClaimBuilder.sol';
@@ -64,7 +64,7 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
     }
 
     function initialize(address _stateContractAddr) public initializer {
-        super.initialize(_stateContractAddr,IState(_stateContractAddr).getDefaultIdType());
+        super.initialize(_stateContractAddr, IState(_stateContractAddr).getDefaultIdType());
         __Ownable_init(_msgSender());
     }
 

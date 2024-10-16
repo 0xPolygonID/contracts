@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.20;
+pragma solidity 0.8.27;
 
 import {PoseidonUnit1L, PoseidonUnit2L, PoseidonUnit3L, PoseidonUnit4L, PoseidonUnit5L, PoseidonUnit6L, SpongePoseidon, PoseidonFacade} from '@iden3/contracts/lib/Poseidon.sol';
 import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
@@ -15,3 +15,4 @@ import {VerifierSig} from '@iden3/contracts/lib/VerifierSig.sol';
 import {VerifierSigWrapper} from '@iden3/contracts/lib/VerifierSigWrapper.sol';
 import {VerifierV3} from '@iden3/contracts/lib/VerifierV3.sol';
 import {VerifierV3Wrapper} from '@iden3/contracts/lib/VerifierV3Wrapper.sol';
+import {CrossChainProofValidator} from '@iden3/contracts/cross-chain/CrossChainProofValidator.sol';

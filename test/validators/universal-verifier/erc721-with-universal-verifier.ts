@@ -7,23 +7,21 @@ import {
   publishState
 } from '../../utils/deploy-utils';
 import { packV2ValidatorParams, unpackV2ValidatorParams } from '../../utils/pack-utils';
-import { Contract } from "ethers";
+import { Contract } from 'ethers';
+import { Blockchain, buildDIDType, DidMethod, NetworkId } from '@iden3/js-iden3-core';
+import { StateDeployHelper } from '../../helpers/StateDeployHelper';
 
 const tenYears = 315360000;
-const query= {
+const query = {
   schema: BigInt('180410020913331409885634153623124536270'),
   claimPathKey: BigInt(
     '8566939875427719562376598811066985304309117528846759529734201066483458512800'
   ),
   operator: BigInt(1),
   slotIndex: BigInt(0),
-  value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) =>
-    BigInt(x)
-  ),
+  value: ['1420070400000000000', ...new Array(63).fill('0')].map((x) => BigInt(x)),
   circuitIds: [''],
-  queryHash: BigInt(
-    '1496222740463292783938163206931059379817846775593932664024082849882751356658'
-  ),
+  queryHash: BigInt('1496222740463292783938163206931059379817846775593932664024082849882751356658'),
   claimPathNotExists: 0,
   metadata: 'test medatada',
   skipClaimRevocationCheck: false
@@ -34,17 +32,22 @@ describe('ERC721 test', function () {
   let universalVerifier: Contract, erc721: Contract;
 
   before(async () => {
+    const typ0 = buildDIDType(DidMethod.Iden3, Blockchain.ReadOnly, NetworkId.NoNetwork);
+    const typ1 = buildDIDType(DidMethod.Iden3, Blockchain.Polygon, NetworkId.Mumbai);
+    const stateDeployHelper = await StateDeployHelper.initialize();
+    ({ state } = await stateDeployHelper.deployState([typ0, typ1]));
+    const stateAddress = await state.getAddress();
     const contractsSig = await deployValidatorContracts(
       'VerifierSigWrapper',
-      'CredentialAtomicQuerySigV2Validator'
+      'CredentialAtomicQuerySigV2Validator',
+      stateAddress
     );
-    state = contractsSig.state;
     sig = contractsSig.validator;
 
     const contractsMTP = await deployValidatorContracts(
       'VerifierMTPWrapper',
       'CredentialAtomicQueryMTPV2Validator',
-      await state.getAddress()
+      stateAddress
     );
     mtp = contractsMTP.validator;
 
@@ -53,10 +56,8 @@ describe('ERC721 test', function () {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     await publishState(state, require('../common-data/issuer_genesis_state.json'));
 
-    ({ universalVerifier, erc721LinkedUniversalVerifier: erc721 } = await deployERC721LinkedUniversalVerifier(
-      'zkpVerifier',
-      'ZKP'
-    ));
+    ({ universalVerifier, erc721LinkedUniversalVerifier: erc721 } =
+      await deployERC721LinkedUniversalVerifier('zkpVerifier', 'ZKP', await state.getAddress()));
 
     await universalVerifier.addValidatorToWhitelist(await sig.getAddress());
     await universalVerifier.addValidatorToWhitelist(await mtp.getAddress());
@@ -82,13 +83,11 @@ describe('ERC721 test', function () {
     async function setRequest(requestId, query, validatorAddress) {
       const [signer] = await ethers.getSigners();
 
-      await universalVerifier.setZKPRequest(
-        requestId, {
-          metadata: 'metadata',
-          validator: validatorAddress,
-          data: packV2ValidatorParams(query),
-        }
-      );
+      await universalVerifier.setZKPRequest(requestId, {
+        metadata: 'metadata',
+        validator: validatorAddress,
+        data: packV2ValidatorParams(query)
+      });
     }
 
     const query2 = Object.assign({}, query);
@@ -153,8 +152,6 @@ describe('ERC721 test', function () {
     const balanceBefore = await erc721.balanceOf(account);
     await erc721.mint(account, tokenId2);
     const balanceAfter = await erc721.balanceOf(account);
-    expect(balanceAfter - balanceBefore).to.be.equal(
-      BigInt('1')
-    );
+    expect(balanceAfter - balanceBefore).to.be.equal(BigInt('1'));
   }
 });

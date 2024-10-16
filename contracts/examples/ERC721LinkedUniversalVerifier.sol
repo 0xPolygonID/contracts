@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.27;
 
 import {ERC721} from '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
-import {IZKPVerifier} from "@iden3/contracts/interfaces/IZKPVerifier.sol";
+import {IZKPVerifier} from '@iden3/contracts/interfaces/IZKPVerifier.sol';
 
 contract ERC721LinkedUniversalVerifier is ERC721 {
     uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 0;

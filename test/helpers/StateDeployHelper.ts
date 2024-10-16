@@ -3,6 +3,7 @@ import { Contract } from 'ethers';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { deployPoseidons } from '../utils/deploy-poseidons.util';
 import { chainIdDefaultIdTypeMap } from './ChainIdDefTypeMap';
+import { chainIdInfoMap } from './constants';
 
 const SMT_MAX_DEPTH = 64;
 
@@ -25,27 +26,71 @@ export class StateDeployHelper {
     return new StateDeployHelper(sgrs, enableLogging);
   }
 
-  async deployState(verifierContractName = 'VerifierStateTransition'): Promise<{
+  async deployCrossChainProofValidator(
+    contractName = 'CrossChainProofValidator',
+    domainName = 'StateInfo',
+    signatureVersion = '1'
+  ): Promise<Contract> {
+    const chainId = parseInt(await network.provider.send('eth_chainId'), 16);
+    const oracleSigningAddress = chainIdInfoMap.get(chainId)?.oracleSigningAddress;
+
+    const crossChainProofValidator = await ethers.deployContract(contractName, [
+      domainName,
+      signatureVersion,
+      oracleSigningAddress
+    ]);
+    await crossChainProofValidator.waitForDeployment();
+    this.log(`${contractName} deployed to:`, await crossChainProofValidator.getAddress());
+    return crossChainProofValidator;
+  }
+
+  async deployStateCrossChainLib(StateCrossChainLibName = 'StateCrossChainLib'): Promise<Contract> {
+    const stateCrossChainLib = await ethers.deployContract(StateCrossChainLibName);
+    await stateCrossChainLib.waitForDeployment();
+    this.enableLogging &&
+      this.log(`StateCrossChainLib deployed to:  ${await stateCrossChainLib.getAddress()}`);
+
+    return stateCrossChainLib;
+  }
+
+  async deployState(
+    supportedIdTypes: Uint8Array[] = [],
+    g16VerifierContractName:
+      | 'Groth16VerifierStateTransition'
+      | 'Groth16VerifierStub' = 'Groth16VerifierStateTransition'
+  ): Promise<{
     state: Contract;
-    verifier: Contract;
+    groth16verifier: Contract;
     stateLib: Contract;
     smtLib: Contract;
+    stateCrossChainLib: Contract;
+    crossChainProofValidator: Contract;
     poseidon1: Contract;
     poseidon2: Contract;
     poseidon3: Contract;
     poseidon4: Contract;
+    defaultIdType;
   }> {
     this.log('======== State: deploy started ========');
+    const { defaultIdType, chainId } = await this.getDefaultIdType();
+    this.log(`found defaultIdType ${defaultIdType} for chainId ${chainId}`);
 
     const owner = this.signers[0];
 
-    this.log('deploying verifier...');
+    this.log('deploying Groth16VerifierStateTransition...');
 
-    const verifierFactory = await ethers.getContractFactory(verifierContractName);
-    const verifier = await verifierFactory.deploy();
-    await verifier.waitForDeployment();
+    if (
+      g16VerifierContractName !== 'Groth16VerifierStateTransition' &&
+      g16VerifierContractName !== 'Groth16VerifierStub'
+    ) {
+      throw new Error('invalid verifierContractName');
+    }
+
+    const verifierFactory = await ethers.getContractFactory(g16VerifierContractName);
+    const g16Verifier = await verifierFactory.deploy();
+    await g16Verifier.waitForDeployment();
     this.log(
-      `${verifierContractName} contract deployed to address ${await verifier.getAddress()} from ${await owner.getAddress()}`
+      `${g16VerifierContractName} contract deployed to address ${await g16Verifier.getAddress()} from ${await owner.getAddress()}`
     );
 
     this.log('deploying poseidons...');
@@ -61,21 +106,30 @@ export class StateDeployHelper {
     this.log('deploying StateLib...');
     const stateLib = await this.deployStateLib();
 
+    this.log('deploying StateCrossChainLib...');
+    const stateCrossChainLib = await this.deployStateCrossChainLib('StateCrossChainLib');
+
+    this.log('deploying CrossChainProofValidator...');
+    const crossChainProofValidator = await this.deployCrossChainProofValidator();
+
     this.log('deploying state...');
     const StateFactory = await ethers.getContractFactory('State', {
       libraries: {
         StateLib: await stateLib.getAddress(),
         SmtLib: await smtLib.getAddress(),
-        PoseidonUnit1L: await poseidon1Elements.getAddress()
+        PoseidonUnit1L: await poseidon1Elements.getAddress(),
+        StateCrossChainLib: await stateCrossChainLib.getAddress()
       }
     });
 
-    const { defaultIdType, chainId } = await this.getDefaultIdType();
-    this.log(`found defaultIdType ${defaultIdType} for chainId ${chainId}`);
-
     const state = await upgrades.deployProxy(
       StateFactory,
-      [await verifier.getAddress(), defaultIdType, await owner.getAddress()],
+      [
+        await g16Verifier.getAddress(),
+        defaultIdType,
+        await owner.getAddress(),
+        await crossChainProofValidator.getAddress()
+      ],
       {
         unsafeAllowLinkedLibraries: true
       }
@@ -85,17 +139,27 @@ export class StateDeployHelper {
       `State contract deployed to address ${await state.getAddress()} from ${await owner.getAddress()}`
     );
 
+    if (supportedIdTypes.length) {
+      for (const idType of supportedIdTypes) {
+        const tx = await state.setSupportedIdType(idType, true);
+        await tx.wait();
+      }
+    }
+
     this.log('======== State: deploy completed ========');
 
     return {
-      state: state,
-      verifier,
+      state,
+      groth16verifier: g16Verifier,
       stateLib,
       smtLib,
+      stateCrossChainLib,
+      crossChainProofValidator: crossChainProofValidator,
       poseidon1: poseidon1Elements,
       poseidon2: poseidon2Elements,
       poseidon3: poseidon3Elements,
-      poseidon4: poseidon4Elements
+      poseidon4: poseidon4Elements,
+      defaultIdType
     };
   }
 
