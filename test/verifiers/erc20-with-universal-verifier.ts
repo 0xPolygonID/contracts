@@ -5,11 +5,11 @@ import {
   deployValidatorContracts,
   prepareInputs,
   publishState
-} from '../../utils/deploy-utils';
-import { packV2ValidatorParams, unpackV2ValidatorParams } from '../../utils/pack-utils';
+} from '../utils/deploy-utils';
+import { packV2ValidatorParams, unpackV2ValidatorParams } from '../utils/pack-utils';
 import { Contract } from 'ethers';
 import { Blockchain, buildDIDType, DidMethod, NetworkId } from '@iden3/js-iden3-core';
-import { StateDeployHelper } from '../../helpers/StateDeployHelper';
+import { StateDeployHelper } from '../helpers/StateDeployHelper';
 
 const tenYears = 315360000;
 const query = {
@@ -52,9 +52,9 @@ describe('ERC 20 test', function () {
     mtp = contractsMTP.validator;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    await publishState(state, require('../common-data/user_state_transition.json'));
+    await publishState(state, require('./common-data/user_state_transition.json'));
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    await publishState(state, require('../common-data/issuer_genesis_state.json'));
+    await publishState(state, require('./common-data/issuer_genesis_state.json'));
 
     ({ universalVerifier, erc20LinkedUniversalVerifier } = await deployERC20LinkedUniversalVerifier(
       'zkpVerifier',
@@ -109,8 +109,8 @@ describe('ERC 20 test', function () {
     const { inputs, pi_a, pi_b, pi_c } = prepareInputs(
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       validator === 'credentialAtomicQuerySigV2OnChain'
-        ? require('../common-data/valid_sig_user_non_genesis_challenge_address.json')
-        : require('../common-data/valid_mtp_user_non_genesis_challenge_address.json')
+        ? require('./common-data/valid_sig_user_non_genesis_challenge_address.json')
+        : require('./common-data/valid_mtp_user_non_genesis_challenge_address.json')
     );
 
     const [signer] = await ethers.getSigners();

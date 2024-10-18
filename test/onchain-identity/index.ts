@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { ethers, network } from 'hardhat';
 import { OnchainIdentityDeployHelper } from '../helpers/OnchainIdentityDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
+import { Blockchain, buildDIDType, DidMethod, NetworkId } from "@iden3/js-iden3-core";
 
 describe('Next tests reproduce identity life cycle', function () {
   this.timeout(10000);
@@ -24,7 +25,9 @@ describe('Next tests reproduce identity life cycle', function () {
 
     const stDeployHelper = await StateDeployHelper.initialize([signer]);
     const deployHelper = await OnchainIdentityDeployHelper.initialize([signer]);
-    const stContracts = await stDeployHelper.deployState();
+    const typ0 = buildDIDType(DidMethod.Iden3, Blockchain.ReadOnly, NetworkId.NoNetwork);
+    const typ1 = buildDIDType(DidMethod.PolygonId, Blockchain.Polygon, NetworkId.Mumbai);
+    const stContracts = await stDeployHelper.deployState([typ0, typ1]);
     const contracts = await deployHelper.deployIdentity(
       await stContracts.state.getAddress(),
       stContracts.smtLib,

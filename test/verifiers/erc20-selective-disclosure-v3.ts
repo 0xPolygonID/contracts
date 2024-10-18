@@ -15,7 +15,7 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
 
   beforeEach(async () => {
     const typ0 = buildDIDType(DidMethod.Iden3, Blockchain.ReadOnly, NetworkId.NoNetwork);
-    const typ1 = buildDIDType(DidMethod.Iden3, Blockchain.Polygon, NetworkId.Mumbai);
+    const typ1 = buildDIDType(DidMethod.PolygonId, Blockchain.Polygon, NetworkId.Mumbai);
     const stateDeployHelper = await StateDeployHelper.initialize();
     ({ state } = await stateDeployHelper.deployState([typ0, typ1]));
     const stateAddress = await state.getAddress();
