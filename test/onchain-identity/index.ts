@@ -25,9 +25,7 @@ describe('Next tests reproduce identity life cycle', function () {
 
     const stDeployHelper = await StateDeployHelper.initialize([signer]);
     const deployHelper = await OnchainIdentityDeployHelper.initialize([signer]);
-    const typ0 = buildDIDType(DidMethod.Iden3, Blockchain.ReadOnly, NetworkId.NoNetwork);
-    const typ1 = buildDIDType(DidMethod.PolygonId, Blockchain.Polygon, NetworkId.Mumbai);
-    const stContracts = await stDeployHelper.deployState([typ0, typ1]);
+    const stContracts = await stDeployHelper.deployState();
     const contracts = await deployHelper.deployIdentity(
       await stContracts.state.getAddress(),
       stContracts.smtLib,
@@ -49,8 +47,8 @@ describe('Next tests reproduce identity life cycle', function () {
       // console.log('Identity id:', BigInt(id).toString(16));
 
       expect(id).to.be.equal(
-        16951151943950117022095443215263973807798182552028439997028377351287738882n
-        // 93C5BAE3728FC605AF22632F905BB4B223ED817C5A8000000000000001202
+        16944250197603326458308008459401696782345731443056269610473214827063939585n
+        // 997112BA706B78C825DE1F9B623F30380E08677393A000000000000001201
       );
     });
   });
