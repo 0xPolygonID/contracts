@@ -4,6 +4,7 @@ pragma solidity 0.8.27;
 import {ERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
+import {IZKPVerifier} from '@iden3/contracts/interfaces/IZKPVerifier.sol';
 import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
 import {IState} from '@iden3/contracts/interfaces/IState.sol';
 
@@ -54,11 +55,11 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
         ICircuitValidator validator
     ) internal view override {
         // check that challenge input is address of sender
-        /* address addr = PrimitiveTypeUtils.uint256LEToAddress(
+        address addr = PrimitiveTypeUtils.uint256LEToAddress(
             inputs[validator.inputIndexOf('challenge')]
         );
-        // this is linking between msg.sender and
-        require(_msgSender() == addr, 'address in proof is not a sender address');*/
+        // this is linking between msg.sender and challenge input
+        require(_msgSender() == addr, 'address in proof is not a sender address');
     }
 
     function _afterProofSubmit(
@@ -79,6 +80,59 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
                 $.idToAddress[id] = _msgSender();
             }
         }
+    }
+
+    function _beforeProofSubmitV2(
+        IZKPVerifier.ZKPResponse[] memory responses
+    ) internal view override {
+        for (uint256 i = 0; i < responses.length; i++) {
+            IZKPVerifier.ZKPResponse memory response = responses[i];
+            IZKPVerifier.ZKPRequest memory request = getZKPRequest(response.requestId);
+            (
+                uint256[] memory inputs,
+                uint256[2] memory a,
+                uint256[2][2] memory b,
+                uint256[2] memory c
+            ) = abi.decode(response.zkProof, (uint256[], uint256[2], uint256[2][2], uint256[2]));
+
+                    // check that challenge input is address of sender
+            address addr = PrimitiveTypeUtils.uint256LEToAddress(
+                inputs[request.validator.inputIndexOf('challenge')]
+            );
+            // this is linking between msg.sender and challenge input
+            require(_msgSender() == addr, 'address in proof is not a sender address');
+        }
+    }
+
+    function _afterProofSubmitV2(
+        IZKPVerifier.ZKPResponse[] memory responses
+    ) internal override {
+        ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
+
+        for (uint256 i = 0; i < responses.length; i++) {
+            IZKPVerifier.ZKPResponse memory response = responses[i];
+            (
+                uint256[] memory inputs,
+                uint256[2] memory a,
+                uint256[2][2] memory b,
+                uint256[2] memory c
+            ) = abi.decode(response.zkProof, (uint256[], uint256[2], uint256[2][2], uint256[2]));
+
+            if (
+                response.requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR ||
+                response.requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR
+            ) {
+                // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
+                uint256 id = inputs[1];
+                if ($.idToAddress[id] == address(0) && $.addressToId[_msgSender()] == 0) {
+                    super._mint(_msgSender(), $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
+                    $.addressToId[_msgSender()] = id;
+                    $.idToAddress[id] = _msgSender();
+                }
+            }
+        }
+
+
     }
 
     function _update(
