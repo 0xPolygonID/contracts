@@ -265,30 +265,3 @@ async function deployUniversalVerifier(stateAddress: string): Promise<Contract> 
   console.log('UniversalVerifier deployed to:', await universalVerifier.getAddress());
   return universalVerifier;
 }
-
-export async function deployERC721LinkedUniversalVerifier(
-  name: string,
-  symbol: string,
-  stateAddress: string
-): Promise<{
-  universalVerifier: Contract;
-  erc721LinkedUniversalVerifier: Contract;
-}> {
-  const universalVerifier = await deployUniversalVerifier(stateAddress);
-  const ERC721LinkedUniversalVerifier = await ethers.getContractFactory(
-    'ERC721LinkedUniversalVerifier'
-  );
-  const erc721LinkedUniversalVerifier = await ERC721LinkedUniversalVerifier.deploy(
-    await universalVerifier.getAddress(),
-    name,
-    symbol
-  );
-  console.log(
-    'ERC721LinkedUniversalVerifier deployed to:',
-    await erc721LinkedUniversalVerifier.getAddress()
-  );
-  return {
-    universalVerifier,
-    erc721LinkedUniversalVerifier
-  };
-}

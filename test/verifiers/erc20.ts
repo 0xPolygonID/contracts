@@ -159,15 +159,15 @@ describe('ERC 20 test', function () {
     mtp = contractsMTP.validator;
 
     token = await deployERC20ZKPVerifierToken('zkpVerifier', 'ZKP', stateAddress);
+    await sig.setProofExpirationTimeout(tenYears);
+    await mtp.setProofExpirationTimeout(tenYears);
   });
 
-  it('Example ERC20 Verifier: set zkp request Sig validator', async () => {
-    await sig.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Sig validator + submit zkp response', async () => {
     await erc20VerifierFlow('SIG');
   });
 
-  it('Example ERC20 Verifier: set zkp request Mtp validator', async () => {
-    await mtp.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Mtp validator + submit zkp response', async () => {
     await erc20VerifierFlow('MTP');
   });
 });

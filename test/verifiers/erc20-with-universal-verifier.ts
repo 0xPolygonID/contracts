@@ -72,29 +72,28 @@ describe('ERC 20 test', function () {
     await universalVerifier.addValidatorToWhitelist(await mtp.getAddress());
 
     await setZKPRequests();
+
+    await sig.setProofExpirationTimeout(tenYears);
+    await mtp.setProofExpirationTimeout(tenYears);
   });
 
   it('Requests count', async () => {
     expect(await universalVerifier.getZKPRequestsCount()).to.be.equal(2);
   });
 
-  it('Example ERC20 Verifier: set zkp request Sig validator', async () => {
-    await sig.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Sig validator + submit zkp response', async () => {
     await erc20VerifierFlow('credentialAtomicQuerySigV2OnChain');
   });
 
-  it('Example ERC20 Verifier: set zkp request Mtp validator', async () => {
-    await mtp.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Mtp validator + submit zkp response', async () => {
     await erc20VerifierFlow('credentialAtomicQueryMTPV2OnChain');
   });
 
-  it('Example ERC20 Verifier: set zkp request Sig validator submitZKPResponseV2', async () => {
-    await sig.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Sig validator + submit zkp response V2', async () => {
     await erc20VerifierFlowV2('credentialAtomicQuerySigV2OnChain');
   });
 
-  it('Example ERC20 Verifier: set zkp request Mtp validator submitZKPResponseV2', async () => {
-    await mtp.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Mtp validator + submit zkp response V2', async () => {
     await erc20VerifierFlowV2('credentialAtomicQueryMTPV2OnChain');
   });
 
@@ -117,6 +116,26 @@ describe('ERC 20 test', function () {
     await setRequest(1, query2, await mtp.getAddress());
   }
 
+  async function checkValidatorQueryRequest(requestId, validator) {
+    const query2 = Object.assign({}, query);
+    query2.circuitIds = [validator];
+    query2.skipClaimRevocationCheck =
+      validator === 'credentialAtomicQuerySigV2OnChain' ? false : true;
+
+    expect(requestId).to.be.equal(validator === 'credentialAtomicQuerySigV2OnChain' ? 0 : 1);
+
+    const requestData = await universalVerifier.getZKPRequest(requestId);
+    const parsedRD = unpackV2ValidatorParams(requestData.data);
+
+    expect(parsedRD.queryHash.toString()).to.be.equal(query2.queryHash);
+    expect(parsedRD.claimPathKey.toString()).to.be.equal(query2.claimPathKey.toString());
+    expect(parsedRD.circuitIds[0].toString()).to.be.equal(query2.circuitIds[0].toString());
+    expect(parsedRD.operator.toString()).to.be.equal(query2.operator.toString());
+    expect(parsedRD.claimPathNotExists.toString()).to.be.equal(
+      query2.claimPathNotExists.toString()
+    );
+  }
+
   async function erc20VerifierFlow(
     validator: 'credentialAtomicQueryMTPV2OnChain' | 'credentialAtomicQuerySigV2OnChain'
   ): Promise<void> {
@@ -137,27 +156,12 @@ describe('ERC 20 test', function () {
       'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
     );
 
-    const query2 = Object.assign({}, query);
-    query2.circuitIds = [validator];
-    query2.skipClaimRevocationCheck =
-      validator === 'credentialAtomicQuerySigV2OnChain' ? false : true;
-
     const requestId =
       validator === 'credentialAtomicQuerySigV2OnChain'
         ? await erc20LinkedUniversalVerifier.TRANSFER_REQUEST_ID_SIG_VALIDATOR()
         : await erc20LinkedUniversalVerifier.TRANSFER_REQUEST_ID_MTP_VALIDATOR();
-    expect(requestId).to.be.equal(validator === 'credentialAtomicQuerySigV2OnChain' ? 0 : 1);
 
-    const requestData = await universalVerifier.getZKPRequest(requestId);
-    const parsedRD = unpackV2ValidatorParams(requestData.data);
-
-    expect(parsedRD.queryHash.toString()).to.be.equal(query2.queryHash);
-    expect(parsedRD.claimPathKey.toString()).to.be.equal(query2.claimPathKey.toString());
-    expect(parsedRD.circuitIds[0].toString()).to.be.equal(query2.circuitIds[0].toString());
-    expect(parsedRD.operator.toString()).to.be.equal(query2.operator.toString());
-    expect(parsedRD.claimPathNotExists.toString()).to.be.equal(
-      query2.claimPathNotExists.toString()
-    );
+    await checkValidatorQueryRequest(requestId, validator);
 
     await universalVerifier.submitZKPResponse(requestId, inputs, pi_a, pi_b, pi_c);
     const proofStatus = await universalVerifier.getProofStatus(account, requestId);
@@ -216,27 +220,12 @@ describe('ERC 20 test', function () {
       'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
     );
 
-    const query2 = Object.assign({}, query);
-    query2.circuitIds = [validator];
-    query2.skipClaimRevocationCheck =
-      validator === 'credentialAtomicQuerySigV2OnChain' ? false : true;
-
     const requestId =
       validator === 'credentialAtomicQuerySigV2OnChain'
         ? await erc20LinkedUniversalVerifier.TRANSFER_REQUEST_ID_SIG_VALIDATOR()
         : await erc20LinkedUniversalVerifier.TRANSFER_REQUEST_ID_MTP_VALIDATOR();
-    expect(requestId).to.be.equal(validator === 'credentialAtomicQuerySigV2OnChain' ? 0 : 1);
 
-    const requestData = await universalVerifier.getZKPRequest(requestId);
-    const parsedRD = unpackV2ValidatorParams(requestData.data);
-
-    expect(parsedRD.queryHash.toString()).to.be.equal(query2.queryHash);
-    expect(parsedRD.claimPathKey.toString()).to.be.equal(query2.claimPathKey.toString());
-    expect(parsedRD.circuitIds[0].toString()).to.be.equal(query2.circuitIds[0].toString());
-    expect(parsedRD.operator.toString()).to.be.equal(query2.operator.toString());
-    expect(parsedRD.claimPathNotExists.toString()).to.be.equal(
-      query2.claimPathNotExists.toString()
-    );
+    await checkValidatorQueryRequest(requestId, validator);
 
     const zkProof = packZKProof(inputs, pi_a, pi_b, pi_c);
     const crossChainProofs = packCrossChainProofs(
