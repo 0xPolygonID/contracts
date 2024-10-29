@@ -1,6 +1,7 @@
 import Web3 from 'web3';
+import { DID } from '@iden3/js-iden3-core';
 
-export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []) {
+export function packV2ValidatorParams(query: any, allowedIssuers: any[]) {
   const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.encodeParameter(
     {
@@ -32,7 +33,7 @@ export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []) {
   );
 }
 
-export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []) {
+export function packV3ValidatorParams(query: any, allowedIssuers: any[]) {
   const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.encodeParameter(
     {
@@ -113,4 +114,8 @@ export function unpackV2ValidatorParams(hex: string) {
     },
     hex
   );
+}
+
+export function didToString(did: string): string {
+  return DID.idFromDID(DID.parse(did)).bigInt().toString();
 }
