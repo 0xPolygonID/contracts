@@ -7,6 +7,8 @@ import {
 } from '../utils/deploy-utils';
 import { packV2ValidatorParams, unpackV2ValidatorParams } from '../utils/pack-utils';
 import { Contract } from 'ethers';
+import { Blockchain, buildDIDType, DidMethod, NetworkId } from '@iden3/js-iden3-core';
+import { StateDeployHelper } from '../helpers/StateDeployHelper';
 
 const tenYears = 315360000;
 describe('ERC 20 test', function () {
@@ -136,30 +138,36 @@ describe('ERC 20 test', function () {
   }
 
   beforeEach(async () => {
+    const typ0 = buildDIDType(DidMethod.Iden3, Blockchain.ReadOnly, NetworkId.NoNetwork);
+    const typ1 = buildDIDType(DidMethod.Iden3, Blockchain.Polygon, NetworkId.Mumbai);
+    const stateDeployHelper = await StateDeployHelper.initialize();
+    ({ state } = await stateDeployHelper.deployState([typ0, typ1]));
+    const stateAddress = await state.getAddress();
+
     const contractsSig = await deployValidatorContracts(
       'VerifierSigWrapper',
-      'CredentialAtomicQuerySigV2Validator'
+      'CredentialAtomicQuerySigV2Validator',
+      stateAddress
     );
-    state = contractsSig.state;
     sig = contractsSig.validator;
 
     const contractsMTP = await deployValidatorContracts(
       'VerifierMTPWrapper',
       'CredentialAtomicQueryMTPV2Validator',
-      await state.getAddress()
+      stateAddress
     );
     mtp = contractsMTP.validator;
 
-    token = await deployERC20ZKPVerifierToken('zkpVerifier', 'ZKP');
+    token = await deployERC20ZKPVerifierToken('zkpVerifier', 'ZKP', stateAddress);
+    await sig.setProofExpirationTimeout(tenYears);
+    await mtp.setProofExpirationTimeout(tenYears);
   });
 
-  it('Example ERC20 Verifier: set zkp request Sig validator', async () => {
-    await sig.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Sig validator + submit zkp response', async () => {
     await erc20VerifierFlow('SIG');
   });
 
-  it('Example ERC20 Verifier: set zkp request Mtp validator', async () => {
-    await mtp.setProofExpirationTimeout(tenYears);
+  it('Example ERC20 Verifier: set zkp request Mtp validator + submit zkp response', async () => {
     await erc20VerifierFlow('MTP');
   });
 });

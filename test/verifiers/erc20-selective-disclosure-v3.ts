@@ -1,28 +1,30 @@
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
 import {
   deployERC20ZKPVerifierToken,
   deployValidatorContracts,
   prepareInputs,
   publishState
 } from '../utils/deploy-utils';
-import {
-  packV2ValidatorParams,
-  packV3ValidatorParams,
-  unpackV2ValidatorParams,
-  unpackV3ValidatorParams
-} from '../utils/pack-utils';
+import { packV3ValidatorParams, unpackV3ValidatorParams } from '../utils/pack-utils';
+import { Blockchain, buildDIDType, DidMethod, NetworkId } from '@iden3/js-iden3-core';
+import { StateDeployHelper } from '../helpers/StateDeployHelper';
 
 const tenYears = 315360000;
 describe('ERC 20 Selective Disclosure (V3) test', function () {
   let state: any, validator: any;
 
   beforeEach(async () => {
+    const typ0 = buildDIDType(DidMethod.Iden3, Blockchain.ReadOnly, NetworkId.NoNetwork);
+    const typ1 = buildDIDType(DidMethod.PolygonId, Blockchain.Polygon, NetworkId.Mumbai);
+    const stateDeployHelper = await StateDeployHelper.initialize();
+    ({ state } = await stateDeployHelper.deployState([typ0, typ1]));
+    const stateAddress = await state.getAddress();
+
     const contractValidator = await deployValidatorContracts(
       'VerifierV3Wrapper',
-      'CredentialAtomicQueryV3Validator'
+      'CredentialAtomicQueryV3Validator',
+      stateAddress
     );
-    state = contractValidator.state;
     validator = contractValidator.validator;
   });
 
@@ -30,6 +32,7 @@ describe('ERC 20 Selective Disclosure (V3) test', function () {
     const token: any = await deployERC20ZKPVerifierToken(
       'zkpVerifierSD',
       'ZKP-SD',
+      await state.getAddress(),
       'ERC20SelectiveDisclosureVerifier'
     );
     // eslint-disable-next-line @typescript-eslint/no-var-requires
