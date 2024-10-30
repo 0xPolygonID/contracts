@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { ethers, network } from 'hardhat';
 import { OnchainIdentityDeployHelper } from '../helpers/OnchainIdentityDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
+import { Blockchain, buildDIDType, DidMethod, NetworkId } from "@iden3/js-iden3-core";
 
 describe('Next tests reproduce identity life cycle', function () {
   this.timeout(10000);
@@ -46,8 +47,8 @@ describe('Next tests reproduce identity life cycle', function () {
       // console.log('Identity id:', BigInt(id).toString(16));
 
       expect(id).to.be.equal(
-        16318200065989903207865860093614592605747279308745685922538039864771744258n
-        // 93C5BAE3728FC605AF22632F905BB4B223ED817C5A8000000000000001202
+        16944250197603326458308008459401696782345731443056269610473214827063939585n
+        // 997112BA706B78C825DE1F9B623F30380E08677393A000000000000001201
       );
     });
   });

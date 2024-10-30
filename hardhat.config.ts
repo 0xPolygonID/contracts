@@ -18,10 +18,13 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: '0.8.20'
-      },
-      {
-        version: '0.8.16'
+        version: '0.8.27',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
       }
     ]
   },
@@ -59,9 +62,9 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      'linea': process.env.LINEA_API_KEY,
+      linea: process.env.LINEA_API_KEY,
       'linea-sepolia': process.env.LINEA_API_KEY,
-      'amoy': process.env.AMOY_API_KEY,
+      amoy: process.env.AMOY_API_KEY
     },
     customChains: [
       {
@@ -74,21 +77,21 @@ const config: HardhatUserConfig = {
         }
       },
       {
-        network: "linea-sepolia",
+        network: 'linea-sepolia',
         chainId: 59141,
         urls: {
-          apiURL: "https://api-sepolia.lineascan.build/api",
-          browserURL: "https://sepolia.lineascan.build",
-        },
+          apiURL: 'https://api-sepolia.lineascan.build/api',
+          browserURL: 'https://sepolia.lineascan.build'
+        }
       },
       {
-        network: "linea",
+        network: 'linea',
         chainId: 59144,
         urls: {
-          apiURL: "https://api.lineascan.build/api",
-          browserURL: "https://lineascan.build",
-        },
-      },
+          apiURL: 'https://api.lineascan.build/api',
+          browserURL: 'https://lineascan.build'
+        }
+      }
     ]
   },
   gasReporter: {
