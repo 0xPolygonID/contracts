@@ -11,12 +11,13 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
 import {IState} from '@iden3/contracts/interfaces/IState.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {IZKPVerifier} from '@iden3/contracts/interfaces/IZKPVerifier.sol';
+// import {EmbeddedZKPVerifier} '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
 
 /**
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradeable {
+contract BalanceCredentialIssuerGringe is NonMerklizedIssuerBase, Ownable2StepUpgradeable {
     using IdentityLib for IdentityLib.Data;
     // IZKPVerifier internal _universalxVerifier;
     ICircuitValidator internal _validator;

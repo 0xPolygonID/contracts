@@ -26,7 +26,8 @@ export class BalanceCredentialIssuerDeployHelper {
     smtLib: Contract,
     poseidon3: Contract,
     poseidon4: Contract,
-    stateContractAddress: string
+    stateContractAddress: string,
+    universalVerifierAddress: string
   ): Promise<{
     balanceCredentialIssuer: Contract;
   }> {
@@ -54,10 +55,15 @@ export class BalanceCredentialIssuerDeployHelper {
     );
     const balanceCredentialIssuer = await upgrades.deployProxy(
       balanceCredentialIssuerFactory,
-      [stateContractAddress],
+      [stateContractAddress, universalVerifierAddress],
       {
-        initializer: 'initialize(address)',
-        unsafeAllow: ['external-library-linking', 'struct-definition', 'state-variable-assignment']
+        initializer: 'initialize(address, address)',
+        unsafeAllow: [
+          'external-library-linking',
+          'struct-definition',
+          'state-variable-assignment',
+          'delegatecall'
+        ]
       }
     );
     await balanceCredentialIssuer.waitForDeployment();

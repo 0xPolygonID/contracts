@@ -17,7 +17,8 @@ describe('Reproduce identity life cycle', function () {
       stContracts.smtLib,
       stContracts.poseidon3,
       stContracts.poseidon4,
-      await stContracts.state.getAddress()
+      await stContracts.state.getAddress(),
+      '0x1Df0B05F15b5ea9648B8a081aca8ad0dE065bD1F'
     );
     identity = contracts.balanceCredentialIssuer;
   });
