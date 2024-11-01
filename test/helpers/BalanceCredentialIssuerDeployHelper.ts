@@ -22,12 +22,23 @@ export class BalanceCredentialIssuerDeployHelper {
     return new BalanceCredentialIssuerDeployHelper(sgrs, enableLogging);
   }
 
+  async deployVerifierLib(): Promise<Contract> {
+    const contractName = 'VerifierLib';
+
+    const verifierLib = await ethers.deployContract(contractName);
+    await verifierLib.waitForDeployment();
+
+    console.log(`${contractName} deployed to:  ${await verifierLib.getAddress()}`);
+
+    return verifierLib;
+  }
+
   async deployBalanceCredentialIssuer(
     smtLib: Contract,
     poseidon3: Contract,
     poseidon4: Contract,
-    stateContractAddress: string,
-    universalVerifierAddress: string
+    stateContractAddress: string
+    // universalVerifierAddress: string
   ): Promise<{
     balanceCredentialIssuer: Contract;
   }> {
@@ -43,21 +54,24 @@ export class BalanceCredentialIssuerDeployHelper {
       true
     );
 
+    const verifierLib = await this.deployVerifierLib();
+
     const balanceCredentialIssuerFactory = await ethers.getContractFactory(
       'BalanceCredentialIssuer',
       {
         libraries: {
           ClaimBuilder: await cb.getAddress(),
           IdentityLib: await il.getAddress(),
-          PoseidonUnit4L: await poseidon4.getAddress()
+          PoseidonUnit4L: await poseidon4.getAddress(),
+          VerifierLib: await verifierLib.getAddress()
         }
       }
     );
     const balanceCredentialIssuer = await upgrades.deployProxy(
       balanceCredentialIssuerFactory,
-      [stateContractAddress, universalVerifierAddress],
+      [stateContractAddress],
       {
-        initializer: 'initialize(address, address)',
+        initializer: 'initialize(address)',
         unsafeAllow: [
           'external-library-linking',
           'struct-definition',

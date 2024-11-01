@@ -11,17 +11,18 @@ import {PoseidonUnit4L} from '@iden3/contracts/lib/Poseidon.sol';
 import {IState} from '@iden3/contracts/interfaces/IState.sol';
 import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
 import {IZKPVerifier} from '@iden3/contracts/interfaces/IZKPVerifier.sol';
+import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
 
 /**
  * @dev Example of decentralized balance credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
-contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradeable {
+contract BalanceCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKPVerifier {
     using IdentityLib for IdentityLib.Data;
     // IZKPVerifier internal _universalxVerifier;
-    ICircuitValidator internal _validator;
+    // ICircuitValidator internal _validator;
     // IZKPVerifier internal _universalxVerifier;
-    IState internal _state;
+    // IState internal _state;
 
     /// @custom:storage-location erc7201:polygonid.storage.BalanceCredentialIssuer
     struct BalanceCredentialIssuerStorage {
@@ -68,35 +69,24 @@ contract BalanceCredentialIssuer is NonMerklizedIssuerBase, Ownable2StepUpgradea
     }
 
     function initialize(
-        address _stateContractAddr,
+        address _stateContractAddr
+    )
+        public
         // IZKPVerifier universalVerifier
-        ICircuitValidator validator
-    ) public initializer {
+        // ICircuitValidator validator
+        initializer
+    {
         super.initialize(_stateContractAddr, IState(_stateContractAddr).getDefaultIdType());
         // _universalVerifier = universalVerifier;
-        _state = IState(_stateContractAddr);
-        _validator = validator;
-        __Ownable_init(_msgSender());
+        // _state = IState(_stateContractAddr);
+        // _validator = validator;
+        super.__EmbeddedZKPVerifier_init(_msgSender(), IState(_stateContractAddr));
     }
 
-    function submitZKPResponseV2(
-        IZKPVerifier.ZKPResponse[] memory responses,
-        bytes memory crossChainProofs
-    ) external {
+    function _afterProofSubmitV2(IZKPVerifier.ZKPResponse[] memory responses) internal override {
         require(responses.length == 1, 'Only one response is allowed');
-
-        // _universalVerifier.submitZKPResponseV2(responses, crossChainProofs);
-        ICircuitValidator.Signal[] memory signals = _validator.verifyV2(
-            responses[0].zkProof,
-            responses[0].data,
-            msg.sender,
-            _state
-        );
-
-        uint256 userId = signals[0].value;
-
+        uint256 userId = super.getProofStorageField(_msgSender(), responses[0].requestId, 'userID');
         require(userId != 0, 'Invalid user id');
-
         _issueCredential(userId);
     }
 
