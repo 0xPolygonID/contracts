@@ -14,7 +14,7 @@ import {IZKPVerifier} from '@iden3/contracts/interfaces/IZKPVerifier.sol';
 import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
 
 /**
- * @dev Example of decentralized address ownership credential issuer.
+ * @dev Address ownership credential issuer.
  * This issuer issue non-merklized credentials decentralized.
  */
 contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKPVerifier {
