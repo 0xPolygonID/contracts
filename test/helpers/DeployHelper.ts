@@ -53,16 +53,13 @@ export class DeployHelper {
       true
     );
 
-    const verifierLib = await this.deployVerifierLib();
-
     const balanceCredentialIssuerFactory = await ethers.getContractFactory(
       'BalanceCredentialIssuer',
       {
         libraries: {
           ClaimBuilder: await cb.getAddress(),
           IdentityLib: await il.getAddress(),
-          PoseidonUnit4L: await poseidon4.getAddress(),
-          VerifierLib: await verifierLib.getAddress()
+          PoseidonUnit4L: await poseidon4.getAddress()
         }
       }
     );
@@ -132,7 +129,7 @@ export class DeployHelper {
       `AddressOwnershipCredentialIssuer contract deployed to address ${await addressOwnershipCredentialIssuer.getAddress()} from ${await owner.getAddress()}`
     );
 
-    this.log('======== Balance credential issuer: deploy completed ========');
+    this.log('======== Address ownership credential issuer: deploy completed ========');
 
     return {
       addressOwnershipCredentialIssuer
