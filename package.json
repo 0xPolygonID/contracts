@@ -1,8 +1,8 @@
 {
   "name": "contracts",
   "devDependencies": {
-    "@0xpolygonid/js-sdk": "1.20.0",
-    "@iden3/contracts": "^2.4.5",
+    "@0xpolygonid/js-sdk": "1.20.3",
+    "@iden3/contracts": "^2.5.0",
     "@iden3/js-crypto": "^1.1.0",
     "@iden3/js-iden3-core": "^1.4.1",
     "@iden3/js-jsonld-merklization": "1.4.1",
