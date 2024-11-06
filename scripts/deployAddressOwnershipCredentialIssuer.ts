@@ -7,11 +7,7 @@ import { ethers } from 'hardhat';
 const pathOutputJson = path.join(__dirname, './deploy_output.json');
 
 async function main() {
-  // const stateAddress = '0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D'; // current iden3 state smart contract on main
-  // const stateAddress = '0x134b1be34911e39a8397ec6289782989729807a4'; // current iden3 state smart contract on mumbai
   const stateAddress = '0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124'; // current iden3 state smart contract on amoy
-  // const universalVerifier = '0x1Df0B05F15b5ea9648B8a081aca8ad0dE065bD1F';
-  // const authV2Validator = '0x1a593E1aD3843b4363Dfa42585c4bBCA885553c0';
 
   const owner = (await ethers.getSigners())[0];
   const [poseidon2Elements, poseidon3Elements, poseidon4Elements] = await deployPoseidons(

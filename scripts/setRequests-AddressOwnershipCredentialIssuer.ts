@@ -10,17 +10,12 @@ export function getAuthV2RequestId(): number {
 }
 
 async function main() {
-  //   const chainId = hre.network.config.chainId;
-  //   const network = hre.network.name;
-
-  //   const methodId = "ade09fcd";
-
   const verifier = await ethers.getContractAt(
-    'BalanceCredentialIssuer',
+    'AddressOwnershipCredentialIssuer',
     '0x98F122a0CDa16d39F1Fb1D7589e846466ec9e630'
   );
 
-  const requestId = getAuthV2RequestId();
+  const requestId = 940499666; // calculateRequestIdForCircuit(CircuitId.AuthV2);
 
   const requestIdExists = await verifier.requestIdExists(requestId);
   if (requestIdExists) {
