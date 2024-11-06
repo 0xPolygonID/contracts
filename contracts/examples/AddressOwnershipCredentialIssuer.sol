@@ -124,7 +124,10 @@ contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKP
                     id: jsonSchema,
                     _type: 'JsonSchema2023'
                 }),
-                displayMethod: INonMerklizedIssuer.DisplayMethod({id: '', _type: ''})
+                displayMethod: INonMerklizedIssuer.DisplayMethod({
+                    id: 'ipfs://QmWePFHENF1S1uo7zma2CiikE7Jm563JZpU2PQXKAhiGR9',
+                    _type: 'Iden3BasicDisplayMethodV1'
+                })
             });
         return (credentialData, claimItem.claim, $.idToCredentialSubject[_credentialId]);
     }
