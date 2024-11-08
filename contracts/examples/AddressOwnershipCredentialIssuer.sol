@@ -125,7 +125,7 @@ contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKP
                     _type: 'JsonSchema2023'
                 }),
                 displayMethod: INonMerklizedIssuer.DisplayMethod({
-                    id: 'ipfs://QmWePFHENF1S1uo7zma2CiikE7Jm563JZpU2PQXKAhiGR9',
+                    id: 'ipfs://QmehEzsEcoqKSL6P549J7c7C4LvCWqNdXHwA7nMVCk1Ar9',
                     _type: 'Iden3BasicDisplayMethodV1'
                 })
             });
