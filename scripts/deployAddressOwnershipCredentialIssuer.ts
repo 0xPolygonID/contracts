@@ -4,11 +4,12 @@ import { DeployHelper } from '../test/helpers/DeployHelper';
 import { deployPoseidons } from '../test/utils/deploy-poseidons.util';
 import { StateDeployHelper } from '../test/helpers/StateDeployHelper';
 import { ethers } from 'hardhat';
-const pathOutputJson = path.join(__dirname, './deploy_output.json');
+const pathOutputJson = path.join(
+  __dirname,
+  './deploy_addressOwnershipCredentialIssuer_output.json'
+);
 
 async function main() {
-  // const stateAddress = '0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D'; // current iden3 state smart contract on main
-  // const stateAddress = '0x134b1be34911e39a8397ec6289782989729807a4'; // current iden3 state smart contract on mumbai
   const stateAddress = '0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124'; // current iden3 state smart contract on amoy
 
   const owner = (await ethers.getSigners())[0];
@@ -22,26 +23,52 @@ async function main() {
     await poseidon3Elements.getAddress()
   );
 
-  const balanceCredentialIssuerDeployer = await DeployHelper.initialize([owner], true);
-  const contracts = await balanceCredentialIssuerDeployer.deployBalanceCredentialIssuer(
-    smtLib,
-    poseidon3Elements,
-    poseidon4Elements,
-    stateAddress
-  );
-
-  const balanceCredentialIssuer = contracts.balanceCredentialIssuer;
+  const deployer = await DeployHelper.initialize([owner], true);
+  const { addressOwnershipCredentialIssuer } =
+    await deployer.deployAddressOwnershipCredentialIssuer(
+      smtLib,
+      poseidon3Elements,
+      poseidon4Elements,
+      stateAddress
+    );
 
   const outputJson = {
     state: stateAddress,
     smtLib: await smtLib.getAddress(),
-    balanceCredentialIssuer: await balanceCredentialIssuer.getAddress(),
     poseidon2: await poseidon2Elements.getAddress(),
     poseidon3: await poseidon3Elements.getAddress(),
     poseidon4: await poseidon4Elements.getAddress(),
+    addressOwnershipCredentialIssuer: await addressOwnershipCredentialIssuer.getAddress(),
     network: process.env.HARDHAT_NETWORK
   };
   fs.writeFileSync(pathOutputJson, JSON.stringify(outputJson, null, 1));
+
+  const requestId = 940499666; // calculateRequestIdForCircuit(CircuitId.AuthV2);
+
+  const requestIdExists = await addressOwnershipCredentialIssuer.requestIdExists(requestId);
+  if (requestIdExists) {
+    throw new Error(`Request ID: ${requestId} already exists`);
+  }
+
+  const tx = await addressOwnershipCredentialIssuer.setZKPRequest(
+    requestId,
+    {
+      metadata: '0x',
+      validator: '0x1a593E1aD3843b4363Dfa42585c4bBCA885553c0',
+      data: '0x'
+    }
+    // {
+    //   gasPrice: 50000000000,
+    //   initialBaseFeePerGas: 25000000000,
+    //   gasLimit: 10000000,
+    // },
+  );
+
+  console.log(`Request ID: ${requestId} is set in tx: ${tx.hash}`);
+
+  const displayMethodId = await addressOwnershipCredentialIssuer.getDisplayMethodId();
+
+  console.log('displayMethodId', displayMethodId);
 }
 
 main()

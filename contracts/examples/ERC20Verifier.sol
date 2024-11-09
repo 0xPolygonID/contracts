@@ -9,9 +9,6 @@ import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifie
 import {IState} from '@iden3/contracts/interfaces/IState.sol';
 
 contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
-    uint64 public constant TRANSFER_REQUEST_ID_SIG_VALIDATOR = 1;
-    uint64 public constant TRANSFER_REQUEST_ID_MTP_VALIDATOR = 2;
-
     /// @custom:storage-location erc7201:polygonid.storage.ERC20Verifier
     struct ERC20VerifierStorage {
         mapping(uint256 => address) idToAddress;
@@ -23,26 +20,23 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
     bytes32 private constant ERC20VerifierStorageLocation =
         0x3b1c3bd751d9cd42a3739426a271cdc235017946663d56eeaf827d70f8b77000;
 
+    uint64 private currentRequestId = 0;
+
     function _getERC20VerifierStorage() private pure returns (ERC20VerifierStorage storage $) {
         assembly {
             $.slot := ERC20VerifierStorageLocation
         }
     }
 
-    modifier beforeTransfer(address to) {
-        require(
-            isProofVerified(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR) ||
-                isProofVerified(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR),
-            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
-        );
-        _;
+    function setZKPRequest(
+        uint64 requestId,
+        IZKPVerifier.ZKPRequest calldata request
+    ) public override checkRequestExistence(requestId, false) {
+        super.setZKPRequest(requestId, request);
+        currentRequestId = requestId;
     }
 
-    function initialize(
-        string memory name,
-        string memory symbol,
-        IState state
-    ) public initializer {
+    function initialize(string memory name, string memory symbol, IState state) public initializer {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
         super.__ERC20_init(name, symbol);
         super.__EmbeddedZKPVerifier_init(_msgSender(), state);
@@ -68,17 +62,13 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
         ICircuitValidator validator
     ) internal override {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
-        if (
-            requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR ||
-            requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR
-        ) {
-            // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
-            uint256 id = inputs[1];
-            if ($.idToAddress[id] == address(0) && $.addressToId[_msgSender()] == 0) {
-                super._mint(_msgSender(), $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
-                $.addressToId[_msgSender()] = id;
-                $.idToAddress[id] = _msgSender();
-            }
+
+        // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
+        uint256 id = inputs[1];
+        if ($.idToAddress[id] == address(0) && $.addressToId[_msgSender()] == 0) {
+            super._mint(_msgSender(), $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
+            $.addressToId[_msgSender()] = id;
+            $.idToAddress[id] = _msgSender();
         }
     }
 
@@ -95,7 +85,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
                 uint256[2] memory c
             ) = abi.decode(response.zkProof, (uint256[], uint256[2], uint256[2][2], uint256[2]));
 
-                    // check that challenge input is address of sender
+            // check that challenge input is address of sender
             address addr = PrimitiveTypeUtils.uint256LEToAddress(
                 inputs[request.validator.inputIndexOf('challenge')]
             );
@@ -104,9 +94,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
         }
     }
 
-    function _afterProofSubmitV2(
-        IZKPVerifier.ZKPResponse[] memory responses
-    ) internal override {
+    function _afterProofSubmitV2(IZKPVerifier.ZKPResponse[] memory responses) internal override {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
 
         for (uint256 i = 0; i < responses.length; i++) {
@@ -118,28 +106,23 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedZKPVerifier {
                 uint256[2] memory c
             ) = abi.decode(response.zkProof, (uint256[], uint256[2], uint256[2][2], uint256[2]));
 
-            if (
-                response.requestId == TRANSFER_REQUEST_ID_SIG_VALIDATOR ||
-                response.requestId == TRANSFER_REQUEST_ID_MTP_VALIDATOR
-            ) {
-                // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
-                uint256 id = inputs[1];
-                if ($.idToAddress[id] == address(0) && $.addressToId[_msgSender()] == 0) {
-                    super._mint(_msgSender(), $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
-                    $.addressToId[_msgSender()] = id;
-                    $.idToAddress[id] = _msgSender();
-                }
-            }
+            uint256 userId = super.getProofStorageField(_msgSender(), response.requestId, 'userID');
+            require(userId != 0, 'Invalid user id');
+            super._mint(_msgSender(), $.TOKEN_AMOUNT_FOR_AIRDROP_PER_ID);
+            $.addressToId[_msgSender()] = userId;
+            $.idToAddress[userId] = _msgSender();
         }
-
-
     }
 
     function _update(
         address from /* from */,
         address to,
         uint256 amount /* amount */
-    ) internal override beforeTransfer(to) {
+    ) internal override {
+        require(
+            isProofVerified(to, currentRequestId),
+            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
+        );
         super._update(from, to, amount);
     }
 
