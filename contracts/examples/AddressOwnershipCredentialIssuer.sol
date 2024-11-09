@@ -19,7 +19,7 @@ import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifie
  */
 contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKPVerifier {
     using IdentityLib for IdentityLib.Data;
-
+    
     /// @custom:storage-location erc7201:polygonid.storage.AddressOwnershipCredentialIssuer
     struct AddressOwnershipCredentialIssuerStorage {
         // countOfIssuedClaims count of issued claims for incrementing id and revocation nonce for new claims
@@ -57,6 +57,7 @@ contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKP
     uint256 private constant jsonldSchemaHash = 102852920559964654297980198544873875695;
     string private constant jsonSchema = 'ipfs://QmQinvQkq78TuxSqKxVqJjE36y6Zf3gFwfMC7PfxMDXsvW';
     string private constant jsonldSchema = 'ipfs://QmeoaM2GYroPzWK7kTnvNoer2QmmtESeT6EvnkVL8DJgyA';
+    string private displayMethodId = '';
 
     struct ClaimItem {
         uint256 id;
@@ -67,6 +68,7 @@ contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKP
     function initialize(address _stateContractAddr) public initializer {
         super.initialize(_stateContractAddr, IState(_stateContractAddr).getDefaultIdType());
         super.__EmbeddedZKPVerifier_init(_msgSender(), IState(_stateContractAddr));
+        displayMethodId = 'ipfs://QmQCUxwKofjEK58HaQxmApTfaZ7w1JvKt3QW9DQgFn3Ubx';
     }
 
     function _afterProofSubmitV2(IZKPVerifier.ZKPResponse[] memory responses) internal override {
@@ -125,7 +127,7 @@ contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKP
                     _type: 'JsonSchema2023'
                 }),
                 displayMethod: INonMerklizedIssuer.DisplayMethod({
-                    id: 'ipfs://QmehEzsEcoqKSL6P549J7c7C4LvCWqNdXHwA7nMVCk1Ar9',
+                    id: displayMethodId,
                     _type: 'Iden3BasicDisplayMethodV1'
                 })
             });
@@ -208,5 +210,13 @@ contract AddressOwnershipCredentialIssuer is NonMerklizedIssuerBase, EmbeddedZKP
     function convertTime(uint256 timestamp) private pure returns (uint64) {
         require(timestamp <= type(uint64).max, 'Timestamp exceeds uint64 range');
         return uint64(timestamp);
+    }
+
+    function getDisplayMethodId() external view returns (string memory) {
+        return displayMethodId;
+    }
+
+    function setDisplayMethodId(string memory _displayMethodId) external onlyOwner {
+        displayMethodId = _displayMethodId;
     }
 }

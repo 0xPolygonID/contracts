@@ -136,6 +136,44 @@ export class DeployHelper {
     };
   }
 
+  async deployERC20Verifier(
+    stateContractAddress: string,
+    name = 'ERC20ZKPVerifier',
+    symbol = 'ERCZKP'
+  ): Promise<{
+    erc20Verifier: Contract;
+  }> {
+    const owner = this.signers[0];
+
+    this.log('======== ERC20 Verifier: deploy started ========');
+
+    const verifierLib = await this.deployVerifierLib();
+
+    const erc20VerifierFactory = await ethers.getContractFactory('ERC20Verifier', {
+      libraries: {
+        VerifierLib: await verifierLib.getAddress()
+      }
+    });
+    const erc20Verifier = await upgrades.deployProxy(
+      erc20VerifierFactory,
+      [name, symbol, stateContractAddress],
+      {
+        initializer: 'initialize(string, string, address)',
+        unsafeAllow: ['external-library-linking', 'struct-definition', 'state-variable-assignment']
+      }
+    );
+    await erc20Verifier.waitForDeployment();
+    this.log(
+      `erc20Verifier contract deployed to address ${await erc20Verifier.getAddress()} from ${await owner.getAddress()}`
+    );
+
+    this.log('======== erc20Verifier: deploy completed ========');
+
+    return {
+      erc20Verifier
+    };
+  }
+
   private log(...args): void {
     this.enableLogging && console.log(args);
   }

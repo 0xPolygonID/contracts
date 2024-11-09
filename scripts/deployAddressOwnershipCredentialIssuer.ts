@@ -42,6 +42,33 @@ async function main() {
     network: process.env.HARDHAT_NETWORK
   };
   fs.writeFileSync(pathOutputJson, JSON.stringify(outputJson, null, 1));
+
+  const requestId = 940499666; // calculateRequestIdForCircuit(CircuitId.AuthV2);
+
+  const requestIdExists = await addressOwnershipCredentialIssuer.requestIdExists(requestId);
+  if (requestIdExists) {
+    throw new Error(`Request ID: ${requestId} already exists`);
+  }
+
+  const tx = await addressOwnershipCredentialIssuer.setZKPRequest(
+    requestId,
+    {
+      metadata: '0x',
+      validator: '0x1a593E1aD3843b4363Dfa42585c4bBCA885553c0',
+      data: '0x'
+    }
+    // {
+    //   gasPrice: 50000000000,
+    //   initialBaseFeePerGas: 25000000000,
+    //   gasLimit: 10000000,
+    // },
+  );
+
+  console.log(`Request ID: ${requestId} is set in tx: ${tx.hash}`);
+
+  const displayMethodId = await addressOwnershipCredentialIssuer.getDisplayMethodId();
+
+  console.log('displayMethodId', displayMethodId);
 }
 
 main()
