@@ -22,7 +22,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "ethereumjs-util": "^7.1.4",
-    "hardhat": "^2.22.9",
+    "hardhat": "^2.22.17",
     "jsonfile": "^6.1.0",
     "prettier": "^3.2.5",
     "prettier-plugin-solidity": "^1.1.1",
@@ -76,5 +76,10 @@
     "format": "prettier --write scripts/*.ts test/**/*.ts",
     "lint:contracts": "npx solhint contracts/**/*.sol",
     "prettier:contracts": "prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol'"
+  },
+  "overrides": {
+    "ws": "^8.17.1",
+    "elliptic": "^6.6.0",
+    "cookie": "^1.0.1"
   }
 }
