@@ -239,8 +239,8 @@ describe('ERC 20 test', function () {
     const { inputs, pi_a, pi_b, pi_c } = prepareInputs(
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       validator === 'credentialAtomicQuerySigV2OnChain'
-        ? require('./common-data/valid_sig_privado_main.json')
-        : require('./common-data/valid_mtp_privado_main.json')
+        ? require('./common-data/valid_sig_user_cross_chain.json')
+        : require('./common-data/valid_mtp_user_cross_chain.json')
     );
 
     const [signer] = await ethers.getSigners();
