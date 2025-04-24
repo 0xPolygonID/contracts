@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { DID } from '@iden3/js-iden3-core';
 import { ethers } from 'hardhat';
 
 const abiCoder = new ethers.AbiCoder();
@@ -44,7 +45,7 @@ export type CrossChainProof = {
   proof: string;
 };
 
-export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []) {
+export function packV2ValidatorParams(query: any) {
   const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.encodeParameter(
     {
@@ -68,7 +69,7 @@ export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []) {
       slotIndex: query.slotIndex,
       value: query.value,
       queryHash: query.queryHash,
-      allowedIssuers: allowedIssuers,
+      allowedIssuers: query.allowedIssuers.map((issuer) => didToIdString(issuer)),
       circuitIds: query.circuitIds,
       skipClaimRevocationCheck: query.skipClaimRevocationCheck,
       claimPathNotExists: query.claimPathNotExists
@@ -76,7 +77,7 @@ export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []) {
   );
 }
 
-export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []) {
+export function packV3ValidatorParams(query: any) {
   const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
   return web3.eth.abi.encodeParameter(
     {
@@ -103,7 +104,7 @@ export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []) {
       slotIndex: query.slotIndex,
       value: query.value,
       queryHash: query.queryHash,
-      allowedIssuers: allowedIssuers,
+      allowedIssuers: query.allowedIssuers.map((issuer) => didToIdString(issuer)),
       circuitIds: query.circuitIds,
       skipClaimRevocationCheck: query.skipClaimRevocationCheck,
       groupID: query.groupID,
@@ -157,6 +158,10 @@ export function unpackV2ValidatorParams(hex: string) {
     },
     hex
   );
+}
+
+export function didToIdString(did: string): string {
+  return DID.idFromDID(DID.parse(did)).bigInt().toString();
 }
 
 export function packZKProof(inputs: string[], a: string[], b: string[][], c: string[]): string {
