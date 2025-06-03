@@ -15,6 +15,18 @@ export async function deploySpongePoseidon(poseidon6ContractAddress: string): Pr
   return spongePoseidon;
 }
 
+export async function deployValidatorStub(
+  validatorName: string = 'RequestValidatorStub'
+): Promise<Contract> {
+  const stub = await ethers.getContractFactory(validatorName);
+  const stubInstance = await stub.deploy();
+  await stubInstance.waitForDeployment();
+
+  console.log(`${validatorName} stub deployed to:`, await stubInstance.getAddress());
+
+  return stubInstance;
+}
+
 export async function deployValidatorContracts(
   verifierContractWrapperName: string,
   validatorContractName: string,

@@ -13,8 +13,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
         mapping(uint256 => address) idToAddress;
         mapping(address => uint256) addressToId;
         uint256 tokenAmountForAirdropPerId;
-        uint256 transferRequestIdSigValidator;
-        uint256 transferRequestIdMtpValidator;
+        uint256 transferRequestId;
     }
 
     // keccak256(abi.encode(uint256(keccak256("polygonid.storage.ERC20Verifier")) - 1)) & ~bytes32(uint256(0xff))
@@ -30,9 +29,8 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
     modifier beforeTransfer(address to) {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
         require(
-            isRequestProofVerified(to, $.transferRequestIdSigValidator) ||
-                isRequestProofVerified(to, $.transferRequestIdMtpValidator),
-            'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
+            isRequestProofVerified(to, $.transferRequestId),
+            'only identities who provided proof for transfer requests are allowed to receive tokens'
         );
         _;
     }
@@ -52,23 +50,6 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
         AuthResponse memory authResponse,
         Response[] memory responses
     ) internal view override {
-        for (uint256 i = 0; i < responses.length; i++) {
-            IVerifier.Response memory response = responses[i];
-            IVerifier.RequestInfo memory request = getRequest(response.requestId);
-            (
-                uint256[] memory inputs,
-                uint256[2] memory a,
-                uint256[2][2] memory b,
-                uint256[2] memory c
-            ) = abi.decode(response.proof, (uint256[], uint256[2], uint256[2][2], uint256[2]));
-
-            // check that challenge input is address of sender
-            address addr = PrimitiveTypeUtils.uint256LEToAddress(
-                inputs[request.validator.inputIndexOf('challenge')]
-            );
-            // this is linking between msg.sender and challenge input
-            require(_msgSender() == addr, 'address in proof is not a sender address');
-        }
     }
 
     function _afterProofSubmit(
@@ -81,8 +62,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
             Response memory response = responses[i];
 
             if (
-                ($.transferRequestIdSigValidator != 0 && response.requestId == $.transferRequestIdSigValidator) ||
-                ($.transferRequestIdMtpValidator !=0 && response.requestId == $.transferRequestIdMtpValidator)
+                $.transferRequestId != 0 && response.requestId == $.transferRequestId
             ) {
                 // if proof is given for transfer request id ( mtp or sig ) and it's a first time we mint tokens to sender
                 uint256 id = getResponseFieldValue(response.requestId, _msgSender(), 'userID');
@@ -117,19 +97,11 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
         return _getERC20VerifierStorage().tokenAmountForAirdropPerId;
     }
 
-    function getTransferRequestIdSigValidator() public view returns (uint256) {
-        return _getERC20VerifierStorage().transferRequestIdSigValidator;
+    function getTransferRequestId() public view returns (uint256) {
+        return _getERC20VerifierStorage().transferRequestId;
     }
 
-    function getTransferRequestIdMtpValidator() public view returns (uint256) {
-        return _getERC20VerifierStorage().transferRequestIdMtpValidator;
-    }
-
-    function setTransferRequestIdSigValidator(uint256 requestId) public onlyOwner {
-        _getERC20VerifierStorage().transferRequestIdSigValidator = requestId;
-    }
-
-    function setTransferRequestIdMtpValidator(uint256 requestId) public onlyOwner {
-        _getERC20VerifierStorage().transferRequestIdMtpValidator = requestId;
+    function setTransferRequestId(uint256 requestId) public onlyOwner {
+        _getERC20VerifierStorage().transferRequestId = requestId;
     }
 }
