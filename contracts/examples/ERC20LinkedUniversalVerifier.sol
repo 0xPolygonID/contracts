@@ -3,8 +3,6 @@ pragma solidity 0.8.27;
 
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import {PrimitiveTypeUtils} from '@iden3/contracts/lib/PrimitiveTypeUtils.sol';
-import {ICircuitValidator} from '@iden3/contracts/interfaces/ICircuitValidator.sol';
-import {EmbeddedZKPVerifier} from '@iden3/contracts/verifiers/EmbeddedZKPVerifier.sol';
 import {UniversalVerifier} from '@iden3/contracts/verifiers/UniversalVerifier.sol';
 
 contract ERC20LinkedUniversalVerifier is ERC20 {
@@ -17,8 +15,8 @@ contract ERC20LinkedUniversalVerifier is ERC20 {
 
     modifier beforeTokenTransfer(address to) {
         require(
-            verifier.getProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isVerified ||
-                verifier.getProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isVerified,
+            verifier.getRequestProofStatus(to, TRANSFER_REQUEST_ID_SIG_VALIDATOR).isVerified ||
+                verifier.getRequestProofStatus(to, TRANSFER_REQUEST_ID_MTP_VALIDATOR).isVerified,
             'only identities who provided sig or mtp proof for transfer requests are allowed to receive tokens'
         );
         _;

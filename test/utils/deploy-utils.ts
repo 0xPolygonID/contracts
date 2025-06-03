@@ -45,8 +45,8 @@ export async function deployValidatorContracts(
 
   const [signer] = await ethers.getSigners();
   const validatorContractProxy = await upgrades.deployProxy(ValidatorContract, [
-    await validatorContractVerifierWrapper.getAddress(),
     stateAddress,
+    await validatorContractVerifierWrapper.getAddress(),
     await signer.getAddress()
   ]);
 
@@ -78,7 +78,7 @@ export async function deployERC20ZKPVerifierToken(
   symbol: string,
   stateAddress: string,
   contractName = 'ERC20Verifier'
-): Promise<Contract> {
+): Promise<{ erc20Verifier: Contract; verifierLib: Contract }> {
   const verifierLib = await deployVerifierLib();
   const signers = await ethers.getSigners();
   const ERC20Verifier = await ethers.getContractFactory(contractName, {
@@ -91,7 +91,7 @@ export async function deployERC20ZKPVerifierToken(
     unsafeAllowLinkedLibraries: true
   });
   console.log(contractName + ' deployed to:', await erc20Verifier.getAddress());
-  return erc20Verifier;
+  return { erc20Verifier, verifierLib };
 }
 
 export interface VerificationInfo {

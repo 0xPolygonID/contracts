@@ -11,3 +11,7 @@ build
 cache
 artifacts
 arguments.js
+
+.vscode
+circuits
+latest.zip

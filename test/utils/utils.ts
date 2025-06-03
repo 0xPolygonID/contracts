@@ -1,5 +1,8 @@
+import { core } from '@0xpolygonid/js-sdk';
 import { Hex, poseidon } from '@iden3/js-crypto';
-import { buildDIDType, genesisFromEthAddress, Id, SchemaHash } from '@iden3/js-iden3-core';
+import { buildDIDType, DID, genesisFromEthAddress, Id, SchemaHash } from '@iden3/js-iden3-core';
+import axios from 'axios';
+import { ethers } from 'hardhat';
 
 type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends (...a: infer X) => void
   ? X
@@ -116,4 +119,47 @@ export function buildVerifierId(
   const tp = buildDIDType(info.method, info.blockchain, info.networkId);
 
   return new Id(tp, genesis);
+}
+
+export function calculateRequestId(params: string, address: string): bigint {
+  const requestId =
+    (BigInt(ethers.keccak256(ethers.solidityPacked(['bytes', 'address'], [params, address]))) &
+      BigInt('0x0000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')) +
+    BigInt('0x0001000000000000000000000000000000000000000000000000000000000000');
+  return requestId;
+}
+
+export async function getDidResolution(
+  did: string,
+  resolverUrl: string,
+  opts?: { gist?: string; state?: string }
+) {
+  console.log(
+    'Resolving DID:',
+    resolverUrl +
+      `/1.0/identifiers/${did}?signature=EthereumEip712Signature2021${
+        opts?.gist ? '&gist=' + opts?.gist : ''
+      }${opts?.state ? '&state=' + opts?.state : ''}`
+  );
+  const resp = await axios.get(
+    resolverUrl +
+      `/1.0/identifiers/${did}?signature=EthereumEip712Signature2021${
+        opts?.gist ? '&gist=' + opts?.gist : ''
+      }${opts?.state ? '&state=' + opts?.state : ''}`
+  );
+  const didResolution = resp.data;
+  return didResolution;
+}
+
+export function getDIDEmptyState(did: core.DID) {
+  const profileId = DID.idFromDID(did);
+  const didType = buildDIDType(
+    DID.methodFromId(profileId),
+    DID.blockchainFromId(profileId),
+    DID.networkIdFromId(profileId)
+  );
+  const identifier = Id.idGenesisFromIdenState(didType, 0n);
+  const emptyDID = DID.parseFromId(identifier);
+
+  return emptyDID;
 }

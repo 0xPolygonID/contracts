@@ -12,14 +12,14 @@ type ChainIdInfo = {
 };
 
 export const chainIdInfoMap: Map<number, ChainIdInfo> = new Map()
-  .set(31337, { idType: '0x0112', networkType: 'test', oracleSigningAddress: oracleSAHardhat }) // hardhat
+  .set(31337, { idType: '0x0112', networkType: 'test', oracleSigningAddress: oracleSAProd }) // hardhat
   .set(1101, { idType: '0x0114', networkType: 'main', oracleSigningAddress: oracleSAProd }) // polygon zkevm
-  .set(2442, { idType: '0x0115', networkType: 'test', oracleSigningAddress: oracleSATest }) // polygon cardona
+  .set(2442, { idType: '0x0115', networkType: 'test', oracleSigningAddress: oracleSAProd }) // polygon cardona
   .set(137, { idType: '0x0111', networkType: 'main', oracleSigningAddress: oracleSAProd }) // polygon main
-  .set(80001, { idType: '0x0112', networkType: 'test', oracleSigningAddress: oracleSATest }) // polygon mumbai
-  .set(80002, { idType: '0x0113', networkType: 'test', oracleSigningAddress: oracleSATest }) // polygon amoy
-  .set(11155111, { idType: '0x0123', networkType: 'test', oracleSigningAddress: oracleSATest }) // ethereum sepolia
+  .set(80001, { idType: '0x0112', networkType: 'test', oracleSigningAddress: oracleSAProd }) // polygon mumbai
+  .set(80002, { idType: '0x0113', networkType: 'test', oracleSigningAddress: oracleSAProd }) // polygon amoy
+  .set(11155111, { idType: '0x0123', networkType: 'test', oracleSigningAddress: oracleSAProd }) // ethereum sepolia
   .set(21000, { idType: '0x01A1', networkType: 'main', oracleSigningAddress: oracleSAProd }) // privado-main
-  .set(21001, { idType: '0x01A2', networkType: 'test', oracleSigningAddress: oracleSATest }) // privado-test
+  .set(21001, { idType: '0x01A2', networkType: 'test', oracleSigningAddress: oracleSAProd }) // privado-test
   .set(59144, { idType: '0x0149', networkType: 'main', oracleSigningAddress: oracleSAProd }) // linea-main
-  .set(59141, { idType: '0x0148', networkType: 'test', oracleSigningAddress: oracleSATest }); // linea-sepolia
+  .set(59141, { idType: '0x0148', networkType: 'test', oracleSigningAddress: oracleSAProd }); // linea-sepolia
