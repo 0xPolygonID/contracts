@@ -4,23 +4,16 @@ import { Contract } from 'ethers';
 import { Blockchain, buildDIDType, DidMethod, NetworkId } from '@iden3/js-iden3-core';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 import { ethers } from 'hardhat';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 
 describe('ERC 20 test', function () {
   let validator: Contract, verifierLib: Contract, token: Contract;
   let signer, request, paramsFromValidator, authResponse, response, crossChainProofs: any;
 
-  async function setRequests() {
-    await token.setRequests([request]);
-    await token.setTransferRequestId(request.requestId);
-
-    const requestData = await token.getRequest(request.requestId);
-    expect(requestData.requestId).to.be.equal(request.requestId);
-  }
-
   async function deployContractsFixture() {
     [signer] = await ethers.getSigners();
     const typ0 = buildDIDType(DidMethod.Iden3, Blockchain.ReadOnly, NetworkId.NoNetwork);
-    const stateDeployHelper = await StateDeployHelper.initialize(null, false);
+    const stateDeployHelper = await StateDeployHelper.initialize();
     const { state } = await stateDeployHelper.deployState([typ0], 'Groth16VerifierStub');
 
     const validator = await ethers.deployContract('RequestValidatorStub');
@@ -49,7 +42,7 @@ describe('ERC 20 test', function () {
       verifier: token,
       verifierLib: verifierLib,
       validator: validator
-    } = await deployContractsFixture());
+    } = await loadFixture(deployContractsFixture));
     const requestId = 1;
     request = {
       requestId: requestId,
@@ -91,7 +84,12 @@ describe('ERC 20 test', function () {
 
     await validator.stub_setRequestParams([request.params], [paramsFromValidator]);
     await validator.stub_setInput('userID', 1);
-    await setRequests();
+
+    await token.setRequests([request]);
+    await token.setTransferRequestId(request.requestId);
+
+    const requestData = await token.getRequest(request.requestId);
+    expect(requestData.requestId).to.be.equal(request.requestId);
 
     // try transfer without given proof (request exists)
     await expect(
@@ -102,19 +100,15 @@ describe('ERC 20 test', function () {
 
     // check that query is assigned
     expect(await token.getRequestsCount()).to.be.equal(1);
-
     expect(await token.isRequestProofVerified(account, request.requestId)).to.be.false;
 
-    const txSubmitResponse = await token.submitResponse(authResponse, [response], crossChainProofs);
-
-    await txSubmitResponse.wait();
+    await token.submitResponse(authResponse, [response], crossChainProofs);
 
     expect(await token.isRequestProofVerified(account, request.requestId)).to.be.true; // check proof is assigned
-
     // check that tokens were minted
     expect(await token.balanceOf(account)).to.equal(BigInt('5000000000000000000'));
 
-    // if proof is provided second time, we don't revert but no tokens are minted
+    // if proof is provided second time, we revert and no tokens are minted
     await expect(token.submitResponse(authResponse, [response], crossChainProofs))
       .to.be.revertedWithCustomError(verifierLib, 'ProofAlreadyVerified')
       .withArgs(request.requestId, account);

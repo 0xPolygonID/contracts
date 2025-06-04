@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { ethers, network } from 'hardhat';
 import { OnchainIdentityDeployHelper } from '../helpers/OnchainIdentityDeployHelper';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
-import { Blockchain, buildDIDType, DidMethod, NetworkId } from "@iden3/js-iden3-core";
 
 describe('Next tests reproduce identity life cycle', function () {
   this.timeout(10000);
@@ -43,12 +42,8 @@ describe('Next tests reproduce identity life cycle', function () {
     it("validate identity's id", async function () {
       const id = await identity.getId();
 
-      // console.log('Identity address:', await identity.getAddress());
-      // console.log('Identity id:', BigInt(id).toString(16));
-
       expect(id).to.be.equal(
-        16944250197603326458308008459401696782345731443056269610473214827063939585n
-        // 997112BA706B78C825DE1F9B623F30380E08677393A000000000000001201
+        14985668022039605206414885900239153480124116554837157870053984788889473537n
       );
     });
   });
@@ -553,7 +548,7 @@ describe("Genesis state doens't have history of states", () => {
         await identity.getRootsByState(latestState);
         expect.fail('The transaction should have thrown an error');
       } catch (err: any) {
-        expect(err.message).to.include("Roots for this state doesn't exist");
+        expect(err.message).to.include('RootsForThisStateDoesntExist');
       }
     });
   });

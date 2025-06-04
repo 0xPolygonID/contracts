@@ -235,8 +235,9 @@ export async function deployERC20LinkedUniversalVerifier(
 ): Promise<{
   universalVerifier: Contract;
   erc20LinkedUniversalVerifier: Contract;
+  verifierLib: Contract;
 }> {
-  const universalVerifier = await deployUniversalVerifier(stateAddress);
+  const { universalVerifier, verifierLib } = await deployUniversalVerifier(stateAddress);
   const ERC20LinkedUniversalVerifier = await ethers.getContractFactory(
     'ERC20LinkedUniversalVerifier'
   );
@@ -251,11 +252,14 @@ export async function deployERC20LinkedUniversalVerifier(
   );
   return {
     universalVerifier,
-    erc20LinkedUniversalVerifier
+    erc20LinkedUniversalVerifier,
+    verifierLib
   };
 }
 
-async function deployUniversalVerifier(stateAddress: string): Promise<Contract> {
+async function deployUniversalVerifier(
+  stateAddress: string
+): Promise<{ universalVerifier: Contract; verifierLib: Contract }> {
   const verifierLib = await deployVerifierLib();
   const signers = await ethers.getSigners();
   const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier', {
@@ -275,5 +279,5 @@ async function deployUniversalVerifier(stateAddress: string): Promise<Contract> 
   );
   universalVerifier.waitForDeployment();
   console.log('UniversalVerifier deployed to:', await universalVerifier.getAddress());
-  return universalVerifier;
+  return { universalVerifier, verifierLib };
 }
