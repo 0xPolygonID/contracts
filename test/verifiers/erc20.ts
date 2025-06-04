@@ -110,7 +110,7 @@ describe('ERC 20 test', function () {
 
     // if proof is provided second time, we revert and no tokens are minted
     await expect(token.submitResponse(authResponse, [response], crossChainProofs))
-      .to.be.revertedWithCustomError(verifierLib, 'ProofAlreadyVerified')
+      .to.be.revertedWithCustomError(token, 'ProofAlreadyVerified')
       .withArgs(request.requestId, account);
 
     expect(await token.balanceOf(account)).to.equal(BigInt('5000000000000000000'));
