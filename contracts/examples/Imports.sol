@@ -18,7 +18,4 @@ import {Groth16VerifierV3} from '@iden3/contracts/lib/groth16-verifiers/Groth16V
 import {Groth16VerifierV3Wrapper} from '@iden3/contracts/lib/groth16-verifiers/Groth16VerifierV3Wrapper.sol';
 import {Groth16VerifierAuthV2} from '@iden3/contracts/lib/groth16-verifiers/Groth16VerifierAuthV2.sol';
 import {Groth16VerifierAuthV2Wrapper} from '@iden3/contracts/lib/groth16-verifiers/Groth16VerifierAuthV2Wrapper.sol';
-import {Groth16VerifierStub} from '@iden3/contracts/test-helpers/Groth16VerifierStub.sol';
-import {RequestValidatorStub} from '@iden3/contracts/test-helpers/RequestValidatorStub.sol';
-import {AuthValidatorStub} from '@iden3/contracts/test-helpers/AuthValidatorStub.sol';
 import {CrossChainProofValidator} from '@iden3/contracts/cross-chain/CrossChainProofValidator.sol';

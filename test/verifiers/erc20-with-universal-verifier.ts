@@ -121,7 +121,7 @@ describe('ERC 20 test', function () {
 
     // if proof is provided second time, we revert and no tokens are minted
     await expect(universalVerifier.submitResponse(authResponse, [response], crossChainProofs))
-      .to.be.revertedWithCustomError(universalVerifier, 'ProofAlreadyVerified')
+      .to.be.revertedWithCustomError(verifierLib, 'ProofAlreadyVerified')
       .withArgs(request.requestId, account);
 
     await erc20LinkedUniversalVerifier.transfer(account, 1); // we send tokens to ourselves, but no error because we sent proof

@@ -83,7 +83,15 @@ describe('ERC 20 test', function () {
     ).to.be.revertedWithCustomError(token, 'RequestIdNotFound');
 
     await validator.stub_setRequestParams([request.params], [paramsFromValidator]);
-    await validator.stub_setInput('userID', 1);
+    const userID = 1;
+    await validator.stub_setInput('userID', userID);
+    await validator.stub_setVerifyResults([
+      {
+        name: 'userID',
+        value: userID,
+        rawValue: '0x'
+      }
+    ]);
 
     await token.setRequests([request]);
     await token.setTransferRequestId(request.requestId);
@@ -110,7 +118,7 @@ describe('ERC 20 test', function () {
 
     // if proof is provided second time, we revert and no tokens are minted
     await expect(token.submitResponse(authResponse, [response], crossChainProofs))
-      .to.be.revertedWithCustomError(token, 'ProofAlreadyVerified')
+      .to.be.revertedWithCustomError(verifierLib, 'ProofAlreadyVerified')
       .withArgs(request.requestId, account);
 
     expect(await token.balanceOf(account)).to.equal(BigInt('5000000000000000000'));

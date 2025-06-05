@@ -2,7 +2,7 @@
   "name": "contracts",
   "devDependencies": {
     "@0xpolygonid/js-sdk": "^1.29.3",
-    "@iden3/contracts": "../../iden3/contracts/contracts",
+    "@iden3/contracts": "^3.1.0",
     "@iden3/js-crypto": "^1.2.0",
     "@iden3/js-iden3-core": "^1.6.0",
     "@iden3/js-jsonld-merklization": "1.5.2",
@@ -18,6 +18,7 @@
     "@types/mocha": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
     "async": "^3.2.3",
+    "axios": "^1.7.2",
     "circomlibjs": "^0.1.7",
     "dotenv": "^16.4.5",
     "eslint-config-prettier": "^9.1.0",
@@ -33,10 +34,8 @@
     "solhint-plugin-prettier": "^0.1.0",
     "solidity-bytes-utils": "^0.8.0",
     "typescript": "^5.4.4",
-    "web3": "^4.7.0",
     "uuid": "^10.0.0",
-    "axios": "^1.7.2"
-
+    "web3": "^4.7.0"
   },
   "scripts": {
     "node": "npx hardhat node",
