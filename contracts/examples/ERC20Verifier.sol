@@ -8,6 +8,13 @@ import {EmbeddedVerifier} from '@iden3/contracts/verifiers/EmbeddedVerifier.sol'
 import {IState} from '@iden3/contracts/interfaces/IState.sol';
 
 contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
+    // keccak256(abi.encodePacked("authV2"))
+    bytes32 private constant AUTHV2_METHOD_NAME_HASH =
+        0x380ee2d21c7a4607d113dad9e76a0bc90f5325a136d5f0e14b6ccf849d948e25;
+    // keccak256(abi.encodePacked("ethIdentity"))
+    bytes32 private constant ETHIDENTITY_METHOD_NAME_HASH =
+        0xf6b3780c307b9ee49bbc6e8f20c4c14216f55dcd34962439d9a1500caae24a3e;
+
     /// @custom:storage-location erc7201:polygonid.storage.ERC20Verifier
     struct ERC20VerifierStorage {
         mapping(uint256 => address) idToAddress;
@@ -35,11 +42,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
         _;
     }
 
-    function initialize(
-        string memory name,
-        string memory symbol,
-        IState state
-    ) public initializer {
+    function initialize(string memory name, string memory symbol, IState state) public initializer {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
         super.__ERC20_init(name, symbol);
         super.__EmbeddedVerifier_init(_msgSender(), state);
@@ -49,8 +52,7 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
     function _beforeProofSubmit(
         AuthResponse memory authResponse,
         Response[] memory responses
-    ) internal view override {
-    }
+    ) internal view override {}
 
     function _afterProofSubmit(
         AuthResponse memory authResponse,
@@ -58,12 +60,23 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
     ) internal override {
         ERC20VerifierStorage storage $ = _getERC20VerifierStorage();
 
+        uint256 userID;
+        if (keccak256(bytes(authResponse.authMethod)) == AUTHV2_METHOD_NAME_HASH) {
+            (
+                uint256[] memory inputs,
+                uint256[2] memory a,
+                uint256[2][2] memory b,
+                uint256[2] memory c
+            ) = abi.decode(authResponse.proof, (uint256[], uint256[2], uint256[2][2], uint256[2]));
+            userID = inputs[0];
+        } else if (keccak256(bytes(authResponse.authMethod)) == ETHIDENTITY_METHOD_NAME_HASH) {            
+            userID = abi.decode(authResponse.proof, (uint256));
+        }
+
         for (uint256 i = 0; i < responses.length; i++) {
             Response memory response = responses[i];
 
-            if (
-                $.transferRequestId != 0 && response.requestId == $.transferRequestId
-            ) {
+            if ($.transferRequestId != 0 && response.requestId == $.transferRequestId) {
                 // if proof is given for transfer request id and it's a first time we mint tokens to sender
                 uint256 id = getResponseFieldValue(response.requestId, _msgSender(), 'userID');
                 if ($.idToAddress[id] == address(0) && $.addressToId[_msgSender()] == 0) {
@@ -73,8 +86,6 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
                 }
             }
         }
-
-
     }
 
     function _update(
