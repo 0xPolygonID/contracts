@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import { DID } from '@iden3/js-iden3-core';
 import { ethers } from 'hardhat';
+import { ProofData } from '@iden3/js-jwz';
 
 const abiCoder = new ethers.AbiCoder();
 
@@ -169,6 +170,21 @@ export function packZKProof(inputs: string[], a: string[], b: string[][], c: str
     ['uint256[] inputs', 'uint256[2]', 'uint256[2][2]', 'uint256[2]'],
     [inputs, a, b, c]
   );
+}
+
+export function prepareProof(proof: ProofData) {
+  const { pi_a, pi_b, pi_c } = proof;
+  const [[p1, p2], [p3, p4]] = pi_b;
+  const preparedProof = {
+    pi_a: pi_a.slice(0, 2),
+    pi_b: [
+      [p2, p1],
+      [p4, p3]
+    ],
+    pi_c: pi_c.slice(0, 2)
+  };
+
+  return { ...preparedProof };
 }
 
 export function packIdentityStateUpdate(msg: StateUpdate): string {

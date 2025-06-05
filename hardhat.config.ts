@@ -3,6 +3,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 import '@openzeppelin/hardhat-upgrades';
 import '@nomicfoundation/hardhat-verify';
+import 'hardhat-contract-sizer';
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ const config: HardhatUserConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200
+            runs: 100
           }
         }
       }
@@ -99,6 +100,12 @@ const config: HardhatUserConfig = {
     coinmarketcap: process.env.COINMARKETCAP_KEY,
     enabled: !!process.env.REPORT_GAS,
     token: 'MATIC'
+  },
+  contractSizer: {
+    alphaSort: false,
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: false
   }
 };
 
