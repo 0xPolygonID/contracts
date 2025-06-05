@@ -73,19 +73,11 @@ contract ERC20Verifier is ERC20Upgradeable, EmbeddedVerifier {
             userID = abi.decode(authResponse.proof, (uint256));
         }
 
-        for (uint256 i = 0; i < responses.length; i++) {
-            Response memory response = responses[i];
-
-            if ($.transferRequestId != 0 && response.requestId == $.transferRequestId) {
-                // if proof is given for transfer request id and it's a first time we mint tokens to sender
-                uint256 id = getResponseFieldValue(response.requestId, _msgSender(), 'userID');
-                if ($.idToAddress[id] == address(0) && $.addressToId[_msgSender()] == 0) {
-                    super._mint(_msgSender(), $.tokenAmountForAirdropPerId);
-                    $.addressToId[_msgSender()] = id;
-                    $.idToAddress[id] = _msgSender();
-                }
-            }
-        }
+        if ($.idToAddress[userID] == address(0) && $.addressToId[_msgSender()] == 0) {
+            super._mint(_msgSender(), $.tokenAmountForAirdropPerId);
+            $.addressToId[_msgSender()] = userID;
+            $.idToAddress[userID] = _msgSender();
+        }    
     }
 
     function _update(
