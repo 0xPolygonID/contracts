@@ -22,8 +22,8 @@ This repository contains examples of smart contracts and deployment scripts.
 
 |         Network          |                  Address                   |
 | :----------------------: | :----------------------------------------: |
-|   **Polygon Mainnet**    | 0x394d1dad46907bd54d15926A1ab4535EF2BF47b1 |
-| **Polygon Amoy testnet** | 0x1B20320042b29AE5c1a3ADc1674cb6bF8760530f |
+|   **Polygon Mainnet**    | 0xfcc86A79fCb057A8e55C6B853dff9479C3cf607c |
+| **Polygon Amoy testnet** | 0xfcc86A79fCb057A8e55C6B853dff9479C3cf607c |
 
 ## ERC20 example, Validators & Verifiers contracts
 
