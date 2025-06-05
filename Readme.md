@@ -231,3 +231,6 @@ Legacy ERC20 examples with airdrop use case, not restricted
 1. **deploy:mumbai:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mumbai
 1. **deploy:amoy:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon amoy
 1. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mainnet
+
+## Examples for Iden3 contracts V3 branch
+If you want to review contract examples using new verifiers from Iden3 contracts V3 then you need to review the branch https://github.com/0xPolygonID/contracts/tree/v3.
