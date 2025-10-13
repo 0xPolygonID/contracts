@@ -33,7 +33,7 @@ The example of ERC20 smart contract. This example shows how to use sig/mtp valid
 
 We aim to provide deployment of:
 
-- Atomic query MTP validator https://github.com/iden3/contracts/blob/master/contracts/validators/CredentialAtomicQueryMTPValidator.sol
+- Atomic query MTP validator https://github.com/iden3/contracts/blob/master/contracts/validators/request/CredentialAtomicQueryMTPV2Validator.sol
 - Atomic query Signature validator https://github.com/iden3/contracts/blob/master/contracts/validators/CredentialAtomicQuerySigValidator.sol
 - Example contract that inherits ZKP Verifier contract https://github.com/iden3/contracts/blob/master/contracts/verifiers/ZKPVerifier.sol
 
