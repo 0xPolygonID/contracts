@@ -2,28 +2,24 @@
 
 This repository contains examples of smart contracts and deployment scripts.
 
-## State Contract
+## Smart contracts with unified addresses
 
-|        Network             |     Address                                |
-|:--------------------------:|:------------------------------------------:|
-| **Polygon Mainnet**        | 0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D |
-| **Polygon Amoy testnet**   | 0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124 |
-| Polygon Mumbai testnet     | 0x134B1BE34911E39A8397ec6289782989729807a4 |
+|     Smart contract      |     Address                                |
+|:-----------------------:|:------------------------------------------:|
+|       **State***        | 0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896 |
+|    **Validator MTP**    | 0xec9EF9c4595B46abF2b6A923BD1529081E03fbBB |
+|    **Validator SIG**    | 0x5BD60F3Ef5890260906172EEe1f0a965707791f1 |
+|    **Validator V3**     | 0xC616963610A5545EF89b373e1fEAE8A1e505FaFF |
+|    **Validator V3 Stable**     | 0x0d78ADDD050a75a94e21eD14d54591933B9B7546 |
+| **Universal Verifier**  | 0xfcc86A79fCb057A8e55C6B853dff9479C3cf607c |
+| **Universal Verifier V2****  | 0x2B0D3f664A5EbbfBD76E6cbc2cA9A504a68d2F4F |
+| **Identity Tree Store** | 0x7dF78ED37d0B39Ffb6d4D527Bb1865Bf85B60f81 |
 
-## IdentityTreeStore contract (On-chain RHS)
 
-|        Network             |     Address                                |
-|:--------------------------:|:------------------------------------------:|
-| **Polygon Mainnet**        | 0xbEeB6bB53504E8C872023451fd0D23BeF01d320B |
-| **Polygon Amoy testnet**   | 0x3d3763eC0a50CE1AdF83d0b5D99FBE0e3fEB43fb |
-| Polygon Mumbai testnet     | 0x16A1ae4c460C0a42f0a87e69c526c61599B28BC9 |
+*The only exception are the State contracts for **Polygon Mainnet** and **Polygon Amoy testnet**, which where deployed before the unified address methodology was implemented.
 
-## UniversalVerifier contract
-
-|         Network          |                  Address                   |
-| :----------------------: | :----------------------------------------: |
-|   **Polygon Mainnet**    | 0x394d1dad46907bd54d15926A1ab4535EF2BF47b1 |
-| **Polygon Amoy testnet** | 0x1B20320042b29AE5c1a3ADc1674cb6bF8760530f |
+- Polygon Amoy testnet State Contract: **0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124**
+- Polygon PoS mainnet State Contract : **0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D**
 
 ## ERC20 example, Validators & Verifiers contracts
 
@@ -31,10 +27,6 @@ If you are deploying your own ZKPVerifier, you can use already deployed Circuit 
 
 The example of ERC20 smart contract. This example shows how to use sig/mtp validator to verification zero-knowledge proof on-chain.
 
-We aim to provide deployment of:
-
-- Atomic query MTP validator https://github.com/iden3/contracts/blob/master/contracts/validators/CredentialAtomicQueryMTPValidator.sol
-- Atomic query Signature validator https://github.com/iden3/contracts/blob/master/contracts/validators/CredentialAtomicQuerySigValidator.sol
 - Example contract that inherits ZKP Verifier contract https://github.com/iden3/contracts/blob/master/contracts/verifiers/ZKPVerifier.sol
 
 Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
@@ -80,8 +72,6 @@ Current addresses for V3 beta circuit on **Polygon Amoy** testnet. (2.0.6-beta.1
 |     **ERC20 example**      | 0xc5Cd536cb9Cc3BD24829502A39BE593354986dc4 (request id = 100 - 1100 merklized  / 10000 - 65000 nonmerklized |
 
 
-Current addresses for V3 beta circuit on **Polygon Mumbai** testnet. (2.0.1-beta.1 V3 validator):
-
 |                      |                                          V3 validator 2.0.1-beta.1                                          |   
 |:--------------------:|:-----------------------------------------------------------------------------------------------------------:|
 |     **Verifier**     |                                 0xDE27fc243Bf4eDAaB72E1008c9828C480582f672                                  | 
@@ -89,8 +79,6 @@ Current addresses for V3 beta circuit on **Polygon Mumbai** testnet. (2.0.1-beta
 | **ERC20 SD example** |                         0x36eB0E70a456c310D8d8d15ae01F6D5A7C15309A (request id = 3)                         |
 |     **ERC20 example**      | 0x36eB0E70a456c310D8d8d15ae01F6D5A7C15309A (request id = 100 - 1100 merklized  / 10000 - 65000 nonmerklized |
 
-
-Current addresses on **Polygon Mumbai** testnet. (V2.0.1 V2 validators)
 
 |                   |                             Sig                             |                             MTP                              |
 |:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
@@ -107,8 +95,6 @@ Current addresses on **Polygon Amoy** testnet. (V2.0.6 V2 validators)
 |  **Validators**   |         0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d          |          0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356          |
 | **ERC20 example** | 0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880 (request id = 1) | 0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880  (request id = 2) |
 
-
-Legacy addresses on Polygon Mumbai testnet. (V1.0.1 V2 validators)
 
 |                   |                             Sig                             |                             MTP                              |
 |:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
@@ -151,18 +137,6 @@ Here is an example of a **non-merklized** on-chain issuer. This example demonstr
 | **BalanceCredentialIssuer** | 0x19875eA86503734f2f9Ed461463e0312A3b42563 |
 
 
-**Polygon Mumbai testnet**:
-
-|                             |                    Address                     |
-|:---------------------------:|:------------------------------------------:|
-|    Poseidon2Elements    | 0x2490924fF554200CFfa3Fb7fEac0A8aF0eaa50fd |
-|    Poseidon3Elements    | 0xB980c71Ae4Dfd899CF9d09Efe135cE4CcFa021B5 |
-|    Poseidon4Elements    | 0x60EFFD4319D29297a97ede20e6bEF3d36ef2E25C |
-|         SmtLib          | 0x48E875a15Bd0AA626756Ad89ec76b63D8810660E |
-|      ClaimBuilder       | 0x4d29B42a7128fC030167e9E84F9dd356d5Ab7879 |
-|       IdentityLib       | 0x3476776B9e7ad7Bf187A98acF4dB62e4dBd99345 |
-| **BalanceCredentialIssuer** | 0x81787BE964A59A95B5508f31d153B806169E15f4 |
-
 </details>
 
 
@@ -191,13 +165,6 @@ Amoy:
 <details>
 <summary>Addresses</summary>
 
-Legacy addresses on Polygon Mumbai testnet.
-
-|                    |                    Sig                   |                    MTP                    |
-|:------------------:|:------------------------------------------:|:-----------------------------------------:|
-|   **Validators**   |0xF2D4Eeb4d455fb673104902282Ce68B9ce4Ac450  |0x3DcAe4c8d94359D31e4C89D7F2b944859408C618 |
-| **ERC20 examples** |0x9017a99afb69CB7B21C7DD29827b4762DECD53FD  |0x3Bf7f4774DC3f92431fA690fa000f636562dCC18 |
-
 Legacy addresses on Polygon Main. (ERC20 example with airdrop use case, restricted to 1 request)
 |                    |                    Sig                   |                    MTP                    |
 |:------------------:|:------------------------------------------:|:-----------------------------------------:|
@@ -217,17 +184,12 @@ Legacy ERC20 examples with airdrop use case, not restricted
 
 ## Deploy scripts
 
-1. **deploy:mumbai:erc20** - deploy erc20 smart contract to polygon mumbai
-1. **deploy:mumbai:sig** - deploy signature validator to polygon mumbai
-1. **deploy:mumbai:mtp** - deploy MTP validator to polygon mumbai
 1. **deploy:main:erc20** - deploy erc20 smart contract to polygon mainnet
 1. **deploy:main:sig** - deploy signature validator to polygon mainnet
 1. **deploy:main:mtp** - deploy MTP validator to polygon mainnet
 
-1. **deploy:mumbai:identityexample** - deploy onchain merklized issuer example to polygon mumbai
 1. **deploy:amoy:identityexample** - deploy onchain merklized issuer example to polygon amoy
 1. **deploy:main:identityexample** - deploy onchain merklized issuer example to polygon mainnet
 
-1. **deploy:mumbai:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mumbai
 1. **deploy:amoy:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon amoy
 1. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mainnet

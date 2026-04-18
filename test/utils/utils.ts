@@ -1,8 +1,7 @@
 import { core } from '@0xpolygonid/js-sdk';
-import { Hex, poseidon } from '@iden3/js-crypto';
-import { buildDIDType, DID, genesisFromEthAddress, Id, SchemaHash } from '@iden3/js-iden3-core';
+import { buildDIDType, DID, Id, SchemaHash } from '@iden3/js-iden3-core';
 import axios from 'axios';
-import { ethers } from 'hardhat';
+import hre from 'hardhat';
 
 type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends (...a: infer X) => void
   ? X
@@ -30,104 +29,14 @@ export function genMaxBinaryNumber(digits: number): bigint {
   return BigInt(2) ** BigInt(digits) - BigInt(1);
 }
 
-export function calculateQueryHashV2(
-  values: bigint[],
-  schema: string,
-  slotIndex: string | number,
-  operator: string | number,
-  claimPathKey: string | number,
-  claimPathNotExists: string | number
-): bigint {
-  const expValue = prepareCircuitArrayValues(values, 64);
-  const valueHash = poseidon.spongeHashX(expValue, 6);
-  const schemaHash = coreSchemaFromStr(schema);
-  const queryHash = poseidon.hash([
-    schemaHash.bigInt(),
-    BigInt(slotIndex),
-    BigInt(operator),
-    BigInt(claimPathKey),
-    BigInt(claimPathNotExists),
-    valueHash
-  ]);
-  return queryHash;
+export async function getChainId() {
+  return parseInt(await hre.network.provider.send('eth_chainId'), 16);
 }
-
-export function calculateQueryHashV3(
-  values: bigint[],
-  schema: SchemaHash,
-  slotIndex: string | number,
-  operator: string | number,
-  claimPathKey: string | number,
-  valueArraySize: string | number,
-  merklized: string | number,
-  isRevocationChecked: string | number,
-  verifierID: string | number,
-  nullifierSessionID: string | number
-): bigint {
-  const expValue = prepareCircuitArrayValues(values, 64);
-  const valueHash = poseidon.spongeHashX(expValue, 6);
-  const firstPartQueryHash = poseidon.hash([
-    schema.bigInt(),
-    BigInt(slotIndex),
-    BigInt(operator),
-    BigInt(claimPathKey),
-    BigInt(merklized),
-    valueHash
-  ]);
-
-  const queryHash = poseidon.hash([
-    firstPartQueryHash,
-    BigInt(valueArraySize),
-    BigInt(isRevocationChecked),
-    BigInt(verifierID),
-    BigInt(nullifierSessionID),
-    BigInt(0)
-  ]);
-  return queryHash;
-}
-
-const prepareCircuitArrayValues = (arr: bigint[], size: number): bigint[] => {
-  if (!arr) {
-    arr = [];
-  }
-  if (arr.length > size) {
-    throw new Error(`array size ${arr.length} is bigger max expected size ${size}`);
-  }
-
-  // Add the empty values
-  for (let i = arr.length; i < size; i++) {
-    arr.push(BigInt(0));
-  }
-
-  return arr;
-};
 
 export const coreSchemaFromStr = (schemaIntString: string) => {
   const schemaInt = BigInt(schemaIntString);
   return SchemaHash.newSchemaHashFromInt(schemaInt);
 };
-
-export function buildVerifierId(
-  address: string,
-  info: { method: string; blockchain: string; networkId: string }
-): Id {
-  address = address.replace('0x', '');
-  const ethAddrBytes = Hex.decodeString(address);
-  const ethAddr = ethAddrBytes.slice(0, 20);
-  const genesis = genesisFromEthAddress(ethAddr);
-
-  const tp = buildDIDType(info.method, info.blockchain, info.networkId);
-
-  return new Id(tp, genesis);
-}
-
-export function calculateRequestId(params: string, address: string): bigint {
-  const requestId =
-    (BigInt(ethers.keccak256(ethers.solidityPacked(['bytes', 'address'], [params, address]))) &
-      BigInt('0x0000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')) +
-    BigInt('0x0001000000000000000000000000000000000000000000000000000000000000');
-  return requestId;
-}
 
 export async function getDidResolution(
   did: string,

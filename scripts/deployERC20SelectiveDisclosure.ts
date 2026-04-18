@@ -42,13 +42,6 @@ async function main() {
   // set default query
   const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.1';
 
-  // current v3 validator address on mumbai
-  // const validatorAddressV3 = '0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a';
-  //
-  // const chainId = 80001;
-  //
-  // const network = 'polygon-mumbai';
-
   // current v3 validator address on amoy
 
   const validatorAddressV3 = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';

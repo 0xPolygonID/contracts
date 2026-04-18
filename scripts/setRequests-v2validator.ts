@@ -22,14 +22,6 @@ export const QueryOperators = {
 };
 
 async function main() {
-  // sig:validator:    // current sig validator address on mumbai
-  // const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
-  //
-  // // mtp:validator:    // current mtp validator address on mumbai
-  // const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
-  //
-  // const erc20verifierAddress = '0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03'; //with sig    validatorc
-
   // sig:validator:    // current sig validator address on amoy
   const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
 
@@ -41,7 +33,7 @@ async function main() {
   const owner = (await ethers.getSigners())[0];
 
   const ERC20Verifier = await ethers.getContractFactory('ERC20Verifier');
-  const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address on mumbai
+  const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address
 
   console.log(erc20Verifier, ' attached to:', await erc20Verifier.getAddress());
 
