@@ -60,25 +60,25 @@ const config: HardhatUserConfig = {
       url: `${process.env.LINEA_MAINNET_RPC_URL}`,
       accounts: [`0x${process.env.PRIVATE_KEY}`]
     },
-    hardhat: {
-      chainId: 11155111,
-      forking: {
-        url: `${process.env.ETHEREUM_SEPOLIA_RPC_URL}`
-      },
-      chains: {
-        11155111: {
-          hardforkHistory: {
-            london: 100000
-          }
-        }
-      },
-      accounts: [
-        {
-          privateKey: process.env.PRIVATE_KEY as string,
-          balance: '1000000000000000000000000'
-        }
-      ]
-    },
+    // hardhat: {
+    //   chainId: 11155111,
+    //   forking: {
+    //     url: `${process.env.ETHEREUM_SEPOLIA_RPC_URL}`
+    //   },
+    //   chains: {
+    //     11155111: {
+    //       hardforkHistory: {
+    //         london: 100000
+    //       }
+    //     }
+    //   },
+    //   accounts: [
+    //     {
+    //       privateKey: process.env.PRIVATE_KEY as string,
+    //       balance: '1000000000000000000000000'
+    //     }
+    //   ]
+    // },
     localhost: {
       url: 'http://127.0.0.1:8545',
       timeout: 100000000
