@@ -42,7 +42,7 @@ async function main() {
   const circuitName: CircuitId = CircuitId.AtomicQueryV3OnChainStable; // TODO put your circuit here;
   const methodId = '06c86a91'; // submitResponse
   const nullifierSessionID = 11838218; // you can generate random number for nullifier session id, but make sure to use the same in the circuit input when you generate proof, otherwise the proof will not be verified
-  const stateAddress = '0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896'; // State contract address
+  const stateAddress = '0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896'; // State contract address in the network you are deploying. Review Readme for more details.
   let requestId: bigint;
 
   const [signer] = await ethers.getSigners();
@@ -240,6 +240,9 @@ async function main() {
     console.log(JSON.stringify(invokeRequestMetadata, null, '\t'));
 
     console.log(`Request ID: ${requestId} is set in tx: ${tx.hash}`);
+    const txSetTransferRequestId = await erc20instance.setTransferRequestId(requestId.toString());
+    await txSetTransferRequestId.wait();
+    console.log(`Transfer Request ID is set in tx: ${txSetTransferRequestId.hash}`);
   } catch (e) {
     console.log('error: ', e);
   }

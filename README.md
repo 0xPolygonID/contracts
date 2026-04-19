@@ -3,7 +3,7 @@
 This repository contains examples of smart contracts and deployment scripts.
 
 ## Smart contracts with unified addresses
-
+There are contracts deployed on the same addresses across all supported networks. You can reuse them in your example contracts.
 |     Smart contract      |     Address                                |
 |:-----------------------:|:------------------------------------------:|
 |       **State***        | 0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896 |
@@ -21,13 +21,24 @@ This repository contains examples of smart contracts and deployment scripts.
 - Polygon Amoy testnet State Contract: **0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124**
 - Polygon PoS mainnet State Contract : **0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D**
 
+## Libraries on unified addresses
+There are a few libraries, which does not tend to evolve much but can be re-used in many other contracts, e.g. custom onchain-identity. They reside on the same addresses across all networks deployed and serve both project needs and as a public good. Obviously, they are not upgradable.
+
+|      Library       |     Address                                |
+|:------------------:|:------------------------------------------:|
+|    **SmtLib***     | 0x682364078e26C1626abD2B95109D2019E241F0F6 |
+| **PoseidonUnit1L** | 0xC72D76D7271924a2AD54a19D216640FeA3d138d9 |
+| **PoseidonUnit2L** | 0x72F721D9D5f91353B505207C63B56cF3d9447edB |
+| **PoseidonUnit3L** | 0x5Bc89782d5eBF62663Df7Ce5fb4bc7408926A240 |
+| **PoseidonUnit4L** | 0x0695cF2c6dfc438a4E40508741888198A6ccacC2 |
+
 ## ERC20 example, Validators & Verifiers contracts
 
 If you are deploying your own ZKPVerifier, you can use already deployed Circuit Validators with the corresponding Verifiers.
 
 The example of ERC20 smart contract. This example shows how to use sig/mtp validator to verification zero-knowledge proof on-chain.
 
-- Example contract that inherits ZKP Verifier contract https://github.com/iden3/contracts/blob/master/contracts/verifiers/ZKPVerifier.sol
+- Example contract that inherits EmbeddedVerifier contract https://github.com/iden3/contracts/blob/master/contracts/verifiers/EmbeddedVerifier.sol
 
 Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
 
