@@ -1,11 +1,7 @@
-import { ethers, upgrades } from 'hardhat';
-import fs from 'fs';
-import path from 'path';
 import { StateDeployHelper } from '../test/helpers/StateDeployHelper';
-const pathOutputJson = path.join(__dirname, './deploy_validator_output.json');
 
 async function main() {
-  const validatorContractAddress = '0xEF8540a5e0F4f53B436e7C3A273dCAe1C05d764D'; // mumbai
+  const validatorContractAddress = '0xa4035dd68609584f47a83E84fBd9CbBA2C344C89'; // your v2 sig validator deployed address
   const validatorContractName = 'CredentialAtomicQuerySigV2Validator';
 
   const stateDeployHelper = await StateDeployHelper.initialize();

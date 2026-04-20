@@ -1,11 +1,7 @@
-import { ethers, upgrades } from 'hardhat';
-import fs from 'fs';
-import path from 'path';
 import { StateDeployHelper } from '../test/helpers/StateDeployHelper';
-const pathOutputJson = path.join(__dirname, './deploy_validator_output.json');
 
 async function main() {
-  const validatorContractAddress = '0x03Ee09635E9946165dd9538e9414f0ACE57e42e1'; // mumbai
+  const validatorContractAddress = '0x8b9588bF3EA1F7B3C4cC2187eCF726F104f0F04F'; // your v2 mtp validator deployed address
   const validatorContractName = 'CredentialAtomicQueryMTPV2Validator';
 
   const stateDeployHelper = await StateDeployHelper.initialize();

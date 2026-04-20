@@ -1,7 +1,13 @@
-import { ethers } from 'hardhat';
+import hre, { ethers } from 'hardhat';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
-import { ChainIds, DID, DidMethod } from '@iden3/js-iden3-core';
-import { buildVerifierId, calculateQueryHashV3, coreSchemaFromStr } from '../test/utils/utils';
+import { Blockchain, DID, DidMethod, NetworkId } from '@iden3/js-iden3-core';
+import { coreSchemaFromStr, getChainId } from '../test/utils/utils';
+import {
+  buildVerifierId,
+  calculateQueryHashV3,
+  calculateRequestId,
+  CircuitId
+} from '@0xpolygonid/js-sdk';
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
   EQ: 1, // equal
@@ -35,37 +41,26 @@ export const QueryOperators = {
 };
 
 async function main() {
-  // current v3 validator address on mumbai
-  // const validatorAddressV3 = '0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a';
-  //
-  // const erc20verifierAddress = '0x36eB0E70a456c310D8d8d15ae01F6D5A7C15309A';
-  //
-  // current v3 validator address on amoy
-  const validatorAddressV3 = '0xa5f08979370AF7095cDeDb2B83425367316FAD0B';
-  const erc20verifierAddress = '0xc5Cd536cb9Cc3BD24829502A39BE593354986dc4';
+  // current v3 stable validator unified address
+  const validatorAddressV3 = '0x0d78ADDD050a75a94e21eD14d54591933B9B7546';
+  const erc20verifierAddress = '0x30c4dfC99CF5e9dFD9053faDd86E087cB06d589B'; //your erc20 verifier deployed address
+  const verifierLibAddress = '0xdaC4f3e3174Ce82909FA109de8307F8C3aed1453'; // verifier lib deployed address
   const owner = (await ethers.getSigners())[0];
 
-  const ERC20Verifier = await ethers.getContractFactory('ERC20SelectiveDisclosureVerifier');
+  const ERC20Verifier = await ethers.getContractFactory('ERC20SelectiveDisclosureVerifier', {
+    libraries: {
+      VerifierLib: verifierLibAddress
+    }
+  });
   const erc20Verifier = await ERC20Verifier.attach(erc20verifierAddress); // current mtp validator address on mumbai
-  console.log(erc20Verifier, ' attached to:', await erc20Verifier.getAddress());
-
-  // set default query
-  const circuitIdV3 = 'credentialAtomicQueryV3OnChain-beta.1';
+  console.log(`ERC20Verifier attached to: ${await erc20Verifier.getAddress()}`);
 
   const type = 'KYCAgeCredential';
 
   const queryHash = '';
-  const circuitIds = [circuitIdV3];
+  const circuitIds = [CircuitId.AtomicQueryV3OnChainStable];
   const skipClaimRevocationCheck = false;
   const allowedIssuers = [];
-  // const schemaUrl =
-  //   'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld';
-  // const schema = '74977327600848231385663280181476307657';
-  // const schemaClaimPathKey =
-  //   '20376033832371109177683048456014525905119173674985843915445634726167450989630';
-  // const slotIndex = 0;
-  // const merklized = 1;
-  // const requestIdModifier = 1;
   const groupID = 0;
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
   //init these values for non-merklized credential use case
@@ -77,36 +72,20 @@ async function main() {
   const schema = '198285726510688200335207273836123338699';
   const requestIdModifier = 100;
 
-  // you can set linked requests by changing group id
+  const chainId = await getChainId();
 
-  // const groupID = 1;
-  // const requestIdModifier = 10000;
-  //
-  // const chainId = 80001;
-  //
-  // const network = 'polygon-mumbai';
-
-  const chainId = 80002;
-
-  const network = 'polygon-amoy';
-
-  const networkFlag = Object.keys(ChainIds).find((key) => ChainIds[key] === chainId);
-
-  if (!networkFlag) {
-    throw new Error(`Invalid chain id ${chainId}`);
-  }
-  const [blockchain, networkId] = networkFlag.split(':');
+  const network = hre.network.name;
 
   const verifierId = buildVerifierId(await erc20Verifier.getAddress(), {
-    blockchain,
-    networkId,
-    method: DidMethod.PolygonId
+    blockchain: Blockchain.Privado,
+    networkId: NetworkId.Main,
+    method: DidMethod.Iden3
   });
+
   console.log(verifierId.bigInt());
-  const ageQueries = [
+  const ageQueries: any = [
     // EQ
     {
-      requestId: 100 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -123,7 +102,6 @@ async function main() {
     },
     // LT
     {
-      requestId: 200 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.LT,
@@ -140,7 +118,6 @@ async function main() {
     },
     // GT
     {
-      requestId: 300 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.GT,
@@ -157,7 +134,6 @@ async function main() {
     },
     // IN
     {
-      requestId: 400 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.IN,
@@ -174,7 +150,6 @@ async function main() {
     },
     // NIN
     {
-      requestId: 500 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.NIN,
@@ -191,7 +166,6 @@ async function main() {
     },
     // NE
     {
-      requestId: 600 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.NE,
@@ -209,7 +183,6 @@ async function main() {
 
     // BETWEEN
     {
-      requestId: 700 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.BETWEEN,
@@ -227,7 +200,6 @@ async function main() {
 
     // NON BETWEEN
     {
-      requestId: 800 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.NONBETWEEN,
@@ -245,7 +217,6 @@ async function main() {
 
     // EXISTS
     {
-      requestId: 900 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EXISTS,
@@ -262,7 +233,6 @@ async function main() {
     },
     // LTE
     {
-      requestId: 1000 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.LTE,
@@ -280,7 +250,6 @@ async function main() {
 
     // GTE
     {
-      requestId: 1100 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.GTE,
@@ -297,9 +266,7 @@ async function main() {
     },
 
     // EQ (corner)
-
     {
-      requestId: 150 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.EQ,
@@ -317,7 +284,6 @@ async function main() {
 
     // LT
     {
-      requestId: 250 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.LT,
@@ -334,7 +300,6 @@ async function main() {
     },
     // GT
     {
-      requestId: 350 * requestIdModifier,
       schema: schema,
       claimPathKey: schemaClaimPathKey,
       operator: Operators.GT,
@@ -407,7 +372,6 @@ async function main() {
   try {
     for (let i = 0; i < ageQueries.length; i++) {
       const query = ageQueries[i];
-      console.log(query.requestId);
 
       const operatorKey =
         Object.keys(QueryOperators)[Object.values(QueryOperators).indexOf(query.operator)];
@@ -425,6 +389,10 @@ async function main() {
         query.verifierID.toString(),
         query.nullifierSessionID
       ).toString();
+      const data = packV3ValidatorParams(query);
+      const requestId = calculateRequestId(data, await owner.getAddress());
+      query.requestId = requestId;
+      console.log(query.requestId);
 
       const invokeRequestMetadata = {
         id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
@@ -443,7 +411,7 @@ async function main() {
           scope: [
             {
               id: query.requestId,
-              circuitId: circuitIdV3,
+              circuitId: CircuitId.AtomicQueryV3OnChainStable,
               query: {
                 allowedIssuers: ['*'],
                 context: schemaUrl,
@@ -462,12 +430,18 @@ async function main() {
         }
       };
 
-      const tx = await erc20Verifier.setZKPRequest(query.requestId, {
-        metadata: JSON.stringify(invokeRequestMetadata),
-        validator: validatorAddressV3,
-        data: packV3ValidatorParams(query)
-      });
-
+      // console.log('Invoke Request Metadata:', invokeRequestMetadata);
+      const tx = await erc20Verifier.setRequests([
+        {
+          requestId: requestId.toString(),
+          metadata: JSON.stringify(invokeRequestMetadata, (_, v) =>
+            typeof v === 'bigint' ? v.toString() : v
+          ),
+          validator: validatorAddressV3,
+          creator: await owner.getAddress(),
+          params: data
+        }
+      ]);
       console.log(tx.hash);
       await tx.wait();
     }

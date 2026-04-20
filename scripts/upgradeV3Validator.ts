@@ -1,11 +1,7 @@
-import { ethers, upgrades } from 'hardhat';
-import fs from 'fs';
-import path from 'path';
 import { StateDeployHelper } from '../test/helpers/StateDeployHelper';
-const pathOutputJson = path.join(__dirname, './deploy_validator_output.json');
 
 async function main() {
-  const validatorContractAddress = '0xd8946ddCD36Ae2552321769070bB263A275dcE35'; // mumbai
+  const validatorContractAddress = '0xeEf86C07547FBfb1F80a2B6F4446a022f8Dd5d39'; // your v3 validator deployed address
   const validatorContractName = 'CredentialAtomicQueryV3Validator';
 
   const stateDeployHelper = await StateDeployHelper.initialize();

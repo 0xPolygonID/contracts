@@ -64,7 +64,7 @@ async function main() {
   console.log(contractName, ' deployed to:', await erc20instance.getAddress());
 
   // set default query
-  const circuitIdV3 = CircuitId.AtomicQueryV3OnChain; // TODO put your circuit here.;
+  const circuitIdV3 = CircuitId.AtomicQueryV3OnChainStable; // TODO put your circuit here.;
 
   // current v3 validator address
   const validatorAddressV3 = '0xC616963610A5545EF89b373e1fEAE8A1e505FaFF';
