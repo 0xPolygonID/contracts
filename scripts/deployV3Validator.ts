@@ -4,22 +4,28 @@ import path from 'path';
 const pathOutputJson = path.join(__dirname, './deploy_validator_output.json');
 
 async function main() {
-  const stateAddress = '0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D'; // current iden3 state smart contract on main
-  // const stateAddress = '0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124'; // current iden3 state smart contract on amoy testnet
+  const stateAddress = '0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896'; // current iden3 state smart contract on the network you want to deploy the identity contract to
+  const [signer] = await ethers.getSigners();
 
-  const verifierContractWrapperName = 'VerifierV3Wrapper';
+  const groth16VerifierContractWrapperName = 'Groth16VerifierV3Wrapper';
   const validatorContractName = 'CredentialAtomicQueryV3Validator';
-  const VerifierSigWrapper = await ethers.getContractFactory(verifierContractWrapperName);
-  const verifierWrapper = await VerifierSigWrapper.deploy();
+  const Groth16VerifierV3Wrapper = await ethers.getContractFactory(
+    groth16VerifierContractWrapperName
+  );
+  const verifierWrapper = await Groth16VerifierV3Wrapper.deploy();
 
   await verifierWrapper.waitForDeployment();
-  console.log(verifierContractWrapperName, ' deployed to:', await verifierWrapper.getAddress());
+  console.log(
+    groth16VerifierContractWrapperName,
+    ' deployed to:',
+    await verifierWrapper.getAddress()
+  );
 
   const CredentialAtomicQueryValidator = await ethers.getContractFactory(validatorContractName);
 
   const CredentialAtomicQueryValidatorProxy = await upgrades.deployProxy(
     CredentialAtomicQueryValidator,
-    [await verifierWrapper.getAddress(), stateAddress]
+    [stateAddress, await verifierWrapper.getAddress(), await signer.getAddress()]
   );
 
   await CredentialAtomicQueryValidatorProxy.waitForDeployment();
@@ -30,7 +36,7 @@ async function main() {
   );
 
   const outputJson = {
-    verifierContractWrapperName,
+    groth16VerifierContractWrapperName,
     validatorContractName,
     validator: await CredentialAtomicQueryValidatorProxy.getAddress(),
     verifier: await verifierWrapper.getAddress(),
