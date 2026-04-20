@@ -1,6 +1,6 @@
 import hre, { ethers, upgrades } from 'hardhat';
 import { packV2ValidatorParams, packV3ValidatorParams } from '../test/utils/pack-utils';
-import { coreSchemaFromStr, getChainId } from '../test/utils/utils';
+import { coreSchemaFromStr, getChainId, verifyContract } from '../test/utils/utils';
 import {
   buildVerifierId,
   calculateQueryHashV2,
@@ -10,6 +10,7 @@ import {
 } from '@0xpolygonid/js-sdk';
 import { Blockchain, DID, DidMethod, NetworkId } from '@iden3/js-iden3-core';
 import { deployVerifierLib } from '../test/utils/deploy-utils';
+import { getImplementationAddress } from '@openzeppelin/upgrades-core';
 
 const Operators = {
   NOOP: 0, // No operation, skip query verification in circuit
@@ -51,6 +52,7 @@ async function main() {
   // Deploy ERC20Verifier contract
 
   const verifierLib = await deployVerifierLib();
+  await verifierLib.waitForDeployment();
 
   const ERC20ContractFactory = await ethers.getContractFactory(contractName, {
     libraries: {
@@ -246,6 +248,28 @@ async function main() {
   } catch (e) {
     console.log('error: ', e);
   }
+
+  console.log('Verifying contracts...');
+  await verifyContract(hre, await verifierLib.getAddress(), {
+    constructorArgsImplementation: [],
+    libraries: {}
+  });
+  await verifyContract(hre, await erc20instance.getAddress(), {
+    constructorArgsImplementation: [],
+    constructorArgsProxy: [],
+    constructorArgsProxyAdmin: [await signer.getAddress()],
+    libraries: {
+      'contracts/lib/VerifierLib.sol:VerifierLib': ''
+    }
+  });
+  await verifyContract(
+    hre,
+    await getImplementationAddress(signer.provider, await erc20instance.getAddress()),
+    {
+      constructorArgsImplementation: [],
+      libraries: {}
+    }
+  );
 }
 
 main()

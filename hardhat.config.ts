@@ -95,18 +95,42 @@ const config: HardhatUserConfig = {
     },
     customChains: [
       {
+        network: 'ethereum-mainnet',
+        chainId: 1,
+        urls: {
+          apiURL: 'https://api.etherscan.io/v2/api?chainid=1',
+          browserURL: 'https://etherscan.io'
+        }
+      },
+      {
+        network: 'ethereum-sepolia',
+        chainId: 11155111,
+        urls: {
+          apiURL: 'https://api.etherscan.io/v2/api?chainid=11155111',
+          browserURL: 'https://sepolia.etherscan.io'
+        }
+      },
+      {
+        network: 'polygon-mainnet',
+        chainId: 137,
+        urls: {
+          apiURL: 'https://api.etherscan.io/v2/api?chainid=137',
+          browserURL: 'https://polygonscan.com'
+        }
+      },
+      {
         network: 'polygon-amoy',
         chainId: 80002,
         urls: {
-          apiURL: 'https://api-amoy.polygonscan.com/api',
-          browserURL: 'https://docs.polygonscan.com'
+          apiURL: 'https://api.etherscan.io/v2/api?chainid=80002',
+          browserURL: 'https://amoy.polygonscan.com'
         }
       },
       {
         network: 'linea-sepolia',
         chainId: 59141,
         urls: {
-          apiURL: 'https://api-sepolia.lineascan.build/api',
+          apiURL: 'https://api.etherscan.io/v2/api?chainid=59141',
           browserURL: 'https://sepolia.lineascan.build'
         }
       },
@@ -114,7 +138,7 @@ const config: HardhatUserConfig = {
         network: 'linea',
         chainId: 59144,
         urls: {
-          apiURL: 'https://api.lineascan.build/api',
+          apiURL: 'https://api.etherscan.io/v2/api?chainid=59144',
           browserURL: 'https://lineascan.build'
         }
       }

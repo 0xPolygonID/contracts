@@ -2,6 +2,7 @@ import { core } from '@0xpolygonid/js-sdk';
 import { buildDIDType, DID, Id, SchemaHash } from '@iden3/js-iden3-core';
 import axios from 'axios';
 import hre from 'hardhat';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends (...a: infer X) => void
   ? X
@@ -71,4 +72,62 @@ export function getDIDEmptyState(did: core.DID) {
   const emptyDID = DID.parseFromId(identifier);
 
   return emptyDID;
+}
+
+export async function verifyContract(
+  hre: HardhatRuntimeEnvironment,
+  contractAddress: any,
+  opts: {
+    contract?: string;
+    constructorArgsProxy?: any[];
+    constructorArgsProxyAdmin?: any[];
+    constructorArgsImplementation: any[];
+    libraries: any;
+  }
+): Promise<boolean> {
+  if (hre.network.name === 'localhost') {
+    return true;
+  }
+  // When verifying if the proxy contract is not verified yet we need to pass the arguments
+  // for the proxy contract first, then for proxy admin and finally for the implementation contract
+  if (opts.constructorArgsProxy) {
+    try {
+      await hre.run('verify:verify', {
+        address: contractAddress,
+        contract: opts.contract,
+        constructorArguments: opts.constructorArgsProxy,
+        libraries: opts.libraries
+      });
+    } catch (error) {
+      // do nothing
+    }
+  }
+
+  if (opts.constructorArgsProxyAdmin) {
+    try {
+      await hre.run('verify:verify', {
+        address: contractAddress,
+        contract: opts.contract,
+        constructorArguments: opts.constructorArgsProxyAdmin,
+        libraries: opts.libraries
+      });
+    } catch (error) {
+      // do nothing
+    }
+  }
+
+  try {
+    await hre.run('verify:verify', {
+      address: contractAddress,
+      contract: opts.contract,
+      constructorArguments: opts.constructorArgsImplementation,
+      libraries: opts.libraries
+    });
+    console.log(`Verification successful for ${contractAddress}\n`);
+    return true;
+  } catch (error) {
+    console.error(`Error verifying ${contractAddress}: ${error}\n`);
+  }
+
+  return false;
 }

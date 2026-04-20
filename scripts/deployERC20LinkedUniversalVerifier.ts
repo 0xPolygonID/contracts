@@ -1,4 +1,5 @@
 import { ethers } from 'hardhat';
+import { verifyContract } from '../test/utils/utils';
 
 const universalVerifierAddress = '0x2B0D3f664A5EbbfBD76E6cbc2cA9A504a68d2F4F'; // your universal verifier address here
 
@@ -16,6 +17,12 @@ async function main() {
   ]);
   await verifier.waitForDeployment();
   console.log(verifierName, ' contract address:', await verifier.getAddress());
+
+  console.log('Verifying contracts...');
+  await verifyContract(hre, await verifier.getAddress(), {
+    constructorArgsImplementation: [universalVerifierAddress, verifierName, verifierSymbol],
+    libraries: {}
+  });
 }
 
 main()
