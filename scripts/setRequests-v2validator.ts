@@ -251,6 +251,10 @@ async function main() {
         claimPathDoesntExist
       ).toString();
 
+      let data = packV2ValidatorParams(query);
+      let requestId = calculateRequestId(data, await owner.getAddress());
+      query.requestId = requestId;
+
       const invokeRequestMetadata = {
         id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
         typ: 'application/iden3comm-plain-json',
@@ -286,10 +290,6 @@ async function main() {
         }
       };
 
-      let data = packV2ValidatorParams(query);
-      let requestId = calculateRequestId(data, await owner.getAddress());
-      query.requestId = requestId;
-
       const tx = await erc20Verifier.setRequests([
         {
           requestId: requestId.toString(),
@@ -307,6 +307,7 @@ async function main() {
       query.circuitIds = [CircuitId.AtomicQueryMTPV2OnChain];
       data = packV2ValidatorParams(query);
       requestId = calculateRequestId(data, await owner.getAddress());
+      query.requestId = requestId;
       console.log(query.requestId);
 
       invokeRequestMetadata.body.scope[0].circuitId = CircuitId.AtomicQueryMTPV2OnChain;

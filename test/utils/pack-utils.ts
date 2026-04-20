@@ -45,7 +45,7 @@ export type CrossChainProof = {
   proof: string;
 };
 
-export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []): string {
+export function packV2ValidatorParams(query: any): string {
   return abiCoder.encode(
     [
       'tuple(' +
@@ -58,7 +58,7 @@ export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []): s
         'uint256[] allowedIssuers,' +
         'string[] circuitIds,' +
         'bool skipClaimRevocationCheck,' +
-        'uint256 claimPathNotExists,' +
+        'uint256 claimPathNotExists' +
         ')'
     ],
     [
@@ -69,7 +69,7 @@ export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []): s
         slotIndex: query.slotIndex,
         value: query.value,
         queryHash: query.queryHash,
-        allowedIssuers: allowedIssuers,
+        allowedIssuers: query.allowedIssuers,
         circuitIds: query.circuitIds,
         skipClaimRevocationCheck: query.skipClaimRevocationCheck,
         claimPathNotExists: query.claimPathNotExists
@@ -78,7 +78,7 @@ export function packV2ValidatorParams(query: any, allowedIssuers: any[] = []): s
   );
 }
 
-export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []): string {
+export function packV3ValidatorParams(query: any): string {
   return abiCoder.encode(
     [
       'tuple(' +
@@ -105,7 +105,7 @@ export function packV3ValidatorParams(query: any, allowedIssuers: any[] = []): s
         slotIndex: query.slotIndex,
         value: query.value,
         queryHash: query.queryHash,
-        allowedIssuers: allowedIssuers,
+        allowedIssuers: query.allowedIssuers,
         circuitIds: query.circuitIds,
         skipClaimRevocationCheck: query.skipClaimRevocationCheck,
         groupID: query.groupID,

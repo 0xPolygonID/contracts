@@ -7,8 +7,6 @@ import 'hardhat-contract-sizer';
 
 dotenv.config();
 
-const DEFAULT_MNEMONIC = 'test test test test test test test test test test test junk';
-
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 

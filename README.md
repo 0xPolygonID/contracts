@@ -195,12 +195,35 @@ Legacy ERC20 examples with airdrop use case, not restricted
 
 ## Deploy scripts
 
-1. **deploy:main:erc20** - deploy erc20 smart contract to polygon mainnet
-1. **deploy:main:sig** - deploy signature validator to polygon mainnet
-1. **deploy:main:mtp** - deploy MTP validator to polygon mainnet
-
-1. **deploy:amoy:identityexample** - deploy onchain merklized issuer example to polygon amoy
-1. **deploy:main:identityexample** - deploy onchain merklized issuer example to polygon mainnet
-
-1. **deploy:amoy:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon amoy
-1. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to polygon mainnet
+1. **deploy:erc20** - deploy erc20 smart contract to selected network
+    ```shell
+    npm run deploy:erc20 -- --network <network>
+    ```
+2. **deploy:erc20linkeduniversalverifier** - deploy erc20 linked to Universal Verifier smart contract to selected network
+    ```shell
+    npm run deploy:erc20linkeduniversalverifier -- --network <network>
+    ```
+3. **deploy:erc20selectivedisclosure** - deploy erc20 selective disclosure smart contract to selected network
+    ```shell
+    npm run deploy:erc20selectivedisclosure -- --network <network>
+    ```
+4. **deploy:sig** - deploy signature validator to selected network
+    ```shell
+    npm run deploy:sig -- --network <network>
+    ```
+5. **deploy:mtp** - deploy MTP validator to selected network
+    ```shell
+    npm run deploy:mtp -- --network <network>
+    ```
+6. **deploy:v3** - deploy V3 validator to selected network
+    ```shell
+    npm run deploy:v3 -- --network <network>
+    ```
+7. **deploy:identityexample** - deploy onchain merklized issuer example to selected network
+    ```shell
+    npm run deploy:identityexample -- --network <network>
+    ```
+8. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to selected network
+    ```shell
+    npm run deploy:balancecredentialissuer -- --network <network>
+    ```
