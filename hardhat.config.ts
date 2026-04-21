@@ -133,7 +133,7 @@ const config: HardhatUserConfig = {
         }
       },
       {
-        network: 'linea',
+        network: 'linea-mainnet',
         chainId: 59144,
         urls: {
           apiURL: 'https://api.etherscan.io/v2/api?chainid=59144',
