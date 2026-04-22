@@ -30,7 +30,7 @@ async function main() {
   const symbol = 'ERCZKP';
 
   const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
-  const allowedIssuers = []; // TODO put your allowed issuers here
+  const allowedIssuers = []; // Put your allowed issuers here. Example: ['did:iden3:privado:main:2SZDsdYordSGwDwsiXcDY7dGzzkDSjHmiSCqdq1t4r']
   const circuitName: CircuitId = CircuitId.AtomicQueryV3OnChainStable; // TODO put your circuit here;
   const methodId = '06c86a91'; // submitResponse
   const nullifierSessionID = 11838218; // you can generate random number for nullifier session id, but make sure to use the same in the circuit input when you generate proof, otherwise the proof will not be verified
