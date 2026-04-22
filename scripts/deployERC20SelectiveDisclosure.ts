@@ -4,23 +4,13 @@ import {
   buildVerifierId,
   calculateQueryHashV3,
   calculateRequestId,
-  CircuitId
+  CircuitId,
+  Operators
 } from '@0xpolygonid/js-sdk';
 import { coreSchemaFromStr, getChainId, verifyContract } from '../test/utils/utils';
 import { packV3ValidatorParams } from '../test/utils/pack-utils';
-import { deployVerifierLib } from '../test/utils/deploy-utils';
+import { deployVerifierLib, getStateContractAddress } from '../test/utils/deploy-utils';
 import { getImplementationAddress } from '@openzeppelin/upgrades-core';
-
-const Operators = {
-  NOOP: 0, // No operation, skip query verification in circuit
-  EQ: 1, // equal
-  LT: 2, // less than
-  GT: 3, // greater than
-  IN: 4, // in
-  NIN: 5, // not in
-  NE: 6, // not equal
-  SD: 16 // selective disclosure
-};
 
 async function main() {
   // you can run https://go.dev/play/p/3id7HAhf-Wi  to get schema hash and claimPathKey using YOUR schema
@@ -39,7 +29,7 @@ async function main() {
   const contractName = 'ERC20SelectiveDisclosureVerifier';
   const name = 'ERC20SelectiveDisclosureVerifier';
   const symbol = 'ERCZKP';
-  const stateAddress = '0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896'; // State contract address in the network you are deploying. Review Readme for more details.
+  const stateAddress = await getStateContractAddress();
 
   const [signer] = await ethers.getSigners();
   console.log(`Deployer address: ${await signer.getAddress()}`);
@@ -66,7 +56,7 @@ async function main() {
   console.log(contractName, ' deployed to:', await erc20instance.getAddress());
 
   // set default query
-  const circuitIdV3 = CircuitId.AtomicQueryV3OnChainStable; // TODO put your circuit here.;
+  const circuitIdV3 = CircuitId.AtomicQueryV3OnChain; // TODO put your circuit here.;
 
   // current v3 validator address
   const validatorAddressV3 = '0xC616963610A5545EF89b373e1fEAE8A1e505FaFF';

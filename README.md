@@ -3,116 +3,49 @@
 This repository contains examples of smart contracts and deployment scripts.
 
 ## Smart contracts with unified addresses
+
 There are contracts deployed on the same addresses across all supported networks. You can reuse them in your example contracts.
-|     Smart contract      |     Address                                |
+| Smart contract | Address |
 |:-----------------------:|:------------------------------------------:|
-|       **State***        | 0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896 |
-|    **Validator MTP**    | 0xec9EF9c4595B46abF2b6A923BD1529081E03fbBB |
-|    **Validator SIG**    | 0x5BD60F3Ef5890260906172EEe1f0a965707791f1 |
-|    **Validator V3**     | 0xC616963610A5545EF89b373e1fEAE8A1e505FaFF |
-|    **Validator V3 Stable**     | 0x0d78ADDD050a75a94e21eD14d54591933B9B7546 |
-| **Universal Verifier**  | 0xfcc86A79fCb057A8e55C6B853dff9479C3cf607c |
-| **Universal Verifier V2****  | 0x2B0D3f664A5EbbfBD76E6cbc2cA9A504a68d2F4F |
-| **Identity Tree Store** | 0x7dF78ED37d0B39Ffb6d4D527Bb1865Bf85B60f81 |
+| **State** | 0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896 |
+| **Validator V3 Stable** | 0x0d78ADDD050a75a94e21eD14d54591933B9B7546 |
+| **Universal Verifier V2** | 0x2B0D3f664A5EbbfBD76E6cbc2cA9A504a68d2F4F |
 
-
-*The only exception are the State contracts for **Polygon Mainnet** and **Polygon Amoy testnet**, which where deployed before the unified address methodology was implemented.
+\*The only exception are the State contracts for **Polygon Mainnet** and **Polygon Amoy testnet**, which where deployed before the unified address methodology was implemented.
 
 - Polygon Amoy testnet State Contract: **0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124**
 - Polygon PoS mainnet State Contract : **0x624ce98D2d27b20b8f8d521723Df8fC4db71D79D**
 
 ## Libraries on unified addresses
+
 There are a few libraries, which does not tend to evolve much but can be re-used in many other contracts, e.g. custom onchain-identity. They reside on the same addresses across all networks deployed and serve both project needs and as a public good. Obviously, they are not upgradable.
 
-|      Library       |     Address                                |
-|:------------------:|:------------------------------------------:|
-|    **SmtLib***     | 0x682364078e26C1626abD2B95109D2019E241F0F6 |
+|      Library       |                  Address                   |
+| :----------------: | :----------------------------------------: |
+|     **SmtLib**     | 0x682364078e26C1626abD2B95109D2019E241F0F6 |
 | **PoseidonUnit1L** | 0xC72D76D7271924a2AD54a19D216640FeA3d138d9 |
 | **PoseidonUnit2L** | 0x72F721D9D5f91353B505207C63B56cF3d9447edB |
 | **PoseidonUnit3L** | 0x5Bc89782d5eBF62663Df7Ce5fb4bc7408926A240 |
 | **PoseidonUnit4L** | 0x0695cF2c6dfc438a4E40508741888198A6ccacC2 |
 
-## ERC20 example, Validators & Verifiers contracts
+## ERC20 example contracts
 
-If you are deploying your own ZKPVerifier, you can use already deployed Circuit Validators with the corresponding Verifiers.
+If you are deploying your own ZKPVerifier, you can use already deployed circuit validators with unified addresses with the corresponding groth16 verifiers.
 
-The example of ERC20 smart contract. This example shows how to use sig/mtp validator to verification zero-knowledge proof on-chain.
+The examples of ERC20 smart contract shows how to use v3 stable validator for verification of zero-knowledge proof on-chain for token transfers.
 
-- Example contract that inherits EmbeddedVerifier contract https://github.com/iden3/contracts/blob/master/contracts/verifiers/EmbeddedVerifier.sol
-
-Also, it contains the example of ERC20 based smart contract with enabled zkp verifications for token transfers.
+We provide deployment scripts for example zkp verifier contracts that inherits EmbeddedVerifier contract https://github.com/iden3/contracts/blob/master/contracts/verifiers/EmbeddedVerifier.sol
 
 <details>
 <summary>Addresses</summary>
 
-Current addresses on **Polygon Mainnet**:
+Current addresses on **Polygon Amoy** testnet using v3 stable validator:
 
-(V2.0.6-beta.1 V3 validators)
-
-|                   |                                Sig                                 |
-|:-----------------:|:------------------------------------------------------------------:|
-|   **Verifier**    |             0x6f9D177019E3b04D2b0fe674fCa106B570e74EfD             |
-|  **Validators**   |             0xd8946ddCD36Ae2552321769070bB263A275dcE35             |
-
-
-(V2.0.6 V2 validators)
-
-|                   |                                Sig                                |                                MTP                                |
-|:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
-|   **Verifier**    |            0xa0495df44ABBDbfCD1da30638869A3307BF21532             |            0x068b3dDE10b55643b55aA4820c7a977dEEEc3c07             |
-|  **Validators**   |            0xEF8540a5e0F4f53B436e7C3A273dCAe1C05d764D             |            0x03Ee09635E9946165dd9538e9414f0ACE57e42e1             |
-| **ERC20 example** | 0xB9Ac8e785f854f9B76bBF6d495213d58226DE813 (request id = 1 (sig)) | 0xB9Ac8e785f854f9B76bBF6d495213d58226DE813  (request id = 2 (mtp) |
-
-
-(V1.0.1 V2 validators) 
-
-|                   |                                Sig                                |                                MTP                                |
-|:-----------------:|:-----------------------------------------------------------------:|:-----------------------------------------------------------------:|
-|   **Verifier**    |            0xaf48CC9C2Ef728b7c4A903c9f5472498f8AED5E1             |            0x1008De1794be8fAba4fc33db6dff59B1d1Ac3a64             |
-|  **Validators**   |            0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb             |            0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d             |
-| **ERC20 example** | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B (request id = 1 (sig)) | 0xa5f08979370AF7095cDeDb2B83425367316FAD0B  (request id = 2 (mtp) |
-
-
-Current addresses for V3 beta circuit on **Polygon Amoy** testnet. (2.0.6-beta.1 V3 validator):
-
-|                      |                                          V3 validator 2.0.1-beta.1                                          |   
-|:--------------------:|:-----------------------------------------------------------------------------------------------------------:|
-|     **Verifier**     |                                 0x07Bbd95505c44B65D7FA3B08dF6F5859373Fa1DC                                  | 
-|    **Validators**    |                                 0xa5f08979370AF7095cDeDb2B83425367316FAD0B                                  |     
-| **ERC20 SD example** |                         0xc5Cd536cb9Cc3BD24829502A39BE593354986dc4 (request id = 3)                         |
-|     **ERC20 example**      | 0xc5Cd536cb9Cc3BD24829502A39BE593354986dc4 (request id = 100 - 1100 merklized  / 10000 - 65000 nonmerklized |
-
-
-|                      |                                          V3 validator 2.0.1-beta.1                                          |   
-|:--------------------:|:-----------------------------------------------------------------------------------------------------------:|
-|     **Verifier**     |                                 0xDE27fc243Bf4eDAaB72E1008c9828C480582f672                                  | 
-|    **Validators**    |                                 0x3412AB64acFf5d94Da4914F176A43aCbDdC7Fc4a                                  |     
-| **ERC20 SD example** |                         0x36eB0E70a456c310D8d8d15ae01F6D5A7C15309A (request id = 3)                         |
-|     **ERC20 example**      | 0x36eB0E70a456c310D8d8d15ae01F6D5A7C15309A (request id = 100 - 1100 merklized  / 10000 - 65000 nonmerklized |
-
-
-|                   |                             Sig                             |                             MTP                              |
-|:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
-|   **Verifier**    |         0x81ef49013627F363570a1C60B0D2215E23651B01          |          0xe5DB0489979C5671D9785cF1cBA9D9028041c9Bf          |
-|  **Validators**   |         0x59f2a6D94D0d02F3a2F527a8B6175dc511935624          |          0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6          |
-| **ERC20 example** | 0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03 (request id = 1) | 0x3a4d4E47bFfF6bD0EF3cd46580D9e36F3367da03  (request id = 2) |
-
-
-Current addresses on **Polygon Amoy** testnet. (V2.0.6 V2 validators)
-
-|                   |                             Sig                             |                             MTP                              |
-|:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
-|   **Verifier**    |         0x35178273C828E08298EcB0C6F1b97B3aFf14C4cb          |          0x789D95794973034BFeDed6D4693e7cc3Eb253B3a          |
-|  **Validators**   |         0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d          |          0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356          |
-| **ERC20 example** | 0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880 (request id = 1) | 0x2b23e5cF70D133fFaA7D8ba61E1bAC4637253880  (request id = 2) |
-
-
-|                   |                             Sig                             |                             MTP                              |
-|:-----------------:|:-----------------------------------------------------------:|:------------------------------------------------------------:|
-|   **Verifier**    |         0x8024014f73BcCAEe048784d835A36c49e96F2806          |          0xF71d97Fc0262bB2e5B20912a6861da0B617a07Aa          |
-|  **Validators**   |         0x1E4a22540E293C0e5E8c33DAfd6f523889cFd878          |          0x0682fbaA2E4C478aD5d24d992069dba409766121          |
-| **ERC20 example** | 0xD75638D319B1aE2a9491DC61f87a800AD362D168 (request id = 1) | 0xD75638D319B1aE2a9491DC61f87a800AD362D168  (request id = 2) |
-
+|                      |                                                          Example contracts                                                          |
+| :------------------: | :---------------------------------------------------------------------------------------------------------------------------------: |
+| **ERC20 Selective Disclosure example** | 0x891273E4889f1615A2901c1c08e181a1BF7A3151 (request id = 1766847064778385425787788993734435560779361951665242919796828552687552473) |
+|  **ERC20 example**   | 0xf26cA3A25bc72F8f646b3F7702e63a7D5271Fc18 (request id = 1766847064778388236564802596319105997190932281386067682776689168350624555) |
+|  **ERC20 Linked Universal Verifier**   | 0x6deC4581D180EdCCcf7660A4c0Ada6DB30908eef (request id = 1766847064778387067339863512871419139452185609990746777156840189569703766) |
 
 </details>
 
@@ -123,33 +56,18 @@ Here is an example of a **non-merklized** on-chain issuer. This example demonstr
 <details>
 <summary>Addresses</summary>
 
-**Polygon Mainnet**:
-
-|                             |                    Address                     |
-|:---------------------------:|:------------------------------------------:|
-|    Poseidon2Elements    | 0x7A26D06B1dA4b4c526eF5Ea88d0880536032871b |
-|    Poseidon3Elements    | 0xF1DD455cB686B3a7309c83b48eB679d609c24f7B |
-|    Poseidon4Elements    | 0x151462e7E6ED90f8B45F3764A7fde4004d411d90 |
-|         SmtLib          | 0xB9F9AE33395dDB7b994eEBFB9B870a32E79887D6 |
-|      ClaimBuilder       | 0x3E84F4493E53015f89908e62873860Bb80eb8378 |
-|       IdentityLib       | 0x3Fc8eaAcE2f46044B6A4745Ff71F7452612e4E9A |
-| **BalanceCredentialIssuer** | 0x029301b6cC1399D9260a08943aC0CB9f18C12acC |
-
 **Polygon Amoy testnet**:
-
-|                             |                    Address                     |
+| Contract | Address |
 |:---------------------------:|:------------------------------------------:|
-|    Poseidon2Elements    | 0xCa06EA29b2f49Db8D575cd04327ac7C679293D5d |
-|    Poseidon3Elements    | 0x9e93872F435c90fB16180b4bA072225E89a7c34E |
-|    Poseidon4Elements    | 0x9c4Dd271EbF869616f157D58c7755747E6A5f068 |
-|         SmtLib          | 0x4c12a0D7DD68E4A5dDd1e92e5EA89F01828aC06B |
-|      ClaimBuilder       | 0x3D66491442a6720d94C083CD08038D19393C4cD3 |
-|       IdentityLib       | 0x6B8e8E3806379f90e7a7dcA2Cfb3dbd6325F9a25 |
-| **BalanceCredentialIssuer** | 0x19875eA86503734f2f9Ed461463e0312A3b42563 |
-
+| **Poseidon2Elements** | 0x72F721D9D5f91353B505207C63B56cF3d9447edB |
+| **Poseidon3Elements** | 0x5Bc89782d5eBF62663Df7Ce5fb4bc7408926A240 |
+| **Poseidon4Elements** | 0x5Bc89782d5eBF62663Df7Ce5fb4bc7408926A240 |
+| **SmtLib** | 0x682364078e26C1626abD2B95109D2019E241F0F6 |
+| **ClaimBuilder** | 0x0AC0fa28ef1a324c7E3eF18AcCe03a6c67BA7E38 |
+| **IdentityLib** | 0x7b8f8C1505fE214786abEc67a2f768EfbFa58B98 |
+| **BalanceCredentialIssuer** | 0x3f28DDeD81Ab39Ee8da91765aE436280dF19C5B2 |
 
 </details>
-
 
 ## IdentityExample
 
@@ -160,70 +78,39 @@ Here is an example of a **merklized** on-chain issuer. This example demonstrates
 
 Amoy:
 
-|                       |                    Address                     |
-|:---------------------:|:------------------------------------------:|
-| **Poseidon2Elements** | 0x95Da3FBec384912D2348A3C9795596E59ca8adcC |
-| **Poseidon3Elements** | 0x2d01A312925784194F85A94b042889D680db7e46 |
-| **Poseidon4Elements** | 0x5C42859D02C959f896f7839F49D7Ed4c7349e4D9 |
-|      **SmtLib**       | 0x4CD9495A654f3ecd480A8E0637Db1CDeEB00be3d |
-| **Identity Contract** | 0x96Cf83540002a735DEb548111bcF95e01877695f |
+|                       |                  Address                   |
+| :-------------------: | :----------------------------------------: |
+| **Poseidon2Elements** | 0x72F721D9D5f91353B505207C63B56cF3d9447edB |
+| **Poseidon3Elements** | 0x5Bc89782d5eBF62663Df7Ce5fb4bc7408926A240 |
+| **Poseidon4Elements** | 0x5Bc89782d5eBF62663Df7Ce5fb4bc7408926A240 |
+|      **SmtLib**       | 0x682364078e26C1626abD2B95109D2019E241F0F6 |
+| **Identity Contract** | 0x7834144d9c1d6B0a365c59f1a39a67e3BA9deb9A |
 
 </details>
-
-
-## Legacy
-
-<details>
-<summary>Addresses</summary>
-
-Legacy addresses on Polygon Main. (ERC20 example with airdrop use case, restricted to 1 request)
-|                    |                    Sig                   |                    MTP                    |
-|:------------------:|:------------------------------------------:|:-----------------------------------------:|
-|   **Verifier**     |0x6f6E19781600d6B06D64A6b86431FB7dB3E919e0  |0x9DB901F3AFdAAA73F5B2123B186F566fA3Ed1551 |
-|  **Validators**    |0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b  |0x5f24dD9FbEa358B9dD96daA281e82160fdefD3CD |
-| **ERC20 examples** |0x8732e29eE329fD19Ff868a3Df3D5F6A3116027A2  |0x5c31BB88AA57C69FF537C5d86102246D61712C90 |
-
-Legacy ERC20 examples with airdrop use case, not restricted
-
-|                    |                    Sig                   |                    MTP                    |
-|:------------------:|:------------------------------------------:|:-----------------------------------------:|
-|   **Validators**   |0x9ee6a2682Caa2E0AC99dA46afb88Ad7e6A58Cd1b  |0x5f24dD9FbEa358B9dD96daA281e82160fdefD3CD |
-| **ERC20 examples** |0x7C14Aa764130852A8B64BA7058bf71E4292d677F  |0xa3Bc012FCf034bee8d16161730CE4eAb34C35100 |
-
-</details>
-
 
 ## Deploy scripts
 
 1. **deploy:erc20** - deploy erc20 smart contract to selected network
-    ```shell
-    npm run deploy:erc20 -- --network <network>
-    ```
+   ```shell
+   npm run deploy:erc20 -- --network <network>
+   ```
 2. **deploy:erc20linkeduniversalverifier** - deploy erc20 linked to Universal Verifier smart contract to selected network
-    ```shell
-    npm run deploy:erc20linkeduniversalverifier -- --network <network>
-    ```
+   ```shell
+   npm run deploy:erc20linkeduniversalverifier -- --network <network>
+   ```
 3. **deploy:erc20selectivedisclosure** - deploy erc20 selective disclosure smart contract to selected network
-    ```shell
-    npm run deploy:erc20selectivedisclosure -- --network <network>
-    ```
-4. **deploy:sig** - deploy signature validator to selected network
-    ```shell
-    npm run deploy:sig -- --network <network>
-    ```
-5. **deploy:mtp** - deploy MTP validator to selected network
-    ```shell
-    npm run deploy:mtp -- --network <network>
-    ```
-6. **deploy:v3** - deploy V3 validator to selected network
-    ```shell
-    npm run deploy:v3 -- --network <network>
-    ```
-7. **deploy:identityexample** - deploy onchain merklized issuer example to selected network
-    ```shell
-    npm run deploy:identityexample -- --network <network>
-    ```
-8. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to selected network
-    ```shell
-    npm run deploy:balancecredentialissuer -- --network <network>
-    ```
+   ```shell
+   npm run deploy:erc20selectivedisclosure -- --network <network>
+   ```
+4. **setrequests:v3** - set different requests v3 for the erc20 selective disclosure smart contract to selected network
+   ```shell
+   npm run setrequests:v3 -- --network <network>
+   ```
+5. **deploy:identityexample** - deploy onchain merklized issuer example to selected network
+   ```shell
+   npm run deploy:identityexample -- --network <network>
+   ```
+6. **deploy:main:balancecredentialissuer** - deploy onchain non-merklized issuer example to selected network
+   ```shell
+   npm run deploy:balancecredentialissuer -- --network <network>
+   ```

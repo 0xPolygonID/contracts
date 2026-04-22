@@ -6,23 +6,10 @@ import {
   buildVerifierId,
   calculateQueryHashV3,
   calculateRequestId,
-  CircuitId
+  CircuitId,
+  Operators
 } from '@0xpolygonid/js-sdk';
-const Operators = {
-  NOOP: 0, // No operation, skip query verification in circuit
-  EQ: 1, // equal
-  LT: 2, // less than
-  GT: 3, // greater than
-  IN: 4, // in
-  NIN: 5, // not in
-  NE: 6, // not equal
-  SD: 16, // selective disclosure
-  LTE: 7, // less than equal
-  GTE: 8, // greater than equal
-  BETWEEN: 9, // between
-  NONBETWEEN: 10, // non between
-  EXISTS: 11 // exists
-};
+import { contractsInfo } from '../test/helpers/constants';
 
 export const QueryOperators = {
   $noop: Operators.NOOP,
@@ -42,12 +29,14 @@ export const QueryOperators = {
 
 async function main() {
   // current v3 stable validator unified address
-  const validatorAddressV3 = '0x0d78ADDD050a75a94e21eD14d54591933B9B7546';
-  const erc20verifierAddress = '0x30c4dfC99CF5e9dFD9053faDd86E087cB06d589B'; //your erc20 verifier deployed address
-  const verifierLibAddress = '0xdaC4f3e3174Ce82909FA109de8307F8C3aed1453'; // verifier lib deployed address
-  const owner = (await ethers.getSigners())[0];
+  const validatorAddressV3 = contractsInfo.VALIDATOR_V3_STABLE.unifiedAddress;
+  const erc20verifierAddress = '0x891273E4889f1615A2901c1c08e181a1BF7A3151'; //your erc20 verifier deployed address
+  const verifierLibAddress = '0x78dDF2934779B849a7a9bEA922c6Bb4659Dd7613'; // verifier lib deployed address
+  const contractName = 'ERC20SelectiveDisclosureVerifier';
 
-  const ERC20Verifier = await ethers.getContractFactory('ERC20SelectiveDisclosureVerifier', {
+  const [signer] = await ethers.getSigners();
+
+  const ERC20Verifier = await ethers.getContractFactory(contractName, {
     libraries: {
       VerifierLib: verifierLibAddress
     }
@@ -390,7 +379,7 @@ async function main() {
         query.nullifierSessionID
       ).toString();
       const data = packV3ValidatorParams(query);
-      const requestId = calculateRequestId(data, await owner.getAddress());
+      const requestId = calculateRequestId(data, await signer.getAddress());
       query.requestId = requestId;
       console.log(query.requestId);
 
@@ -438,7 +427,7 @@ async function main() {
             typeof v === 'bigint' ? v.toString() : v
           ),
           validator: validatorAddressV3,
-          creator: await owner.getAddress(),
+          creator: await signer.getAddress(),
           params: data
         }
       ]);

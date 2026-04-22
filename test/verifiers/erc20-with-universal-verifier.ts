@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { deployERC20LinkedUniversalVerifier, deployValidatorStub } from '../utils/deploy-utils';
-
 import { Contract } from 'ethers';
 import { Blockchain, buildDIDType, DidMethod, NetworkId } from '@iden3/js-iden3-core';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';

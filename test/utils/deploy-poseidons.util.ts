@@ -2,19 +2,7 @@ import { ethers } from 'hardhat';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { poseidonContract } from 'circomlibjs';
 import { Contract } from 'ethers';
-
-export async function deploySpongePoseidon(poseidon6ContractAddress: string): Promise<Contract> {
-  const SpongePoseidonFactory = await ethers.getContractFactory('SpongePoseidon', {
-    libraries: {
-      PoseidonUnit6L: poseidon6ContractAddress
-    }
-  });
-
-  const spongePoseidon = await SpongePoseidonFactory.deploy();
-  await spongePoseidon.waitForDeployment();
-  console.log('SpongePoseidon deployed to:', await spongePoseidon.getAddress());
-  return spongePoseidon;
-}
+import { contractsInfo } from '../helpers/constants';
 
 export async function deployPoseidons(
   deployer: SignerWithAddress,
@@ -46,28 +34,38 @@ export async function deployPoseidons(
   return result;
 }
 
-export async function deployPoseidonFacade(): Promise<Contract> {
-  const poseidonContracts = await deployPoseidons(
-    (await ethers.getSigners())[0],
-    new Array(6).fill(6).map((_, i) => i + 1)
-  );
-
-  const spongePoseidon = await deploySpongePoseidon(await poseidonContracts[5].getAddress());
-
-  const PoseidonFacade = await ethers.getContractFactory('PoseidonFacade', {
-    libraries: {
-      PoseidonUnit1L: await poseidonContracts[0].getAddress(),
-      PoseidonUnit2L: await poseidonContracts[1].getAddress(),
-      PoseidonUnit3L: await poseidonContracts[2].getAddress(),
-      PoseidonUnit4L: await poseidonContracts[3].getAddress(),
-      PoseidonUnit5L: await poseidonContracts[4].getAddress(),
-      PoseidonUnit6L: await poseidonContracts[5].getAddress(),
-      SpongePoseidon: await spongePoseidon.getAddress()
+export async function getPoseidonsUnifiedAddresses(
+  deployer: SignerWithAddress,
+  poseidonSizeParams: number[]
+): Promise<Contract[]> {
+  poseidonSizeParams.forEach((size) => {
+    if (![1, 2, 3, 4].includes(size)) {
+      throw new Error(
+        `Poseidon should be integer in a range 1..4. Poseidon size provided: ${size}`
+      );
     }
   });
 
-  const poseidonFacade = await PoseidonFacade.deploy();
-  await poseidonFacade.waitForDeployment();
-  console.log('PoseidonFacade deployed to:', await poseidonFacade.getAddress());
-  return poseidonFacade;
+  const getPoseidon = async (params: number) => {
+    const abi = poseidonContract.generateABI(params);
+    switch (params) {
+      case 1:
+        return new ethers.Contract(contractsInfo.POSEIDON_1.unifiedAddress, abi, deployer);
+      case 2:
+        return new ethers.Contract(contractsInfo.POSEIDON_2.unifiedAddress, abi, deployer);
+      case 3:
+        return new ethers.Contract(contractsInfo.POSEIDON_3.unifiedAddress, abi, deployer);
+      case 4:
+        return new ethers.Contract(contractsInfo.POSEIDON_4.unifiedAddress, abi, deployer);
+      default:
+        throw new Error(`Unsupported Poseidon size: ${params}`);
+    }
+  };
+
+  const result: Contract[] = [];
+  for (const size of poseidonSizeParams) {
+    result.push(await getPoseidon(size));
+  }
+
+  return result;
 }

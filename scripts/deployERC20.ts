@@ -1,26 +1,17 @@
 import hre, { ethers, upgrades } from 'hardhat';
-import { packV2ValidatorParams, packV3ValidatorParams } from '../test/utils/pack-utils';
+import { packV3ValidatorParams } from '../test/utils/pack-utils';
 import { coreSchemaFromStr, getChainId, verifyContract } from '../test/utils/utils';
 import {
   buildVerifierId,
-  calculateQueryHashV2,
   calculateQueryHashV3,
   calculateRequestId,
-  CircuitId
+  CircuitId,
+  Operators
 } from '@0xpolygonid/js-sdk';
 import { Blockchain, DID, DidMethod, NetworkId } from '@iden3/js-iden3-core';
-import { deployVerifierLib } from '../test/utils/deploy-utils';
+import { deployVerifierLib, getStateContractAddress } from '../test/utils/deploy-utils';
 import { getImplementationAddress } from '@openzeppelin/upgrades-core';
-
-const Operators = {
-  NOOP: 0, // No operation, skip query verification in circuit
-  EQ: 1, // equal
-  LT: 2, // less than
-  GT: 3, // greater than
-  IN: 4, // in
-  NIN: 5, // not in
-  NE: 6 // not equal
-};
+import { contractsInfo } from '../test/helpers/constants';
 
 async function main() {
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
@@ -43,8 +34,7 @@ async function main() {
   const circuitName: CircuitId = CircuitId.AtomicQueryV3OnChainStable; // TODO put your circuit here;
   const methodId = '06c86a91'; // submitResponse
   const nullifierSessionID = 11838218; // you can generate random number for nullifier session id, but make sure to use the same in the circuit input when you generate proof, otherwise the proof will not be verified
-  const stateAddress = '0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896'; // State contract address in the network you are deploying. Review Readme for more details.
-  let requestId: bigint;
+  const stateAddress = await getStateContractAddress();
 
   const [signer] = await ethers.getSigners();
   console.log(`Deployer address: ${await signer.getAddress()}`);
@@ -73,8 +63,7 @@ async function main() {
   const chainId = await getChainId();
   const network = hre.network.name;
 
-  let validatorAddress: string;
-  let data: string;
+  const validatorAddress = contractsInfo.VALIDATOR_V3_STABLE.unifiedAddress;
 
   const verifierId = buildVerifierId(await erc20instance.getAddress(), {
     blockchain: Blockchain.Privado,
@@ -94,96 +83,30 @@ async function main() {
     claimPathNotExists: claimPathDoesntExist
   };
 
-  switch (circuitName) {
-    case CircuitId.AtomicQueryMTPV2OnChain:
-      // TODO put your V2 MTP validator address here
-      validatorAddress = '0xec9EF9c4595B46abF2b6A923BD1529081E03fbBB';
-      query.queryHash = calculateQueryHashV2(
-        query.value,
-        coreSchemaFromStr(query.schema),
-        query.slotIndex,
-        query.operator,
-        query.claimPathKey,
-        query.claimPathNotExists
-      ).toString();
-      data = packV2ValidatorParams(query);
-      requestId = calculateRequestId(data, await signer.getAddress());
-      query.requestId = requestId;
-      break;
-    case CircuitId.AtomicQuerySigV2OnChain:
-      // TODO put your V2 Sig validator address here
-      validatorAddress = '0x5BD60F3Ef5890260906172EEe1f0a965707791f1';
-      query.queryHash = calculateQueryHashV2(
-        query.value,
-        coreSchemaFromStr(query.schema),
-        query.slotIndex,
-        query.operator,
-        query.claimPathKey,
-        query.claimPathNotExists
-      ).toString();
-      data = packV2ValidatorParams(query);
-      requestId = calculateRequestId(data, await signer.getAddress());
-      query.requestId = requestId;
-      break;
-    case CircuitId.AtomicQueryV3OnChain:
-      // TODO put your V3 validator address here
-      validatorAddress = '0xC616963610A5545EF89b373e1fEAE8A1e505FaFF';
-      query = {
-        ...query,
-        allowedIssuers: allowedIssuers,
-        verifierID: verifierId.bigInt(),
-        nullifierSessionID: nullifierSessionID,
-        groupID: 0,
-        proofType: 0
-      };
+  query = {
+    ...query,
+    allowedIssuers: allowedIssuers,
+    verifierID: verifierId.bigInt(),
+    nullifierSessionID: nullifierSessionID,
+    groupID: 0,
+    proofType: 0
+  };
 
-      query.queryHash = calculateQueryHashV3(
-        query.value.map((i) => BigInt(i)),
-        coreSchemaFromStr(query.schema),
-        query.slotIndex,
-        query.operator,
-        query.claimPathKey,
-        1, //queryV3KYCAgeCredential.value.length, // for operator NE, LT it should be 1 for value
-        1, // merklized
-        query.skipClaimRevocationCheck ? 0 : 1,
-        query.verifierID.toString(),
-        query.nullifierSessionID
-      ).toString();
-      data = packV3ValidatorParams(query);
-      requestId = calculateRequestId(data, await signer.getAddress());
-      query.requestId = requestId;
-      break;
-    case CircuitId.AtomicQueryV3OnChainStable:
-      // TODO put your V3 validator address here
-      validatorAddress = '0x0d78ADDD050a75a94e21eD14d54591933B9B7546';
-      query = {
-        ...query,
-        allowedIssuers: allowedIssuers,
-        verifierID: verifierId.bigInt(),
-        nullifierSessionID: nullifierSessionID,
-        groupID: 0,
-        proofType: 0
-      };
-
-      query.queryHash = calculateQueryHashV3(
-        query.value.map((i) => BigInt(i)),
-        coreSchemaFromStr(query.schema),
-        query.slotIndex,
-        query.operator,
-        query.claimPathKey,
-        1, //queryV3KYCAgeCredential.value.length, // for operator NE, LT it should be 1 for value
-        1, // merklized
-        query.skipClaimRevocationCheck ? 0 : 1,
-        query.verifierID.toString(),
-        query.nullifierSessionID
-      ).toString();
-      data = packV3ValidatorParams(query);
-      requestId = calculateRequestId(data, await signer.getAddress());
-      query.requestId = requestId;
-      break;
-    default:
-      throw new Error(`Unsupported circuit name: ${circuitName}`);
-  }
+  query.queryHash = calculateQueryHashV3(
+    query.value.map((i) => BigInt(i)),
+    coreSchemaFromStr(query.schema),
+    query.slotIndex,
+    query.operator,
+    query.claimPathKey,
+    1, //queryV3KYCAgeCredential.value.length, // for operator NE, LT it should be 1 for value
+    1, // merklized
+    query.skipClaimRevocationCheck ? 0 : 1,
+    query.verifierID.toString(),
+    query.nullifierSessionID
+  ).toString();
+  const data = packV3ValidatorParams(query);
+  const requestId = calculateRequestId(data, await signer.getAddress());
+  query.requestId = requestId;
 
   const invokeRequestMetadata = {
     id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
