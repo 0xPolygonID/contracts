@@ -1,19 +1,14 @@
 import { ethers, upgrades } from 'hardhat';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 import { Contract } from 'ethers';
-
-export async function deploySpongePoseidon(poseidon6ContractAddress: string): Promise<Contract> {
-  const SpongePoseidonFactory = await ethers.getContractFactory('SpongePoseidon', {
-    libraries: {
-      PoseidonUnit6L: poseidon6ContractAddress
-    }
-  });
-
-  const spongePoseidon = await SpongePoseidonFactory.deploy();
-  await spongePoseidon.waitForDeployment();
-  console.log('SpongePoseidon deployed to:', await spongePoseidon.getAddress());
-  return spongePoseidon;
-}
+import { getChainId } from './utils';
+import {
+  contractsInfo,
+  POLYGON_AMOY_CHAINID,
+  POLYGON_MAINNET_CHAINID,
+  STATE_ADDRESS_POLYGON_AMOY,
+  STATE_ADDRESS_POLYGON_MAINNET
+} from '../helpers/constants';
 
 export async function deployValidatorStub(
   validatorName: string = 'RequestValidatorStub'
@@ -280,4 +275,26 @@ async function deployUniversalVerifier(
   universalVerifier.waitForDeployment();
   console.log('UniversalVerifier deployed to:', await universalVerifier.getAddress());
   return { universalVerifier, verifierLib };
+}
+
+export async function getStateContractAddress(): Promise<string> {
+  const chainId = await getChainId();
+
+  let stateContractAddress = contractsInfo.STATE.unifiedAddress;
+  if (chainId === POLYGON_AMOY_CHAINID) {
+    stateContractAddress = STATE_ADDRESS_POLYGON_AMOY;
+  }
+  if (chainId === POLYGON_MAINNET_CHAINID) {
+    stateContractAddress = STATE_ADDRESS_POLYGON_MAINNET;
+  }
+
+  return stateContractAddress;
+}
+
+export async function getSmtLib(): Promise<Contract> {
+  const smtLib = await ethers.getContractAt(
+    contractsInfo.SMT_LIB.name,
+    contractsInfo.SMT_LIB.unifiedAddress
+  );
+  return smtLib;
 }

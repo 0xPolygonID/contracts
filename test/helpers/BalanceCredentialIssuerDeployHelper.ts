@@ -1,16 +1,15 @@
 import { ethers, upgrades } from 'hardhat';
 import { Contract } from 'ethers';
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { deployClaimBuilder, deployIdentityLib } from '../utils/deploy-utils';
 
 export class BalanceCredentialIssuerDeployHelper {
   constructor(
-    private signers: SignerWithAddress[],
+    private signers: any[],
     private readonly enableLogging: boolean = false
   ) {}
 
   static async initialize(
-    signers: SignerWithAddress[] | null = null,
+    signers: any[] | null = null,
     enableLogging = false
   ): Promise<BalanceCredentialIssuerDeployHelper> {
     let sgrs;
@@ -29,6 +28,8 @@ export class BalanceCredentialIssuerDeployHelper {
     stateContractAddress: string
   ): Promise<{
     balanceCredentialIssuer: Contract;
+    claimBuilder: Contract;
+    identityLib: Contract;
   }> {
     const owner = this.signers[0];
 
@@ -68,7 +69,9 @@ export class BalanceCredentialIssuerDeployHelper {
     this.log('======== Balance credential issuer: deploy completed ========');
 
     return {
-      balanceCredentialIssuer
+      balanceCredentialIssuer,
+      claimBuilder: cb,
+      identityLib: il
     };
   }
 

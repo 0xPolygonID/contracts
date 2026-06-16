@@ -29,6 +29,8 @@ export class OnchainIdentityDeployHelper {
     poseidon4: Contract
   ): Promise<{
     identity: Contract;
+    claimBuilder: Contract;
+    identityLib: Contract;
   }> {
     const owner = this.signers[0];
 
@@ -51,8 +53,7 @@ export class OnchainIdentityDeployHelper {
     const Identity = await upgrades.deployProxy(IdentityFactory, [stateAddress], {
       initializer: 'initialize(address)',
       unsafeAllowLinkedLibraries: true
-      }
-    );
+    });
     await Identity.waitForDeployment();
     this.log(
       `Identity contract deployed to address ${await Identity.getAddress()} from ${await owner.getAddress()}`
@@ -61,7 +62,9 @@ export class OnchainIdentityDeployHelper {
     this.log('======== Identity: deploy completed ========');
 
     return {
-      identity: Identity
+      identity: Identity,
+      claimBuilder: cb,
+      identityLib: il
     };
   }
 

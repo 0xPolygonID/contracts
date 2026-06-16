@@ -5,8 +5,6 @@ import { deployPoseidons } from '../utils/deploy-poseidons.util';
 import { chainIdDefaultIdTypeMap } from './ChainIdDefTypeMap';
 import { chainIdInfoMap } from './constants';
 
-const SMT_MAX_DEPTH = 64;
-
 export class StateDeployHelper {
   constructor(
     private signers: SignerWithAddress[],
@@ -172,33 +170,6 @@ export class StateDeployHelper {
     this.enableLogging && this.log(`StateLib deployed to:  ${await stateLib.getAddress()}`);
 
     return stateLib;
-  }
-
-  async upgradeValidator(
-    validatorAddress: string,
-    validatorContractName: string
-  ): Promise<{
-    validator: Contract;
-  }> {
-    console.log('======== validator: upgrade started ========');
-
-    const owner = this.signers[0];
-
-    const ValidatorFactory = await ethers.getContractFactory(validatorContractName);
-    const validator = await upgrades.upgradeProxy(validatorAddress, ValidatorFactory);
-    await validator.waitForDeployment();
-    const s = await validator.getSupportedCircuitIds();
-    console.log('======== validator: ', s);
-
-    console.log(
-      `Validator contract upgraded at address ${await validator.getAddress()} from ${await owner.getAddress()}`
-    );
-
-    console.log('======== validator: upgrade completed ========');
-
-    return {
-      validator
-    };
   }
 
   async getDefaultIdType(): Promise<{ defaultIdType: number; chainId: number }> {

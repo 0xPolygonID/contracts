@@ -1,16 +1,17 @@
-import { ethers, upgrades } from 'hardhat';
-import { packV2ValidatorParams } from '../test/utils/pack-utils';
-import { calculateQueryHashV2 } from '../test/utils/utils';
-
-const Operators = {
-  NOOP: 0, // No operation, skip query verification in circuit
-  EQ: 1, // equal
-  LT: 2, // less than
-  GT: 3, // greater than
-  IN: 4, // in
-  NIN: 5, // not in
-  NE: 6 // not equal
-};
+import hre, { ethers, upgrades } from 'hardhat';
+import { packV3ValidatorParams } from '../test/utils/pack-utils';
+import { coreSchemaFromStr, getChainId, verifyContract } from '../test/utils/utils';
+import {
+  buildVerifierId,
+  calculateQueryHashV3,
+  calculateRequestId,
+  CircuitId,
+  Operators
+} from '@0xpolygonid/js-sdk';
+import { Blockchain, DID, DidMethod, NetworkId } from '@iden3/js-iden3-core';
+import { deployVerifierLib, getStateContractAddress } from '../test/utils/deploy-utils';
+import { getImplementationAddress } from '@openzeppelin/upgrades-core';
+import { contractsInfo } from '../test/helpers/constants';
 
 async function main() {
   // you can run https://go.dev/play/p/3id7HAhf-Wi to get schema hash and claimPathKey using YOUR schema
@@ -27,87 +28,106 @@ async function main() {
   const contractName = 'ERC20Verifier';
   const name = 'ERC20ZKPVerifier';
   const symbol = 'ERCZKP';
-  const ERC20ContractFactory = await ethers.getContractFactory(contractName);
-  const erc20instance = await upgrades.deployProxy(ERC20ContractFactory, [name, symbol]);
-  const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
 
+  const claimPathDoesntExist = 0; // 0 for inclusion (merklized credentials) - 1 for non-merklized
+  const allowedIssuers = []; // Put your allowed issuers here. Example: ['did:iden3:privado:main:2SZDsdYordSGwDwsiXcDY7dGzzkDSjHmiSCqdq1t4r']
+  const circuitName: CircuitId = CircuitId.AtomicQueryV3OnChainStable; // TODO put your circuit here;
+  const methodId = '06c86a91'; // submitResponse
+  const nullifierSessionID = 11838218; // you can generate random number for nullifier session id, but make sure to use the same in the circuit input when you generate proof, otherwise the proof will not be verified
+  const stateAddress = await getStateContractAddress();
+
+  const [signer] = await ethers.getSigners();
+  console.log(`Deployer address: ${await signer.getAddress()}`);
+
+  // Deploy ERC20Verifier contract
+
+  const verifierLib = await deployVerifierLib();
+  await verifierLib.waitForDeployment();
+
+  const ERC20ContractFactory = await ethers.getContractFactory(contractName, {
+    libraries: {
+      VerifierLib: await verifierLib.getAddress()
+    }
+  });
+  const erc20instance = await upgrades.deployProxy(
+    ERC20ContractFactory,
+    [name, symbol, stateAddress],
+    {
+      unsafeAllow: ['external-library-linking']
+    }
+  );
   await erc20instance.waitForDeployment();
+
   console.log(contractName, ' deployed to:', await erc20instance.getAddress());
 
-  // set default query
-  const circuitIdSig = 'credentialAtomicQuerySigV2OnChain';
-  const circuitIdMTP = 'credentialAtomicQueryMTPV2OnChain';
+  const chainId = await getChainId();
+  const network = hre.network.name;
 
-  // // // current sig validator address on mumbai
-  // const validatorAddressSig = '0x59f2a6D94D0d02F3a2F527a8B6175dc511935624';
-  //
-  // // current mtp validator address on mumbai
-  // const validatorAddressMTP = '0xb9b51F7E8C83C90FE48e0aBd815ef0418685CcF6';
-  //
-  // const chainId = 80001;
+  const validatorAddress = contractsInfo.VALIDATOR_V3_STABLE.unifiedAddress;
 
-  // const network = 'polygon-mumbai';
+  const verifierId = buildVerifierId(await erc20instance.getAddress(), {
+    blockchain: Blockchain.Privado,
+    networkId: NetworkId.Main,
+    method: DidMethod.Iden3
+  });
 
-  // current sig validator address on polygon main
-  // const validatorAddressSig = '0xEF8540a5e0F4f53B436e7C3A273dCAe1C05d764D';
-  //
-  // // current mtp validator address on polygon main
-  // const validatorAddressMTP = '0x03Ee09635E9946165dd9538e9414f0ACE57e42e1';
-  //
-  // const network = 'polygon-main';
-  //
-  // const chainId = 137;
-
-  // current sig validator address on polygon amoy
-  const validatorAddressSig = '0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d';
-  const validatorAddressMTP = '0xEEd5068AD8Fecf0b9a91aF730195Fef9faB00356';
-
-  const network = 'polygon-amoy';
-
-  const chainId = 80002;
-
-  const query = {
+  let query: any = {
     schema: schema,
     claimPathKey: schemaClaimPathKey,
     operator: Operators.LT,
     slotIndex: slotIndex,
+    queryHash: '',
     value: value,
-    queryHash: calculateQueryHashV2(
-      value,
-      schema,
-      slotIndex,
-      Operators.LT,
-      schemaClaimPathKey,
-      claimPathDoesntExist
-    ).toString(),
-    circuitIds: [circuitIdSig],
-    allowedIssuers: [],
+    circuitIds: [circuitName],
     skipClaimRevocationCheck: false,
     claimPathNotExists: claimPathDoesntExist
   };
 
-  const requestIdSig = await erc20instance.TRANSFER_REQUEST_ID_SIG_VALIDATOR();
-  const requestIdMtp = await erc20instance.TRANSFER_REQUEST_ID_MTP_VALIDATOR();
+  query = {
+    ...query,
+    allowedIssuers: allowedIssuers,
+    verifierID: verifierId.bigInt(),
+    nullifierSessionID: nullifierSessionID,
+    groupID: 0,
+    proofType: 0
+  };
+
+  query.queryHash = calculateQueryHashV3(
+    query.value.map((i) => BigInt(i)),
+    coreSchemaFromStr(query.schema),
+    query.slotIndex,
+    query.operator,
+    query.claimPathKey,
+    1, //queryV3KYCAgeCredential.value.length, // for operator NE, LT it should be 1 for value
+    1, // merklized
+    query.skipClaimRevocationCheck ? 0 : 1,
+    query.verifierID.toString(),
+    query.nullifierSessionID
+  ).toString();
+  const data = packV3ValidatorParams(query);
+  const requestId = calculateRequestId(data, await signer.getAddress());
+  query.requestId = requestId;
 
   const invokeRequestMetadata = {
     id: '7f38a193-0918-4a48-9fac-36adfdb8b542',
     typ: 'application/iden3comm-plain-json',
     type: 'https://iden3-communication.io/proofs/1.0/contract-invoke-request',
     thid: '7f38a193-0918-4a48-9fac-36adfdb8b542',
+    from: DID.parseFromId(verifierId).string(),
     body: {
       reason: 'for testing',
       transaction_data: {
         contract_address: await erc20instance.getAddress(),
-        method_id: 'b68967e2',
+        method_id: methodId,
         chain_id: chainId,
         network: network
       },
       scope: [
         {
-          id: requestIdSig,
-          circuitId: circuitIdSig,
+          id: requestId.toString(),
+          circuitId: circuitName,
           query: {
-            allowedIssuers: ['*'],
+            allowedIssuers: !allowedIssuers.length ? ['*'] : allowedIssuers,
             context: schemaUrl,
             credentialSubject: {
               birthday: {
@@ -121,35 +141,58 @@ async function main() {
     }
   };
 
+  const requestIdExists = await erc20instance.requestIdExists(requestId);
+  if (requestIdExists) {
+    throw new Error(`Request ID: ${requestId} already exists`);
+  } else {
+    console.log(`Request ID to create: ${requestId}`);
+  }
+
   try {
-    // sig request set
-    const txSig = await erc20instance.setZKPRequest(requestIdSig, {
-      metadata: JSON.stringify(invokeRequestMetadata, (_, v) =>
-        typeof v === 'bigint' ? v.toString() : v
-      ),
-      validator: validatorAddressSig,
-      data: packV2ValidatorParams(query)
-    });
-    await txSig.wait();
-    console.log(txSig.hash);
+    const tx = await erc20instance.setRequests([
+      {
+        requestId: requestId.toString(),
+        metadata: JSON.stringify(invokeRequestMetadata, (_, v) =>
+          typeof v === 'bigint' ? v.toString() : v
+        ),
+        validator: validatorAddress,
+        creator: await signer.getAddress(),
+        params: data
+      }
+    ]);
+    await tx.wait();
 
-    // mtp request set
-    query.circuitIds = [circuitIdMTP];
-    invokeRequestMetadata.body.scope[0].circuitId = circuitIdMTP;
-    invokeRequestMetadata.body.scope[0].id = requestIdMtp;
-    const txMtp = await erc20instance.setZKPRequest(requestIdMtp, {
-      metadata: JSON.stringify(invokeRequestMetadata, (_, v) =>
-        typeof v === 'bigint' ? v.toString() : v
-      ),
-      validator: validatorAddressMTP,
-      data: packV2ValidatorParams(query)
-    });
+    console.log(JSON.stringify(invokeRequestMetadata, null, '\t'));
 
-    console.log(txMtp.hash);
-    await txMtp.wait();
+    console.log(`Request ID: ${requestId} is set in tx: ${tx.hash}`);
+    const txSetTransferRequestId = await erc20instance.setTransferRequestId(requestId.toString());
+    await txSetTransferRequestId.wait();
+    console.log(`Transfer Request ID is set in tx: ${txSetTransferRequestId.hash}`);
   } catch (e) {
     console.log('error: ', e);
   }
+
+  console.log('Verifying contracts...');
+  await verifyContract(hre, await verifierLib.getAddress(), {
+    constructorArgsImplementation: [],
+    libraries: {}
+  });
+  await verifyContract(hre, await erc20instance.getAddress(), {
+    constructorArgsImplementation: [],
+    constructorArgsProxy: [],
+    constructorArgsProxyAdmin: [await signer.getAddress()],
+    libraries: {
+      'contracts/lib/VerifierLib.sol:VerifierLib': ''
+    }
+  });
+  await verifyContract(
+    hre,
+    await getImplementationAddress(signer.provider, await erc20instance.getAddress()),
+    {
+      constructorArgsImplementation: [],
+      libraries: {}
+    }
+  );
 }
 
 main()
