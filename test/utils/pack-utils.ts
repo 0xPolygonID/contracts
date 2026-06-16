@@ -1,6 +1,6 @@
-import Web3 from 'web3';
 import { DID } from '@iden3/js-iden3-core';
 import { ethers } from 'hardhat';
+import { ProofData } from '@iden3/js-jwz';
 
 const abiCoder = new ethers.AbiCoder();
 
@@ -45,118 +45,75 @@ export type CrossChainProof = {
   proof: string;
 };
 
-export function packV2ValidatorParams(query: any) {
-  const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
-  return web3.eth.abi.encodeParameter(
-    {
-      CredentialAtomicQuery: {
-        schema: 'uint256',
-        claimPathKey: 'uint256',
-        operator: 'uint256',
-        slotIndex: 'uint256',
-        value: 'uint256[]',
-        queryHash: 'uint256',
-        allowedIssuers: 'uint256[]',
-        circuitIds: 'string[]',
-        skipClaimRevocationCheck: 'bool',
-        claimPathNotExists: 'uint256'
+export function packV2ValidatorParams(query: any): string {
+  return abiCoder.encode(
+    [
+      'tuple(' +
+        'uint256 schema,' +
+        'uint256 claimPathKey,' +
+        'uint256 operator,' +
+        'uint256 slotIndex,' +
+        'uint256[] value,' +
+        'uint256 queryHash,' +
+        'uint256[] allowedIssuers,' +
+        'string[] circuitIds,' +
+        'bool skipClaimRevocationCheck,' +
+        'uint256 claimPathNotExists' +
+        ')'
+    ],
+    [
+      {
+        schema: query.schema,
+        claimPathKey: query.claimPathKey,
+        operator: query.operator,
+        slotIndex: query.slotIndex,
+        value: query.value,
+        queryHash: query.queryHash,
+        allowedIssuers: query.allowedIssuers,
+        circuitIds: query.circuitIds,
+        skipClaimRevocationCheck: query.skipClaimRevocationCheck,
+        claimPathNotExists: query.claimPathNotExists
       }
-    },
-    {
-      schema: query.schema,
-      claimPathKey: query.claimPathKey,
-      operator: query.operator,
-      slotIndex: query.slotIndex,
-      value: query.value,
-      queryHash: query.queryHash,
-      allowedIssuers: query.allowedIssuers.map((issuer) => didToIdString(issuer)),
-      circuitIds: query.circuitIds,
-      skipClaimRevocationCheck: query.skipClaimRevocationCheck,
-      claimPathNotExists: query.claimPathNotExists
-    }
+    ]
   );
 }
 
-export function packV3ValidatorParams(query: any) {
-  const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
-  return web3.eth.abi.encodeParameter(
-    {
-      CredentialAtomicQueryV3: {
-        schema: 'uint256',
-        claimPathKey: 'uint256',
-        operator: 'uint256',
-        slotIndex: 'uint256',
-        value: 'uint256[]',
-        queryHash: 'uint256',
-        allowedIssuers: 'uint256[]',
-        circuitIds: 'string[]',
-        skipClaimRevocationCheck: 'bool',
-        groupID: 'uint256',
-        nullifierSessionID: 'uint256',
-        proofType: 'uint256',
-        verifierID: 'uint256'
+export function packV3ValidatorParams(query: any): string {
+  return abiCoder.encode(
+    [
+      'tuple(' +
+        'uint256 schema,' +
+        'uint256 claimPathKey,' +
+        'uint256 operator,' +
+        'uint256 slotIndex,' +
+        'uint256[] value,' +
+        'uint256 queryHash,' +
+        'uint256[] allowedIssuers,' +
+        'string[] circuitIds,' +
+        'bool skipClaimRevocationCheck,' +
+        'uint256 groupID,' +
+        'uint256 nullifierSessionID,' +
+        'uint256 proofType,' +
+        'uint256 verifierID' +
+        ')'
+    ],
+    [
+      {
+        schema: query.schema,
+        claimPathKey: query.claimPathKey,
+        operator: query.operator,
+        slotIndex: query.slotIndex,
+        value: query.value,
+        queryHash: query.queryHash,
+        allowedIssuers: query.allowedIssuers,
+        circuitIds: query.circuitIds,
+        skipClaimRevocationCheck: query.skipClaimRevocationCheck,
+        groupID: query.groupID,
+        nullifierSessionID: query.nullifierSessionID,
+        proofType: query.proofType,
+        verifierID: query.verifierID
       }
-    },
-    {
-      schema: query.schema,
-      claimPathKey: query.claimPathKey,
-      operator: query.operator,
-      slotIndex: query.slotIndex,
-      value: query.value,
-      queryHash: query.queryHash,
-      allowedIssuers: query.allowedIssuers.map((issuer) => didToIdString(issuer)),
-      circuitIds: query.circuitIds,
-      skipClaimRevocationCheck: query.skipClaimRevocationCheck,
-      groupID: query.groupID,
-      nullifierSessionID: query.nullifierSessionID,
-      proofType: query.proofType,
-      verifierID: query.verifierID
-    }
-  );
-}
-
-export function unpackV3ValidatorParams(hex: string) {
-  const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
-  return web3.eth.abi.decodeParameter(
-    {
-      CredentialAtomicQueryV3: {
-        schema: 'uint256',
-        claimPathKey: 'uint256',
-        operator: 'uint256',
-        slotIndex: 'uint256',
-        value: 'uint256[]',
-        queryHash: 'uint256',
-        allowedIssuers: 'uint256[]',
-        circuitIds: 'string[]',
-        skipClaimRevocationCheck: 'bool',
-        groupID: 'uint256',
-        nullifierSessionID: 'uint256',
-        proofType: 'uint256',
-        verifierID: 'uint256'
-      }
-    },
-    hex
-  );
-}
-
-export function unpackV2ValidatorParams(hex: string) {
-  const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
-  return web3.eth.abi.decodeParameter(
-    {
-      CredentialAtomicQuery: {
-        schema: 'uint256',
-        claimPathKey: 'uint256',
-        operator: 'uint256',
-        slotIndex: 'uint256',
-        value: 'uint256[]',
-        queryHash: 'uint256',
-        allowedIssuers: 'uint256[]',
-        circuitIds: 'string[]',
-        skipClaimRevocationCheck: 'bool',
-        claimPathNotExists: 'uint256'
-      }
-    },
-    hex
+    ]
   );
 }
 
@@ -169,6 +126,21 @@ export function packZKProof(inputs: string[], a: string[], b: string[][], c: str
     ['uint256[] inputs', 'uint256[2]', 'uint256[2][2]', 'uint256[2]'],
     [inputs, a, b, c]
   );
+}
+
+export function prepareProof(proof: ProofData) {
+  const { pi_a, pi_b, pi_c } = proof;
+  const [[p1, p2], [p3, p4]] = pi_b;
+  const preparedProof = {
+    pi_a: pi_a.slice(0, 2),
+    pi_b: [
+      [p2, p1],
+      [p4, p3]
+    ],
+    pi_c: pi_c.slice(0, 2)
+  };
+
+  return { ...preparedProof };
 }
 
 export function packIdentityStateUpdate(msg: StateUpdate): string {

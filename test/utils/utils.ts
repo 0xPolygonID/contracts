@@ -1,5 +1,8 @@
-import { Hex, poseidon } from '@iden3/js-crypto';
-import { buildDIDType, genesisFromEthAddress, Id, SchemaHash } from '@iden3/js-iden3-core';
+import { core } from '@0xpolygonid/js-sdk';
+import { buildDIDType, DID, Id, SchemaHash } from '@iden3/js-iden3-core';
+import axios from 'axios';
+import hre from 'hardhat';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends (...a: infer X) => void
   ? X
@@ -27,93 +30,104 @@ export function genMaxBinaryNumber(digits: number): bigint {
   return BigInt(2) ** BigInt(digits) - BigInt(1);
 }
 
-export function calculateQueryHashV2(
-  values: bigint[],
-  schema: string,
-  slotIndex: string | number,
-  operator: string | number,
-  claimPathKey: string | number,
-  claimPathNotExists: string | number
-): bigint {
-  const expValue = prepareCircuitArrayValues(values, 64);
-  const valueHash = poseidon.spongeHashX(expValue, 6);
-  const schemaHash = coreSchemaFromStr(schema);
-  const queryHash = poseidon.hash([
-    schemaHash.bigInt(),
-    BigInt(slotIndex),
-    BigInt(operator),
-    BigInt(claimPathKey),
-    BigInt(claimPathNotExists),
-    valueHash
-  ]);
-  return queryHash;
+export async function getChainId() {
+  return parseInt(await hre.network.provider.send('eth_chainId'), 16);
 }
-
-export function calculateQueryHashV3(
-  values: bigint[],
-  schema: SchemaHash,
-  slotIndex: string | number,
-  operator: string | number,
-  claimPathKey: string | number,
-  valueArraySize: string | number,
-  merklized: string | number,
-  isRevocationChecked: string | number,
-  verifierID: string | number,
-  nullifierSessionID: string | number
-): bigint {
-  const expValue = prepareCircuitArrayValues(values, 64);
-  const valueHash = poseidon.spongeHashX(expValue, 6);
-  const firstPartQueryHash = poseidon.hash([
-    schema.bigInt(),
-    BigInt(slotIndex),
-    BigInt(operator),
-    BigInt(claimPathKey),
-    BigInt(merklized),
-    valueHash
-  ]);
-
-  const queryHash = poseidon.hash([
-    firstPartQueryHash,
-    BigInt(valueArraySize),
-    BigInt(isRevocationChecked),
-    BigInt(verifierID),
-    BigInt(nullifierSessionID),
-    BigInt(0)
-  ]);
-  return queryHash;
-}
-
-const prepareCircuitArrayValues = (arr: bigint[], size: number): bigint[] => {
-  if (!arr) {
-    arr = [];
-  }
-  if (arr.length > size) {
-    throw new Error(`array size ${arr.length} is bigger max expected size ${size}`);
-  }
-
-  // Add the empty values
-  for (let i = arr.length; i < size; i++) {
-    arr.push(BigInt(0));
-  }
-
-  return arr;
-};
 
 export const coreSchemaFromStr = (schemaIntString: string) => {
   const schemaInt = BigInt(schemaIntString);
   return SchemaHash.newSchemaHashFromInt(schemaInt);
 };
 
-export function buildVerifierId(
-  address: string,
-  info: { method: string; blockchain: string; networkId: string }
-): Id {
-  address = address.replace('0x', '');
-  const ethAddrBytes = Hex.decodeString(address);
-  const ethAddr = ethAddrBytes.slice(0, 20);
-  const genesis = genesisFromEthAddress(ethAddr);
+export async function getDidResolution(
+  did: string,
+  resolverUrl: string,
+  opts?: { gist?: string; state?: string }
+) {
+  console.log(
+    'Resolving DID:',
+    resolverUrl +
+      `/1.0/identifiers/${did}?signature=EthereumEip712Signature2021${
+        opts?.gist ? '&gist=' + opts?.gist : ''
+      }${opts?.state ? '&state=' + opts?.state : ''}`
+  );
+  const resp = await axios.get(
+    resolverUrl +
+      `/1.0/identifiers/${did}?signature=EthereumEip712Signature2021${
+        opts?.gist ? '&gist=' + opts?.gist : ''
+      }${opts?.state ? '&state=' + opts?.state : ''}`
+  );
+  const didResolution = resp.data;
+  return didResolution;
+}
 
-  const tp = buildDIDType(info.method, info.blockchain, info.networkId);
+export function getDIDEmptyState(did: core.DID) {
+  const profileId = DID.idFromDID(did);
+  const didType = buildDIDType(
+    DID.methodFromId(profileId),
+    DID.blockchainFromId(profileId),
+    DID.networkIdFromId(profileId)
+  );
+  const identifier = Id.idGenesisFromIdenState(didType, 0n);
+  const emptyDID = DID.parseFromId(identifier);
 
-  return new Id(tp, genesis);
+  return emptyDID;
+}
+
+export async function verifyContract(
+  hre: HardhatRuntimeEnvironment,
+  contractAddress: any,
+  opts: {
+    contract?: string;
+    constructorArgsProxy?: any[];
+    constructorArgsProxyAdmin?: any[];
+    constructorArgsImplementation: any[];
+    libraries: any;
+  }
+): Promise<boolean> {
+  if (hre.network.name === 'localhost') {
+    return true;
+  }
+  // When verifying if the proxy contract is not verified yet we need to pass the arguments
+  // for the proxy contract first, then for proxy admin and finally for the implementation contract
+  if (opts.constructorArgsProxy) {
+    try {
+      await hre.run('verify:verify', {
+        address: contractAddress,
+        contract: opts.contract,
+        constructorArguments: opts.constructorArgsProxy,
+        libraries: opts.libraries
+      });
+    } catch (error) {
+      // do nothing
+    }
+  }
+
+  if (opts.constructorArgsProxyAdmin) {
+    try {
+      await hre.run('verify:verify', {
+        address: contractAddress,
+        contract: opts.contract,
+        constructorArguments: opts.constructorArgsProxyAdmin,
+        libraries: opts.libraries
+      });
+    } catch (error) {
+      // do nothing
+    }
+  }
+
+  try {
+    await hre.run('verify:verify', {
+      address: contractAddress,
+      contract: opts.contract,
+      constructorArguments: opts.constructorArgsImplementation,
+      libraries: opts.libraries
+    });
+    console.log(`Verification successful for ${contractAddress}\n`);
+    return true;
+  } catch (error) {
+    console.error(`Error verifying ${contractAddress}: ${error}\n`);
+  }
+
+  return false;
 }

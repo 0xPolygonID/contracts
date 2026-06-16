@@ -1,18 +1,25 @@
 import { ethers, upgrades } from 'hardhat';
 import { StateDeployHelper } from '../helpers/StateDeployHelper';
 import { Contract } from 'ethers';
+import { getChainId } from './utils';
+import {
+  contractsInfo,
+  POLYGON_AMOY_CHAINID,
+  POLYGON_MAINNET_CHAINID,
+  STATE_ADDRESS_POLYGON_AMOY,
+  STATE_ADDRESS_POLYGON_MAINNET
+} from '../helpers/constants';
 
-export async function deploySpongePoseidon(poseidon6ContractAddress: string): Promise<Contract> {
-  const SpongePoseidonFactory = await ethers.getContractFactory('SpongePoseidon', {
-    libraries: {
-      PoseidonUnit6L: poseidon6ContractAddress
-    }
-  });
+export async function deployValidatorStub(
+  validatorName: string = 'RequestValidatorStub'
+): Promise<Contract> {
+  const stub = await ethers.getContractFactory(validatorName);
+  const stubInstance = await stub.deploy();
+  await stubInstance.waitForDeployment();
 
-  const spongePoseidon = await SpongePoseidonFactory.deploy();
-  await spongePoseidon.waitForDeployment();
-  console.log('SpongePoseidon deployed to:', await spongePoseidon.getAddress());
-  return spongePoseidon;
+  console.log(`${validatorName} stub deployed to:`, await stubInstance.getAddress());
+
+  return stubInstance;
 }
 
 export async function deployValidatorContracts(
@@ -45,8 +52,8 @@ export async function deployValidatorContracts(
 
   const [signer] = await ethers.getSigners();
   const validatorContractProxy = await upgrades.deployProxy(ValidatorContract, [
-    await validatorContractVerifierWrapper.getAddress(),
     stateAddress,
+    await validatorContractVerifierWrapper.getAddress(),
     await signer.getAddress()
   ]);
 
@@ -78,7 +85,7 @@ export async function deployERC20ZKPVerifierToken(
   symbol: string,
   stateAddress: string,
   contractName = 'ERC20Verifier'
-): Promise<Contract> {
+): Promise<{ erc20Verifier: Contract; verifierLib: Contract }> {
   const verifierLib = await deployVerifierLib();
   const signers = await ethers.getSigners();
   const ERC20Verifier = await ethers.getContractFactory(contractName, {
@@ -91,7 +98,7 @@ export async function deployERC20ZKPVerifierToken(
     unsafeAllowLinkedLibraries: true
   });
   console.log(contractName + ' deployed to:', await erc20Verifier.getAddress());
-  return erc20Verifier;
+  return { erc20Verifier, verifierLib };
 }
 
 export interface VerificationInfo {
@@ -223,8 +230,9 @@ export async function deployERC20LinkedUniversalVerifier(
 ): Promise<{
   universalVerifier: Contract;
   erc20LinkedUniversalVerifier: Contract;
+  verifierLib: Contract;
 }> {
-  const universalVerifier = await deployUniversalVerifier(stateAddress);
+  const { universalVerifier, verifierLib } = await deployUniversalVerifier(stateAddress);
   const ERC20LinkedUniversalVerifier = await ethers.getContractFactory(
     'ERC20LinkedUniversalVerifier'
   );
@@ -239,11 +247,14 @@ export async function deployERC20LinkedUniversalVerifier(
   );
   return {
     universalVerifier,
-    erc20LinkedUniversalVerifier
+    erc20LinkedUniversalVerifier,
+    verifierLib
   };
 }
 
-async function deployUniversalVerifier(stateAddress: string): Promise<Contract> {
+async function deployUniversalVerifier(
+  stateAddress: string
+): Promise<{ universalVerifier: Contract; verifierLib: Contract }> {
   const verifierLib = await deployVerifierLib();
   const signers = await ethers.getSigners();
   const UniversalVerifier = await ethers.getContractFactory('UniversalVerifier', {
@@ -263,5 +274,27 @@ async function deployUniversalVerifier(stateAddress: string): Promise<Contract> 
   );
   universalVerifier.waitForDeployment();
   console.log('UniversalVerifier deployed to:', await universalVerifier.getAddress());
-  return universalVerifier;
+  return { universalVerifier, verifierLib };
+}
+
+export async function getStateContractAddress(): Promise<string> {
+  const chainId = await getChainId();
+
+  let stateContractAddress = contractsInfo.STATE.unifiedAddress;
+  if (chainId === POLYGON_AMOY_CHAINID) {
+    stateContractAddress = STATE_ADDRESS_POLYGON_AMOY;
+  }
+  if (chainId === POLYGON_MAINNET_CHAINID) {
+    stateContractAddress = STATE_ADDRESS_POLYGON_MAINNET;
+  }
+
+  return stateContractAddress;
+}
+
+export async function getSmtLib(): Promise<Contract> {
+  const smtLib = await ethers.getContractAt(
+    contractsInfo.SMT_LIB.name,
+    contractsInfo.SMT_LIB.unifiedAddress
+  );
+  return smtLib;
 }

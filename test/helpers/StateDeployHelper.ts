@@ -5,8 +5,6 @@ import { deployPoseidons } from '../utils/deploy-poseidons.util';
 import { chainIdDefaultIdTypeMap } from './ChainIdDefTypeMap';
 import { chainIdInfoMap } from './constants';
 
-const SMT_MAX_DEPTH = 64;
-
 export class StateDeployHelper {
   constructor(
     private signers: SignerWithAddress[],
@@ -44,15 +42,6 @@ export class StateDeployHelper {
     return crossChainProofValidator;
   }
 
-  async deployStateCrossChainLib(StateCrossChainLibName = 'StateCrossChainLib'): Promise<Contract> {
-    const stateCrossChainLib = await ethers.deployContract(StateCrossChainLibName);
-    await stateCrossChainLib.waitForDeployment();
-    this.enableLogging &&
-      this.log(`StateCrossChainLib deployed to:  ${await stateCrossChainLib.getAddress()}`);
-
-    return stateCrossChainLib;
-  }
-
   async deployState(
     supportedIdTypes: Uint8Array[] = [],
     g16VerifierContractName:
@@ -63,7 +52,6 @@ export class StateDeployHelper {
     groth16verifier: Contract;
     stateLib: Contract;
     smtLib: Contract;
-    stateCrossChainLib: Contract;
     crossChainProofValidator: Contract;
     poseidon1: Contract;
     poseidon2: Contract;
@@ -106,9 +94,6 @@ export class StateDeployHelper {
     this.log('deploying StateLib...');
     const stateLib = await this.deployStateLib();
 
-    this.log('deploying StateCrossChainLib...');
-    const stateCrossChainLib = await this.deployStateCrossChainLib('StateCrossChainLib');
-
     this.log('deploying CrossChainProofValidator...');
     const crossChainProofValidator = await this.deployCrossChainProofValidator();
 
@@ -117,8 +102,7 @@ export class StateDeployHelper {
       libraries: {
         StateLib: await stateLib.getAddress(),
         SmtLib: await smtLib.getAddress(),
-        PoseidonUnit1L: await poseidon1Elements.getAddress(),
-        StateCrossChainLib: await stateCrossChainLib.getAddress()
+        PoseidonUnit1L: await poseidon1Elements.getAddress()
       }
     });
 
@@ -145,7 +129,6 @@ export class StateDeployHelper {
         await tx.wait();
       }
     }
-
     this.log('======== State: deploy completed ========');
 
     return {
@@ -153,7 +136,6 @@ export class StateDeployHelper {
       groth16verifier: g16Verifier,
       stateLib,
       smtLib,
-      stateCrossChainLib,
       crossChainProofValidator: crossChainProofValidator,
       poseidon1: poseidon1Elements,
       poseidon2: poseidon2Elements,
@@ -188,33 +170,6 @@ export class StateDeployHelper {
     this.enableLogging && this.log(`StateLib deployed to:  ${await stateLib.getAddress()}`);
 
     return stateLib;
-  }
-
-  async upgradeValidator(
-    validatorAddress: string,
-    validatorContractName: string
-  ): Promise<{
-    validator: Contract;
-  }> {
-    console.log('======== validator: upgrade started ========');
-
-    const owner = this.signers[0];
-
-    const ValidatorFactory = await ethers.getContractFactory(validatorContractName);
-    const validator = await upgrades.upgradeProxy(validatorAddress, ValidatorFactory);
-    await validator.waitForDeployment();
-    const s = await validator.getSupportedCircuitIds();
-    console.log('======== validator: ', s);
-
-    console.log(
-      `Validator contract upgraded at address ${await validator.getAddress()} from ${await owner.getAddress()}`
-    );
-
-    console.log('======== validator: upgrade completed ========');
-
-    return {
-      validator
-    };
   }
 
   async getDefaultIdType(): Promise<{ defaultIdType: number; chainId: number }> {
